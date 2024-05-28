@@ -7,6 +7,7 @@ import { client } from '@/lib/supabase';
 
 export default function Home() {
   const { session, loading } = useAuth();
+  const { userFormState, setUserFormState } = useState({});
 
   const handleLinkedIn = async () => {
     const { data, error } = await client.auth.signInWithOAuth({
@@ -20,6 +21,13 @@ export default function Home() {
     } else {
       throw new Error('Failed to sign in with LinkedIn');
     }
+  };
+
+  //get user from database if logged in
+  const fetchUser = async () => {
+    const user = await client.from('users').select().eq('id', session.user.id);
+    setUserFormState(user);
+    return null;
   };
 
   const LandingPage = () => (
@@ -45,7 +53,20 @@ export default function Home() {
           <LoadingSpinner />
         </BaseLayout>
       )}
-      {session ? <BaseLayout>Welcome</BaseLayout> : <LandingPage />}
+      {session ? (
+        <BaseLayout>
+          {userFormState ? (
+            <div>
+              <h1>{userFormState.name}</h1>
+              <p>{userFormState.email}</p>
+            </div>
+          ) : (
+            fetchUser()
+          )}
+        </BaseLayout>
+      ) : (
+        <LandingPage />
+      )}
     </>
   );
 }
