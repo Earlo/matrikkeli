@@ -4,15 +4,17 @@ import BaseLayout from '@/components/layout/baseLayout';
 import LoadingSpinner from '@/components/generic/loadingSpinner';
 import Button from '@/components/generic/button';
 import { client } from '@/lib/supabase';
+import { useState, useCallback } from 'react';
 
 export default function Home() {
   const { session, loading } = useAuth();
-  const { userFormState, setUserFormState } = useState({});
+  const [userFormState, setUserFormState] = useState({});
 
   const handleLinkedIn = async () => {
     const { data, error } = await client.auth.signInWithOAuth({
       provider: 'linkedin_oidc',
     });
+    console.log('got', data, error);
     if (error) {
       throw new Error(error.message);
     }
@@ -24,11 +26,14 @@ export default function Home() {
   };
 
   //get user from database if logged in
-  const fetchUser = async () => {
+  useCallback(async () => {
+    console.log(session);
+    if (!session) return null;
     const user = await client.from('users').select().eq('id', session.user.id);
     setUserFormState(user);
+    console.log(user);
     return null;
-  };
+  }, [session]);
 
   const LandingPage = () => (
     <BaseLayout>
@@ -45,7 +50,6 @@ export default function Home() {
       </div>
     </BaseLayout>
   );
-
   return (
     <>
       {loading && (
@@ -55,14 +59,10 @@ export default function Home() {
       )}
       {session ? (
         <BaseLayout>
-          {userFormState ? (
-            <div>
-              <h1>{userFormState.name}</h1>
-              <p>{userFormState.email}</p>
-            </div>
-          ) : (
-            fetchUser()
-          )}
+          <div>
+            <h1>{userFormState.name}</h1>
+            <p>{userFormState.email}</p>
+          </div>
         </BaseLayout>
       ) : (
         <LandingPage />
