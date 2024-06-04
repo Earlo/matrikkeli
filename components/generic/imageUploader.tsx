@@ -4,7 +4,7 @@ import { handleUpload } from '@/lib/cloudinary';
 import { cn } from '@/lib/helpers';
 import { ChangeEvent, useRef, useState } from 'react';
 import Image from 'next/image';
-import { SparklesIcon, ArrowUpOnSquareIcon } from '@heroicons/react/24/solid';
+import { ArrowUpOnSquareIcon } from '@heroicons/react/24/solid';
 
 interface ImageUploaderProps {
   setIcon: (icon: string) => void;
@@ -23,7 +23,6 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   disabled = false,
   className,
   children,
-  context = null,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -35,21 +34,6 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
       const url = await handleUpload(file, path);
       setIcon(url);
     }
-    setIsLoading(false);
-  };
-
-  const onGenerateImage = async () => {
-    console.log('Generating image');
-    if (isLoading || !context) return;
-    console.log(context);
-    setIsLoading(true);
-    const response = await fetch('/api/createImage', {
-      method: 'POST',
-      body: JSON.stringify({ sheet: context }),
-    });
-    const data = await response.json();
-    console.log(data);
-    setIcon(data);
     setIsLoading(false);
   };
 
@@ -91,16 +75,10 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
             !disabled && (
               <div className="absolute inset-0 flex items-center justify-between opacity-0 transition-opacity duration-200 hover:opacity-100">
                 <div
-                  className="flex h-full w-1/2 items-center justify-center rounded-l-full bg-black bg-opacity-40 transition-opacity hover:bg-opacity-20"
+                  className="flex h-full w-full items-center justify-center rounded-full bg-black bg-opacity-40 transition-opacity hover:bg-opacity-20"
                   onClick={() => !disabled && fileInputRef.current?.click()}
                 >
                   <ArrowUpOnSquareIcon className="h-6 w-6" />
-                </div>
-                <div
-                  className="flex h-full w-1/2 items-center justify-center rounded-r-full bg-black bg-opacity-40 transition-opacity hover:bg-opacity-20"
-                  onClick={() => !disabled && onGenerateImage()}
-                >
-                  <SparklesIcon className="h-6 w-6" />
                 </div>
               </div>
             )

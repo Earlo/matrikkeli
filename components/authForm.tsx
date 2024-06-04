@@ -14,10 +14,7 @@ export default function AuthForm({ onClose }: AuthFormProps) {
     if (error) {
       throw new Error(error.message);
     }
-    console.log('got', data, error);
-    if (data) {
-      console.log(data);
-    } else {
+    if (!data) {
       throw new Error('Failed to sign in with LinkedIn');
     }
   };

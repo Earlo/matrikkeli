@@ -7,6 +7,10 @@ const nextConfig = {
         protocol: 'http',
         hostname: 'res.cloudinary.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'media.licdn.com',
+      },
     ],
   },
   async headers() {
