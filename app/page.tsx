@@ -12,7 +12,6 @@ export default function Home() {
     const { data, error } = await client.auth.signInWithOAuth({
       provider: 'linkedin_oidc',
     });
-    console.log('got', data, error);
     if (error) {
       throw new Error(error.message);
     }
