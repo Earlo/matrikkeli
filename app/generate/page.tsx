@@ -68,7 +68,7 @@ export default function GeneratePage() {
                   width={100}
                   height={100}
                   alt="Profile"
-                  className="h-full w-full  object-fill "
+                  className="h-full w-full object-contain"
                 />
               </div>
             </div>
@@ -87,7 +87,7 @@ export default function GeneratePage() {
             </div>
           </div>
         ))}
-      </div>{' '}
+      </div>
       <button
         onClick={generatePdf}
         className="mt-5 cursor-pointer rounded-md border-none bg-orange-400 p-2.5 text-lg text-white"
