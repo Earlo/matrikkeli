@@ -1,8 +1,6 @@
 'use client';
-import FormContainer from './formContainer';
 import Button from './generic/button';
 import ImageUploader from './generic/imageUploader';
-import Input from './generic/input';
 import LabeledInput from './generic/labeledInput';
 import { useAuth } from '@/app/authProvider';
 import { client } from '@/lib/supabase';

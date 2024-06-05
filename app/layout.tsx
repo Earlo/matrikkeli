@@ -2,10 +2,10 @@ import '@/styles/globals.css';
 import Provider from './providers';
 import TopBar from '@/components/layout/topBar';
 import Footer from '@/components/layout/footer';
+import BaseLayout from '@/components/layout/baseLayout';
 import { Archivo } from 'next/font/google';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
-
 export const metadata: Metadata = {
   title: 'My App',
   description: 'A tool ',
@@ -24,7 +24,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className="flex min-h-[100dvh] flex-col">
         <Provider>
           <TopBar />
-          {children}
+          <BaseLayout>{children}</BaseLayout>
           <Footer />
         </Provider>
       </body>
