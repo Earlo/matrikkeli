@@ -38,6 +38,9 @@ export default function GeneratePage() {
 
     for (const person of people) {
       const input = document.getElementById(`person-${person.user_id}`);
+      if (!input) {
+        continue;
+      }
       const canvas = await html2canvas(input);
       const imgData = canvas.toDataURL('image/png');
 
