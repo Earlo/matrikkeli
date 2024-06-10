@@ -4,6 +4,7 @@ import ImageUploader from './generic/imageUploader';
 import LabeledInput from './generic/labeledInput';
 import { useAuth } from '@/app/authProvider';
 import { client } from '@/lib/supabase';
+import { Person } from '@/schemas/user';
 import { useState, useEffect } from 'react';
 
 interface PersonFormProps {
@@ -13,7 +14,7 @@ interface PersonFormProps {
 export default function PersonForm({ onClose }: PersonFormProps) {
   //get user from database if logged in
   const { session, loading } = useAuth();
-  const [formState, seFormState] = useState({});
+  const [formState, seFormState] = useState<Person | null>();
 
   useEffect(() => {
     const getUser = async () => {
@@ -59,10 +60,9 @@ export default function PersonForm({ onClose }: PersonFormProps) {
   return (
     <div className="flex h-full w-full flex-col justify-center p-4 sm:w-96">
       <ImageUploader
-        name="Kuva"
         icon={formState.image_url_session}
-        onChange={(e) =>
-          seFormState({ ...formState, image_url_session: e.target.value })
+        setIcon={(value) =>
+          seFormState({ ...formState, image_url_session: value })
         }
       />
       <LabeledInput

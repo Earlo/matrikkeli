@@ -1,17 +1,10 @@
 'use client';
 import { client } from '@/lib/supabase';
+import { Person } from '@/schemas/user';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-
-interface Person {
-  user_id: string;
-  email: string;
-  first_name: string;
-  last_name: string;
-  image_url: string;
-}
 
 export default function GeneratePage() {
   const [people, setPeople] = useState<Person[]>([]);
@@ -42,8 +35,6 @@ export default function GeneratePage() {
         continue;
       }
       const canvas = await html2canvas(input);
-      const imgData = canvas.toDataURL('image/png');
-
       if (people.indexOf(person) !== 0) {
         pdf.addPage();
       }
