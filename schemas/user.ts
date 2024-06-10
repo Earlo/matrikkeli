@@ -12,4 +12,11 @@ export interface Person {
   first_name: string;
   last_name: string;
   image_url_session: string;
+  description: string;
+  birthday: Date;
+  roles: string[];
+  work_history: string[];
+  joined: Date;
+  left: Date;
+  qr_code: string;
 }

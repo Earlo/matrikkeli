@@ -2,6 +2,7 @@
 import Button from './generic/button';
 import ImageUploader from './generic/imageUploader';
 import LabeledInput from './generic/labeledInput';
+import Positions from './Positions';
 import { useAuth } from '@/app/authProvider';
 import { client } from '@/lib/supabase';
 import { Person } from '@/schemas/user';
@@ -15,7 +16,22 @@ export default function PersonForm({ onClose }: PersonFormProps) {
   //get user from database if logged in
   const { session, loading } = useAuth();
   const [formState, seFormState] = useState<Person | null>();
-
+  const positions = [
+    {
+      title: 'Software Developer',
+      organization: 'Tech Solutions Inc',
+      start: '2020-01-01',
+      end: '2024-01-01',
+      description: 'Developing and maintaining web applications.',
+    },
+    {
+      title: 'Volunteer Coordinator',
+      organization: 'Local Charity',
+      start: '2019-05-01',
+      end: '2019-12-01',
+      description: 'Managed volunteer staff for community programs.',
+    },
+  ];
   useEffect(() => {
     const getUser = async () => {
       if (!session) {
@@ -84,6 +100,15 @@ export default function PersonForm({ onClose }: PersonFormProps) {
         value={formState.email}
         onChange={(e) => seFormState({ ...formState, email: e.target.value })}
       />
+      <LabeledInput
+        name="Esittely"
+        value={formState.description}
+        onChange={(e) =>
+          seFormState({ ...formState, description: e.target.value })
+        }
+        multiline
+      />
+      <Positions positions={positions} />
       <Button
         label={'Tallenna'}
         type="button"
@@ -95,6 +120,7 @@ export default function PersonForm({ onClose }: PersonFormProps) {
               first_name: formState.first_name,
               last_name: formState.last_name,
               image_url_session: session.user.user_metadata.picture,
+              description: formState.description,
             })
             .eq('user_id', session.user.id);
           if (error) {
@@ -102,7 +128,7 @@ export default function PersonForm({ onClose }: PersonFormProps) {
           }
           if (data) {
             console.log(data);
-          } else {
+          } else if (error) {
             throw new Error('Failed to save person');
           }
         }}

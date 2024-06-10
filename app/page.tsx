@@ -11,6 +11,9 @@ export default function Home() {
   const handleLinkedIn = async () => {
     const { data, error } = await client.auth.signInWithOAuth({
       provider: 'linkedin_oidc',
+      options: {
+        redirectTo: process.env.NEXT_PUBLIC_URL || 'http://localhost:3000',
+      },
     });
     if (error) {
       throw new Error(error.message);
