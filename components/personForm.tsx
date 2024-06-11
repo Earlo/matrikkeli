@@ -36,23 +36,32 @@ export default function PersonForm({ onClose }: PersonFormProps) {
 
       if (!data) {
         // Insert new user if not found
-        const { data: newUser, error: newUserError } = await client
+        const newUser = {
+          user_id: session.user.id,
+          email: session.user.email,
+          first_name: session.user.user_metadata.given_name,
+          last_name: session.user.user_metadata.family_name,
+          image_url: session.user.user_metadata.picture,
+          roles: [],
+          image_url_session: '',
+          description: '',
+          birthday: new Date(),
+          work_history: [],
+          joined: new Date(),
+          left: new Date(),
+          qr_code: '',
+        } as Person;
+        const { error: newUserError } = await client
           .from('people')
-          .insert({
-            user_id: session.user.id,
-            email: session.user.email,
-            first_name: session.user.user_metadata.given_name,
-            last_name: session.user.user_metadata.family_name,
-            image_url: session.user.user_metadata.picture,
-            roles: [],
-          })
+          .insert(newUser)
           .single();
 
         if (newUserError) {
           console.error('Error creating new user:', newUserError.message);
           return;
         }
-        setFormState({ ...newUser, roles: JSON.parse(newUser.roles) });
+
+        setFormState(newUser);
         return;
       }
       console.log('User found:', data);
