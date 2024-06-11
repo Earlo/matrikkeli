@@ -1,4 +1,5 @@
 import { cn } from '@/lib/helpers';
+
 interface LabelProps {
   label?: string;
   name: string;
@@ -8,14 +9,7 @@ interface LabelProps {
 
 const Label: React.FC<LabelProps> = ({ label, name, children, className }) => (
   <label
-    className={cn(
-      'relative z-[1] flex w-full items-center justify-between whitespace-nowrap bg-black p-1 pl-4 text-xl font-black uppercase text-white',
-      className,
-    )}
-    style={{
-      clipPath:
-        'polygon(1rem 0%, 100% 0%, 100% calc(100% - 1rem), calc(100% - 1rem) 100%, 0% 100%, 0% 1rem)',
-    }}
+    className={cn('block text-sm font-medium text-gray-700', className)}
     htmlFor={name}
   >
     {label ? label : name}

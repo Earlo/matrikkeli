@@ -14,9 +14,18 @@ export interface Person {
   image_url_session: string;
   description: string;
   birthday: Date;
-  roles: string[];
+  roles: Position[];
   work_history: string[];
   joined: Date;
   left: Date;
   qr_code: string;
+}
+
+export interface Position {
+  id: number;
+  title: string;
+  organization: string;
+  start: string;
+  end: string;
+  description: string;
 }

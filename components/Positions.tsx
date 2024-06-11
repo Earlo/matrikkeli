@@ -1,29 +1,136 @@
 // components/Positions.js
-import React from 'react';
+import LabeledInput from './generic/labeledInput';
+import React, { useState } from 'react';
+import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/solid';
 
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
+const PositionCard = ({ position, onChange, onDelete }) => {
+  const [expanded, setExpanded] = useState(false);
+  return (
+    <div className="mb-2 rounded-lg bg-white p-2 shadow-md">
+      <div
+        className="flex cursor-pointer items-center justify-between"
+        onClick={() => setExpanded(!expanded)}
+      >
+        <h3 className="text-lg font-semibold">{position.title}</h3>
+        {expanded ? (
+          <ChevronUpIcon className="h-6 w-6 text-gray-500" />
+        ) : (
+          <ChevronDownIcon className="h-6 w-6 text-gray-500" />
+        )}
+      </div>
+      {expanded && (
+        <>
+          <LabeledInput
+            name="title"
+            value={position.title}
+            onChange={(e) => onChange(e, position.id)}
+          />
+          <LabeledInput
+            name="organization"
+            value={position.organization}
+            onChange={(e) => onChange(e, position.id)}
+          />
+          <LabeledInput
+            name="start"
+            type="date"
+            value={position.start}
+            onChange={(e) => onChange(e, position.id)}
+          />
+          <LabeledInput
+            name="end"
+            type="date"
+            value={position.end}
+            onChange={(e) => onChange(e, position.id)}
+          />
+          <LabeledInput
+            name="description"
+            value={position.description}
+            onChange={(e) => onChange(e, position.id)}
+            multiline
+          />
+          <button
+            className="mt-2 rounded bg-red-500 px-4 py-2 text-white hover:bg-red-700"
+            onClick={() => onDelete(position.id)}
+          >
+            Delete
+          </button>
+        </>
+      )}
+    </div>
+  );
 };
 
-const Positions = ({ positions }) => {
+const Positions = ({
+  positions,
+  setPositions,
+}: {
+  positions: {
+    id: number;
+    title: string;
+    organization: string;
+    start: string;
+    end: string;
+    description: string;
+  }[];
+  setPositions: (
+    positions: {
+      id: number;
+      title: string;
+      organization: string;
+      start: string;
+      end: string;
+      description: string;
+    }[],
+  ) => void;
+}) => {
+  const handleAddPosition = () => {
+    setPositions([
+      ...positions,
+      {
+        id: positions.length + 1,
+        title: '',
+        organization: '',
+        start: new Date().toISOString().split('T')[0], // sets today's date
+        end: '',
+        description: '',
+      },
+    ]);
+  };
+
+  const handleChange = (e, id) => {
+    const { name, value } = e.target;
+    const updatedPositions = positions.map((pos) =>
+      pos.id === id ? { ...pos, [name]: value } : pos,
+    );
+    console.log('updated', updatedPositions);
+    setPositions(updatedPositions);
+  };
+
+  const handleDelete = (id) => {
+    setPositions(positions.filter((pos) => pos.id !== id));
+  };
+
+  // Sort positions by start date
+  positions.sort(
+    (a, b) => new Date(a.start).getTime() - new Date(b.start).getTime(),
+  );
+
   return (
-    <div className="space-y-4">
-      {positions.map((position, index) => (
-        <div
-          key={index}
-          className="rounded-lg bg-white p-4 shadow-md transition-shadow duration-300 hover:shadow-lg"
-        >
-          <h3 className="text-lg font-semibold">{position.title}</h3>
-          <h4 className="text-sm text-gray-500">{position.organization}</h4>
-          <p className="text-xs text-gray-400">{`${formatDate(position.start)} - ${formatDate(position.end)}`}</p>
-          <p className="mt-2 text-gray-600">{position.description}</p>
-        </div>
+    <div>
+      {positions.map((position) => (
+        <PositionCard
+          key={position.id}
+          position={position}
+          onChange={handleChange}
+          onDelete={handleDelete}
+        />
       ))}
+      <button
+        className="mb-4 rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-700"
+        onClick={handleAddPosition}
+      >
+        Add New Position
+      </button>
     </div>
   );
 };

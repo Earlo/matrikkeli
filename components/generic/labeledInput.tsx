@@ -1,6 +1,8 @@
 import Label from './label';
 import Input from './input';
+import { cn } from '@/lib/helpers';
 import { HTMLInputTypeAttribute } from 'react';
+
 interface LabeledInputProps {
   name: string;
   type?: HTMLInputTypeAttribute;
@@ -12,7 +14,7 @@ interface LabeledInputProps {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void;
   disabled?: boolean;
-  children?: React.ReactNode;
+  className?: string;
 }
 
 const LabeledInput: React.FC<LabeledInputProps> = ({
@@ -24,10 +26,17 @@ const LabeledInput: React.FC<LabeledInputProps> = ({
   placeholder,
   onChange,
   disabled = false,
-  children,
+  className,
 }) => (
-  <div className="pb-2">
-    <Label name={name}>{children}</Label>
+  <div className="mt-1">
+    <Label
+      name={name}
+      className={cn('h-[16px] w-fit text-gray-700 transition ease-in-out', {
+        'translate-x-[10px] translate-y-7 select-none bg-slate-200 text-gray-500':
+          !value,
+        'select-text': !!value,
+      })}
+    />
     <Input
       name={name}
       type={type}
@@ -37,7 +46,10 @@ const LabeledInput: React.FC<LabeledInputProps> = ({
       placeholder={placeholder}
       onChange={onChange}
       disabled={disabled}
-      className="rounded-tl-none focus:outline-none"
+      className={cn(
+        'rounded-tl-none bg-slate-200 focus:outline-none',
+        className,
+      )}
     />
   </div>
 );

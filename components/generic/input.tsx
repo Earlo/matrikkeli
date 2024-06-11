@@ -1,5 +1,6 @@
 import { cn } from '@/lib/helpers';
 import { HTMLInputTypeAttribute } from 'react';
+
 interface InputProps {
   name: string;
   type?: HTMLInputTypeAttribute;
@@ -32,7 +33,7 @@ const Input: React.FC<InputProps> = ({
       value={value}
       placeholder={placeholder}
       className={cn(
-        'relative top-[-2px] z-0 h-24 min-h-8 w-full rounded border-2 border-black bg-white pl-1 font-archivo text-gray-700 placeholder-gray-400',
+        'mt-1 block w-full rounded-md border border-gray-200 p-2 shadow-sm sm:text-sm',
         className,
       )}
       required={required}
@@ -47,7 +48,7 @@ const Input: React.FC<InputProps> = ({
       value={value}
       placeholder={placeholder}
       className={cn(
-        'relative top-[-2px] z-0 h-8 w-full rounded border-2 border-black bg-white pl-1 font-archivo text-gray-700 placeholder-gray-400',
+        'mt-1 block w-full rounded-md border border-gray-200 p-2 shadow-sm sm:text-sm',
         className,
       )}
       required={required}

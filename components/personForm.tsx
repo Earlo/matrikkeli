@@ -1,6 +1,7 @@
 'use client';
 import Button from './generic/button';
 import ImageUploader from './generic/imageUploader';
+import Label from './generic/label';
 import LabeledInput from './generic/labeledInput';
 import Positions from './Positions';
 import { useAuth } from '@/app/authProvider';
@@ -13,126 +14,120 @@ interface PersonFormProps {
 }
 
 export default function PersonForm({ onClose }: PersonFormProps) {
-  //get user from database if logged in
   const { session, loading } = useAuth();
-  const [formState, seFormState] = useState<Person | null>();
-  const positions = [
-    {
-      title: 'Software Developer',
-      organization: 'Tech Solutions Inc',
-      start: '2020-01-01',
-      end: '2024-01-01',
-      description: 'Developing and maintaining web applications.',
-    },
-    {
-      title: 'Volunteer Coordinator',
-      organization: 'Local Charity',
-      start: '2019-05-01',
-      end: '2019-12-01',
-      description: 'Managed volunteer staff for community programs.',
-    },
-  ];
+  const [formState, setFormState] = useState<Person | null>(null);
+
   useEffect(() => {
     const getUser = async () => {
       if (!session) {
         console.log('no session');
-        return null;
+        return;
       }
-      const user = await client
+      const { data, error } = await client
         .from('people')
         .select()
         .eq('user_id', session.user.id)
         .single();
 
-      if (user.error || !user.data) {
-        const newUser = await client
+      if (error) {
+        console.error('Error fetching user:', error.message);
+        return;
+      }
+
+      if (!data) {
+        // Insert new user if not found
+        const { data: newUser, error: newUserError } = await client
           .from('people')
           .insert({
             user_id: session.user.id,
             email: session.user.email,
             first_name: session.user.user_metadata.given_name,
             last_name: session.user.user_metadata.family_name,
-            image_url_session: session.user.user_metadata.picture,
+            image_url: session.user.user_metadata.picture,
+            roles: [],
           })
-          .select()
           .single();
-        console.log('newUser', newUser);
-        if (newUser.error) {
-          throw new Error(newUser.error.message);
-        } else if (newUser.data) {
-          seFormState(newUser.data[0]);
+
+        if (newUserError) {
+          console.error('Error creating new user:', newUserError.message);
+          return;
         }
-        return null;
+        setFormState({ ...newUser, roles: JSON.parse(newUser.roles) });
+        return;
       }
-      seFormState(user.data);
-      return null;
+      console.log('User found:', data);
+      setFormState({ ...data, roles: JSON.parse(data.roles) });
     };
+
     getUser();
   }, [session]);
+
+  const handleUpdate = async () => {
+    if (!formState) return;
+
+    const updatedData = {
+      ...formState,
+      roles: JSON.stringify(formState.roles),
+    };
+
+    const { data, error } = await client
+      .from('people')
+      .update(updatedData)
+      .eq('user_id', session.user.id);
+
+    if (error) {
+      console.error('Failed to save person:', error.message);
+      return;
+    }
+
+    console.log('Person updated successfully:', data);
+  };
 
   if (loading || !formState) {
     return <div>Loading...</div>;
   }
+
   return (
     <div className="flex h-full w-full flex-col justify-center p-4 sm:w-96">
       <ImageUploader
         icon={formState.image_url_session}
         setIcon={(value) =>
-          seFormState({ ...formState, image_url_session: value })
+          setFormState({ ...formState, image_url_session: value })
         }
       />
       <LabeledInput
         name="Etunimi"
         value={formState.first_name}
         onChange={(e) =>
-          seFormState({ ...formState, first_name: e.target.value })
+          setFormState({ ...formState, first_name: e.target.value })
         }
       />
       <LabeledInput
         name="Sukunimi"
         value={formState.last_name}
         onChange={(e) =>
-          seFormState({ ...formState, last_name: e.target.value })
+          setFormState({ ...formState, last_name: e.target.value })
         }
       />
       <LabeledInput
         name="Sähköposti"
         value={formState.email}
-        onChange={(e) => seFormState({ ...formState, email: e.target.value })}
+        onChange={(e) => setFormState({ ...formState, email: e.target.value })}
       />
       <LabeledInput
         name="Esittely"
         value={formState.description}
         onChange={(e) =>
-          seFormState({ ...formState, description: e.target.value })
+          setFormState({ ...formState, description: e.target.value })
         }
         multiline
       />
-      <Positions positions={positions} />
-      <Button
-        label={'Tallenna'}
-        type="button"
-        onClick={async () => {
-          const { data, error } = await client
-            .from('people')
-            .update({
-              email: formState.email,
-              first_name: formState.first_name,
-              last_name: formState.last_name,
-              image_url_session: session.user.user_metadata.picture,
-              description: formState.description,
-            })
-            .eq('user_id', session.user.id);
-          if (error) {
-            throw new Error(error.message);
-          }
-          if (data) {
-            console.log(data);
-          } else if (error) {
-            throw new Error('Failed to save person');
-          }
-        }}
+      <Label name="Työhistoria:" className="mt-2" />
+      <Positions
+        positions={formState.roles}
+        setPositions={(roles) => setFormState({ ...formState, roles })}
       />
+      <Button label={'Tallenna'} type="button" onClick={handleUpdate} />
     </div>
   );
 }
