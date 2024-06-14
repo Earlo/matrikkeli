@@ -21,7 +21,7 @@
     "jspdf": "^2.5.1",
     "lucide-react": "^0.379.0",
     "next": "^14.2.3",
-    "react": "18.2.0",
+    "react": "18.3.1",
     "react-dom": "18.2.0",
     "react-draggable": "4.4.6",
     "tailwindcss-animate": "^1.0.7"
