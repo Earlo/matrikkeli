@@ -131,10 +131,19 @@ export default function PersonForm({ onClose }: PersonFormProps) {
         }
         multiline
       />
-      <Label name="Työhistoria:" className="mt-2" />
+      <Label name="Kamarihistoria:" className="mt-2" />
       <Positions
         positions={formState.roles}
         setPositions={(roles) => setFormState({ ...formState, roles })}
+        buttonText="Lisää merkintä"
+      />
+      <Label name="Työhistoria:" className="mt-2" />
+      <Positions
+        positions={formState.work_history}
+        setPositions={(work_history) =>
+          setFormState({ ...formState, work_history })
+        }
+        buttonText="Lisää työhistoriamerkintä"
       />
       <Button label={'Tallenna'} type="button" onClick={handleUpdate} />
     </div>

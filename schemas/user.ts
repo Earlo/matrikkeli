@@ -15,7 +15,7 @@ export interface Person {
   description: string;
   birthday: Date;
   roles: Position[];
-  work_history: string[];
+  work_history: Position[];
   joined: Date;
   left: Date;
   qr_code: string;

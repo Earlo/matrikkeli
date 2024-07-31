@@ -15,6 +15,7 @@ interface LabeledInputProps {
   ) => void;
   disabled?: boolean;
   className?: string;
+  wrapperClassName?: string;
 }
 
 const LabeledInput: React.FC<LabeledInputProps> = ({
@@ -27,8 +28,9 @@ const LabeledInput: React.FC<LabeledInputProps> = ({
   onChange,
   disabled = false,
   className,
+  wrapperClassName,
 }) => (
-  <div className="mt-1">
+  <div className={cn('mt-1', wrapperClassName)}>
     <Label
       name={name}
       className={cn('h-[16px] w-fit text-gray-700 transition ease-in-out', {

@@ -30,18 +30,22 @@ const PositionCard = ({ position, onChange, onDelete }) => {
             value={position.organization}
             onChange={(e) => onChange(e, position.id)}
           />
-          <LabeledInput
-            name="start"
-            type="date"
-            value={position.start}
-            onChange={(e) => onChange(e, position.id)}
-          />
-          <LabeledInput
-            name="end"
-            type="date"
-            value={position.end}
-            onChange={(e) => onChange(e, position.id)}
-          />
+          <div className="flex">
+            <LabeledInput
+              name="start"
+              type="date"
+              value={position.start}
+              onChange={(e) => onChange(e, position.id)}
+              wrapperClassName="grow mr-2"
+            />
+            <LabeledInput
+              name="end"
+              type="date"
+              value={position.end}
+              onChange={(e) => onChange(e, position.id)}
+              wrapperClassName="grow"
+            />
+          </div>
           <LabeledInput
             name="description"
             value={position.description}
@@ -63,6 +67,7 @@ const PositionCard = ({ position, onChange, onDelete }) => {
 const Positions = ({
   positions,
   setPositions,
+  buttonText,
 }: {
   positions: {
     id: number;
@@ -82,6 +87,7 @@ const Positions = ({
       description: string;
     }[],
   ) => void;
+  buttonText?: string;
 }) => {
   const handleAddPosition = () => {
     setPositions([
@@ -109,7 +115,6 @@ const Positions = ({
   const handleDelete = (id) => {
     setPositions(positions.filter((pos) => pos.id !== id));
   };
-
   // Sort positions by start date
   positions.sort(
     (a, b) => new Date(a.start).getTime() - new Date(b.start).getTime(),
@@ -129,7 +134,7 @@ const Positions = ({
         className="mb-4 rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-700"
         onClick={handleAddPosition}
       >
-        Add New Position
+        {buttonText || 'Add position'}
       </button>
     </div>
   );
