@@ -100,6 +100,7 @@ export default function PersonForm({ onClose }: PersonFormProps) {
     <div className="flex h-full w-full flex-col justify-center p-4 sm:w-96">
       <ImageUploader
         icon={formState.image_url_session}
+        path={'matrikkeli/user/' + session.user.id}
         setIcon={(value) =>
           setFormState({ ...formState, image_url_session: value })
         }

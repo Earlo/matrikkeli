@@ -1,6 +1,6 @@
 'use client';
 import LoadingSpinner from './loadingSpinner';
-import { handleUpload } from '@/lib/cloudinary';
+import { handleUpload } from '@/lib/supabase';
 import { cn } from '@/lib/helpers';
 import { ChangeEvent, useRef, useState } from 'react';
 import Image from 'next/image';
@@ -31,12 +31,11 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     setIsLoading(true);
     const file = e.target.files ? e.target.files[0] : null;
     if (file) {
-      const url = await handleUpload(file, path);
+      const url = await handleUpload(file, path, 'matrikkeli');
       setIcon(url);
     }
     setIsLoading(false);
   };
-
   return (
     <div className="relative inline-block">
       <input

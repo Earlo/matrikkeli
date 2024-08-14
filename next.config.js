@@ -11,6 +11,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'media.licdn.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'jrbpxuxzrdettrzhmkza.supabase.co',
+      },
     ],
   },
   async headers() {
