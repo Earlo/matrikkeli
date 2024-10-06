@@ -46,27 +46,27 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
         disabled={disabled}
       />
       {isLoading ? (
-        <div className="flex size-32 items-center justify-center">
+        <div className="flex h-32 w-32 items-center justify-center">
           <LoadingSpinner />
         </div>
       ) : (
         <div
-          className={`relative h-32 w-32 ${className}`}
+          className={`relative h-32 w-32 overflow-hidden ${className}`}
           onMouseEnter={() => {}}
           onMouseLeave={() => {}}
         >
           <Image
             src={icon || '/blank_user.png'}
             alt="Upload Image"
-            height={128}
-            width={128}
-            className={cn('rounded-full object-cover', {
+            layout="fill"
+            objectFit="cover"
+            className={cn('rounded-tl-full rounded-tr-full rounded-bl-full rounded-br-none bg-orange-700', {
               'cursor-pointer': !disabled,
             })}
           />
           {children ? (
             <div className="absolute inset-0 flex items-center justify-between opacity-0 transition-opacity duration-200 hover:opacity-100">
-              <div className="flex h-full w-full items-center justify-center rounded-full bg-black bg-opacity-40 hover:bg-opacity-20">
+              <div className="flex h-full w-full items-center justify-center rounded-tl-full rounded-tr-full rounded-bl-full rounded-br-none bg-black bg-opacity-40 hover:bg-opacity-20">
                 {children}
               </div>
             </div>
@@ -74,7 +74,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
             !disabled && (
               <div className="absolute inset-0 flex items-center justify-between opacity-0 transition-opacity duration-200 hover:opacity-100">
                 <div
-                  className="flex h-full w-full items-center justify-center rounded-full bg-black bg-opacity-40 transition-opacity hover:bg-opacity-20"
+                  className="flex h-full w-full items-center justify-center rounded-tl-full rounded-tr-full rounded-bl-full rounded-br-none bg-black bg-opacity-40 transition-opacity hover:bg-opacity-20"
                   onClick={() => !disabled && fileInputRef.current?.click()}
                 >
                   <ArrowUpOnSquareIcon className="h-6 w-6" />
