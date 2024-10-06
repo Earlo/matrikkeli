@@ -1,11 +1,11 @@
-import puppeteer from 'puppeteer';
+import { launch } from 'puppeteer';
 import { NextResponse } from 'next/server';
 
 export async function POST(req) {
   const body = await req.json();
   const { people } = body;
 
-  const browser = await puppeteer.launch();
+  const browser = await launch();
   const page = await browser.newPage();
 
   let content = `
@@ -87,7 +87,15 @@ export async function POST(req) {
   `;
 
   people.forEach((person) => {
-    const { first_name, last_name, email, image_url_session, description, work_history, roles } = person;
+    const {
+      first_name,
+      last_name,
+      email,
+      image_url_session,
+      description,
+      work_history,
+      roles,
+    } = person;
     content += `
       <div class="page">
         <div class="profile">
@@ -101,19 +109,27 @@ export async function POST(req) {
           <p>${description || 'No description provided'}</p>
           <div class="section-title">Roles</div>
           <ul>
-            ${JSON.parse(roles).map((role) => `
+            ${JSON.parse(roles)
+              .map(
+                (role) => `
               <li class="list-item">
                 <strong>${role.title}</strong> at ${role.organization} (${role.start} - ${role.end})
               </li>
-            `).join('')}
+            `,
+              )
+              .join('')}
           </ul>
           <div class="section-title">Work History</div>
           <ul>
-            ${work_history.map((work) => `
+            ${work_history
+              .map(
+                (work) => `
               <li class="list-item">
                 <strong>${work.title}</strong> at ${work.organization} (${work.start} - ${work.end || 'Present'})
               </li>
-            `).join('')}
+            `,
+              )
+              .join('')}
           </ul>
         </div>
         <div class="footer">
@@ -133,7 +149,11 @@ export async function POST(req) {
   `;
 
   await page.setContent(content);
-  const pdfBuffer = await page.pdf({ format: 'A6', printBackground: true, margin: { top: 0, bottom: 0, left: 0, right: 0 } });
+  const pdfBuffer = await page.pdf({
+    format: 'A6',
+    printBackground: true,
+    margin: { top: 0, bottom: 0, left: 0, right: 0 },
+  });
 
   await browser.close();
 
