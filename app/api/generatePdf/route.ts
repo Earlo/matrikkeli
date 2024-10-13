@@ -17,13 +17,13 @@ export async function POST(req) {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            background: #FFA500;
           }
           .page {
             width: 100%;
             height: 100%;
             page-break-after: always;
-            padding: 8mm;
-            background: #FFA500;
+            padding: 4mm 6mm 4mm 6mm;
             box-sizing: border-box;
             position: relative;
           }

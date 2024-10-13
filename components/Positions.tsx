@@ -108,7 +108,6 @@ const Positions = ({
     const updatedPositions = positions.map((pos) =>
       pos.id === id ? { ...pos, [name]: value } : pos,
     );
-    console.log('updated', updatedPositions);
     setPositions(updatedPositions);
   };
 

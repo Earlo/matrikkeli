@@ -9,6 +9,9 @@ export interface IUser {
 export interface Person {
   user_id: string;
   email: string;
+  contact_info: {
+    [key: string]: string;
+  };
   first_name: string;
   last_name: string;
   image_url_session: string;

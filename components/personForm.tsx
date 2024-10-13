@@ -27,8 +27,7 @@ export default function PersonForm({ onClose }: PersonFormProps) {
         .from('people')
         .select()
         .eq('user_id', session.user.id)
-        .single();
-
+        .maybeSingle();
       if (error) {
         console.error('Error fetching user:', error.message);
         return;
@@ -39,11 +38,13 @@ export default function PersonForm({ onClose }: PersonFormProps) {
         const newUser = {
           user_id: session.user.id,
           email: session.user.email,
+          contact_info: {
+            email: session.user.email,
+          },
           first_name: session.user.user_metadata.given_name,
           last_name: session.user.user_metadata.family_name,
-          image_url: session.user.user_metadata.picture,
           roles: [],
-          image_url_session: '',
+          image_url_session: session.user.user_metadata.picture,
           description: '',
           birthday: new Date(),
           work_history: [],
@@ -64,8 +65,13 @@ export default function PersonForm({ onClose }: PersonFormProps) {
         setFormState(newUser);
         return;
       }
-      console.log('User found:', data);
-      setFormState({ ...data, roles: JSON.parse(data.roles) });
+      setFormState({
+        ...data,
+        contact_info: {
+          ...data.contact_info,
+          email: data.contact_info.email || data.email,
+        },
+      });
     };
 
     getUser();
@@ -121,8 +127,13 @@ export default function PersonForm({ onClose }: PersonFormProps) {
       />
       <LabeledInput
         name="Sähköposti"
-        value={formState.email}
-        onChange={(e) => setFormState({ ...formState, email: e.target.value })}
+        value={formState.contact_info.email}
+        onChange={(e) =>
+          setFormState({
+            ...formState,
+            contact_info: { ...formState.contact_info, email: e.target.value },
+          })
+        }
       />
       <LabeledInput
         name="Esittely"
