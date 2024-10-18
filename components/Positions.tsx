@@ -116,7 +116,7 @@ const Positions = ({
   };
   if (!Array.isArray(positions)) {
     // Should never happen, but just in case, since production gets weird "t.sort is not a function" error
-    console.error('Positions is not an array', positions);
+    console.error('Positions is not an array', positions, typeof positions);
     return null;
   }
   // Sort positions by start date
