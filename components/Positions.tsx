@@ -65,7 +65,7 @@ const PositionCard = ({ position, onChange, onDelete }) => {
 };
 
 const Positions = ({
-  positions,
+  positions = [],
   setPositions,
   buttonText,
 }: {
@@ -114,7 +114,7 @@ const Positions = ({
   const handleDelete = (id) => {
     setPositions(positions.filter((pos) => pos.id !== id));
   };
-  if (!positions) {
+  if (!Array.isArray(positions)) {
     // Should never happen, but just in case, since production gets weird "t.sort is not a function" error
     return null;
   }
