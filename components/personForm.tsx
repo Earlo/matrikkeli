@@ -82,7 +82,6 @@ export default function PersonForm({ onClose }: PersonFormProps) {
 
     const updatedData = {
       ...formState,
-      roles: JSON.stringify(formState.roles),
     };
 
     const { data, error } = await client
