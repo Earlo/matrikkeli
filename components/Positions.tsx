@@ -114,11 +114,7 @@ const Positions = ({
   const handleDelete = (id) => {
     setPositions(positions.filter((pos) => pos.id !== id));
   };
-  if (!Array.isArray(positions)) {
-    // Should never happen, but just in case, since production gets weird "t.sort is not a function" error
-    console.error('Positions is not an array', positions, typeof positions);
-    return null;
-  }
+
   // Sort positions by start date
   positions.sort(
     (a, b) => new Date(a.start).getTime() - new Date(b.start).getTime(),
