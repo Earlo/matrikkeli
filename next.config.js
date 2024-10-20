@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone', // For standalone serverless builds
   reactStrictMode: false,
   images: {
     remotePatterns: [
