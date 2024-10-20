@@ -30,7 +30,7 @@ export async function POST(req) {
   const body = await req.json();
   const { people } = body;
 
-  console.log('local?', isLocal, people);
+  console.log('local?', isLocal, people, body);
   // Validate that `people` is an array and not empty
   if (!people || !Array.isArray(people) || people.length === 0) {
     return new NextResponse('Invalid or missing "people" data', {
