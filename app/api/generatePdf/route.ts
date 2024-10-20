@@ -1,4 +1,4 @@
-import { launch, defaultArgs } from 'puppeteer-core';
+import { launch } from 'puppeteer-core';
 import { NextResponse } from 'next/server';
 import chromium from '@sparticuz/chromium';
 
@@ -10,18 +10,35 @@ chromium.setHeadlessMode = true;
 // Optional: If you'd like to disable webgl, true is the default.
 chromium.setGraphicsMode = false;
 
+const chromeArgs = [
+  '--font-render-hinting=none', // Improves font-rendering quality and spacing
+  '--no-sandbox',
+  '--disable-setuid-sandbox',
+  '--disable-gpu',
+  '--disable-dev-shm-usage',
+  '--disable-accelerated-2d-canvas',
+  '--disable-animations',
+  '--disable-background-timer-throttling',
+  '--disable-restore-session-state',
+  '--disable-web-security', // Only if necessary, be cautious with security implications
+  '--single-process', // Be cautious as this can affect stability in some environments
+];
+
+const isLocal = process.env.IS_LOCAL == 'true';
+
 export async function POST(req) {
   const body = await req.json();
   const { people } = body;
 
   const browser = await launch({
-    args: process.env.IS_LOCAL == 'true' ? defaultArgs() : chromium.args,
-    defaultViewport: chromium.defaultViewport,
-    executablePath:
-      process.env.IS_LOCAL == 'true'
-        ? '/tmp/localChromium/chromium/linux-1122391/chrome-linux/chrome'
-        : await chromium.executablePath(),
-    headless: process.env.IS_LOCAL == 'true' ? false : chromium.headless,
+    ...(isLocal
+      ? {}
+      : {
+          args: chromeArgs,
+          executablePath: await chromium.executablePath(),
+          ignoreHTTPSErrors: true,
+          headless: true,
+        }),
   });
 
   const page = await browser.newPage();
