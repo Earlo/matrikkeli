@@ -158,13 +158,13 @@ export async function POST(req) {
           <p>${description || 'No description provided'}</p>
           <div class="section-title">Roles</div>
           <ul>
-            ${JSON.parse(roles)
+            ${roles
               .map(
                 (role) => `
-              <li class="list-item">
-                <strong>${role.title}</strong> at ${role.organization} (${role.start} - ${role.end})
-              </li>
-            `,
+                <li class="list-item">
+                  <strong>${role.title}</strong> at ${role.organization} (${role.start} - ${role.end || 'Present'})
+                </li>
+              `,
               )
               .join('')}
           </ul>
@@ -173,10 +173,10 @@ export async function POST(req) {
             ${work_history
               .map(
                 (work) => `
-              <li class="list-item">
-                <strong>${work.title}</strong> at ${work.organization} (${work.start} - ${work.end || 'Present'})
-              </li>
-            `,
+                <li class="list-item">
+                  <strong>${work.title}</strong> at ${work.organization} (${work.start} - ${work.end || 'Present'})
+                </li>
+              `,
               )
               .join('')}
           </ul>
