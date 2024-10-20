@@ -1,6 +1,6 @@
 {
   "functions": {
-    "api/generatePdf": {
+    "app/api/generatePdf": {
       "maxDuration": 60
     }
   }
