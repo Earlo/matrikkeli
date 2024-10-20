@@ -7,8 +7,8 @@ import { Archivo } from 'next/font/google';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 export const metadata: Metadata = {
-  title: 'My App',
-  description: 'A tool ',
+  title: 'ENKK Matrikkeli Tool',
+  description: 'A tool for generating a booklet of people in an organization',
 };
 
 const archivo = Archivo({
