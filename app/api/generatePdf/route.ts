@@ -30,7 +30,14 @@ export async function POST(req) {
   const body = await req.json();
   const { people } = body;
 
-  console.log('local?', isLocal);
+  console.log('local?', isLocal, people);
+  // Validate that `people` is an array and not empty
+  if (!people || !Array.isArray(people) || people.length === 0) {
+    return new NextResponse('Invalid or missing "people" data', {
+      status: 400,
+    });
+  }
+
   const browser = await launch({
     ...(isLocal
       ? {}
