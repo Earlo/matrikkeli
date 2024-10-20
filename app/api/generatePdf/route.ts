@@ -1,3 +1,4 @@
+import { client } from '@/lib/supabase'; // Import your Supabase client
 import { launch } from 'puppeteer-core';
 import { NextResponse } from 'next/server';
 import chromium from '@sparticuz/chromium';
@@ -27,15 +28,15 @@ const chromeArgs = [
 const isLocal = process.env.IS_LOCAL == 'true';
 
 export async function POST(req) {
-  const body = await req.json();
-  const { people } = body;
+  const { data: people, error } = await client.from('people').select('*');
+  if (error) {
+    return new NextResponse('Error fetching people data', { status: 500 });
+  }
 
-  console.log(
-    'local?',
-    isLocal,
-    JSON.stringify(people, null, 2),
-    JSON.stringify(body, null, 2),
-  );
+  if (!people || people.length === 0) {
+    return new NextResponse('No people data available', { status: 400 });
+  }
+  console.log('local?', isLocal, JSON.stringify(people, null, 2));
   // Validate that `people` is an array and not empty
   if (!people || !Array.isArray(people) || people.length === 0) {
     return new NextResponse('Invalid or missing "people" data', {

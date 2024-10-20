@@ -1,32 +1,17 @@
 'use client';
-import { client } from '@/lib/supabase';
-import { Person } from '@/schemas/user';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 export default function GeneratePage() {
-  const [people, setPeople] = useState<Person[]>([]);
-
-  useEffect(() => {
-    const fetchPeople = async () => {
-      const { data, error } = await client.from('people').select('*');
-      if (error) {
-        console.error('Error fetching people', error);
-        return;
-      }
-      setPeople(data);
-    };
-
-    fetchPeople();
-  }, []);
+  const [loading, setLoading] = useState(false);
 
   const generatePdf = async () => {
+    setLoading(true);
     try {
       const response = await fetch('/api/generatePdf', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ people }),
       });
 
       if (response.ok) {
@@ -43,6 +28,8 @@ export default function GeneratePage() {
       }
     } catch (error) {
       console.error('Error generating PDF', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -50,9 +37,10 @@ export default function GeneratePage() {
     <div className="mx-auto max-w-4xl">
       <button
         onClick={generatePdf}
-        className="mt-5 cursor-pointer rounded-md border-none bg-gradient-to-r from-orange-500 to-red-500 p-3 text-lg text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-in-out"
+        className="mt-5 transform cursor-pointer rounded-md border-none bg-gradient-to-r from-orange-500 to-red-500 p-3 text-lg text-white shadow-lg transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl"
+        disabled={loading}
       >
-        Generate PDF
+        {loading ? 'Generating...' : 'Generate PDF'}
       </button>
     </div>
   );
