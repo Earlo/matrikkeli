@@ -1,11 +1,29 @@
-import { launch } from 'puppeteer';
+import { launch, defaultArgs } from 'puppeteer-core';
 import { NextResponse } from 'next/server';
+import chromium from '@sparticuz/chromium';
+
+// Optional: If you'd like to use the new headless mode. "shell" is the default.
+// NOTE: Because we build the shell binary, this option does not work.
+//       However, this option will stay so when we migrate to full chromium it will work.
+chromium.setHeadlessMode = true;
+
+// Optional: If you'd like to disable webgl, true is the default.
+chromium.setGraphicsMode = false;
 
 export async function POST(req) {
   const body = await req.json();
   const { people } = body;
 
-  const browser = await launch();
+  const browser = await launch({
+    args: process.env.IS_LOCAL == 'true' ? defaultArgs() : chromium.args,
+    defaultViewport: chromium.defaultViewport,
+    executablePath:
+      process.env.IS_LOCAL == 'true'
+        ? '/tmp/localChromium/chromium/linux-1122391/chrome-linux/chrome'
+        : await chromium.executablePath(),
+    headless: process.env.IS_LOCAL == 'true' ? false : chromium.headless,
+  });
+
   const page = await browser.newPage();
 
   let content = `
