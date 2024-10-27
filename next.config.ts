@@ -1,9 +1,8 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from 'next';
+
+const nextConfig: NextConfig = {
   output: 'standalone', // For standalone serverless builds
-  experimental: {
-    serverComponentsExternalPackages: ['puppeteer-core', '@sparticuz/chromium'],
-  },
+  serverExternalPackages: ['puppeteer-core', '@sparticuz/chromium'],
   reactStrictMode: false,
   images: {
     remotePatterns: [
