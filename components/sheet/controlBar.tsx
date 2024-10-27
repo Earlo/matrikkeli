@@ -18,7 +18,6 @@ const ControlBar: React.FC<ControlBarProps> = ({
         <IconButton onClick={onMaximize} icon="grow" />
       </div>
     )}
-
     {onMinimize && (
       <div className="absolute right-6 top-0 z-20">
         <IconButton onClick={onMinimize} icon="reduce" />

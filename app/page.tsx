@@ -18,9 +18,7 @@ export default function Home() {
     if (error) {
       throw new Error(error.message);
     }
-    if (data) {
-      console.log(data);
-    } else {
+    if (!data) {
       throw new Error('Failed to sign in with LinkedIn');
     }
   };

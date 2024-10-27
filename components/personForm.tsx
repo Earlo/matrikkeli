@@ -19,10 +19,6 @@ export default function PersonForm({ onClose }: PersonFormProps) {
 
   useEffect(() => {
     const getUser = async () => {
-      if (!session) {
-        console.log('no session');
-        return;
-      }
       const { data, error } = await client
         .from('people')
         .select()
@@ -32,9 +28,7 @@ export default function PersonForm({ onClose }: PersonFormProps) {
         console.error('Error fetching user:', error.message);
         return;
       }
-
       if (!data) {
-        // Insert new user if not found
         const newUser = {
           user_id: session.user.id,
           email: session.user.email,
@@ -56,13 +50,9 @@ export default function PersonForm({ onClose }: PersonFormProps) {
           .from('people')
           .insert(newUser)
           .single();
-
-        if (newUserError) {
-          console.error('Error creating new user:', newUserError.message);
-          return;
+        if (!newUserError) {
+          setFormState(newUser);
         }
-
-        setFormState(newUser);
         return;
       }
       setFormState({
@@ -73,8 +63,9 @@ export default function PersonForm({ onClose }: PersonFormProps) {
         },
       });
     };
-
-    getUser();
+    if (session) {
+      getUser();
+    }
   }, [session]);
 
   const handleUpdate = async () => {

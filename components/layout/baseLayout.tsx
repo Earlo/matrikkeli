@@ -7,7 +7,7 @@ interface BaseLayoutProps {
 
 const BaseLayout: React.FC<BaseLayoutProps> = ({ children, className }) => {
   return (
-    <div className={cn('flex flex-auto flex-col bg-orange-600 ', className)}>
+    <div className={cn('flex flex-auto flex-col bg-orange-600', className)}>
       {children}
     </div>
   );
