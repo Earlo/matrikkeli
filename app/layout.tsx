@@ -1,11 +1,11 @@
-import '@/styles/globals.css';
-import Provider from './providers';
-import TopBar from '@/components/layout/topBar';
-import Footer from '@/components/layout/footer';
 import BaseLayout from '@/components/layout/baseLayout';
-import { Archivo } from 'next/font/google';
+import Footer from '@/components/layout/footer';
+import TopBar from '@/components/layout/topBar';
+import '@/styles/globals.css';
 import type { Metadata } from 'next';
+import { Archivo } from 'next/font/google';
 import type { ReactNode } from 'react';
+import Provider from './providers';
 export const metadata: Metadata = {
   title: 'ENKK Matrikkeli Tool',
   description: 'A tool for generating a booklet of people in an organization',

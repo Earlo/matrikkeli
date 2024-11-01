@@ -1,7 +1,7 @@
-import Label from './label';
-import Input from './input';
 import { cn } from '@/lib/helpers';
 import { HTMLInputTypeAttribute } from 'react';
+import Input from './input';
+import Label from './label';
 
 interface LabeledInputProps {
   name: string;
@@ -35,7 +35,7 @@ const LabeledInput: React.FC<LabeledInputProps> = ({
       name={name}
       className={cn('h-[16px] w-fit text-gray-700 transition ease-in-out', {
         'translate-x-[10px] translate-y-7 select-none bg-slate-200 text-gray-500':
-          !value && !placeholder && (type != 'date'),
+          !value && !placeholder && type != 'date',
         'select-text': !!value,
       })}
     />

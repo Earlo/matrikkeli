@@ -1,10 +1,10 @@
 'use client';
-import LoadingSpinner from './loadingSpinner';
-import { handleUpload } from '@/lib/supabase';
 import { cn } from '@/lib/helpers';
-import { ChangeEvent, useRef, useState } from 'react';
-import Image from 'next/image';
+import { handleUpload } from '@/lib/supabase';
 import { ArrowUpOnSquareIcon } from '@heroicons/react/24/solid';
+import Image from 'next/image';
+import { ChangeEvent, useRef, useState } from 'react';
+import LoadingSpinner from './loadingSpinner';
 
 interface ImageUploaderProps {
   setIcon: (icon: string) => void;
@@ -60,9 +60,12 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
             alt="Upload Image"
             layout="fill"
             objectFit="cover"
-            className={cn('rounded-tl-full rounded-tr-full rounded-bl-full rounded-br-none bg-orange-700', {
-              'cursor-pointer': !disabled,
-            })}
+            className={cn(
+              'rounded-tl-full rounded-tr-full rounded-bl-full rounded-br-none bg-orange-700',
+              {
+                'cursor-pointer': !disabled,
+              },
+            )}
           />
           {children ? (
             <div className="absolute inset-0 flex items-center justify-between opacity-0 transition-opacity duration-200 hover:opacity-100">

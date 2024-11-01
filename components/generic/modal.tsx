@@ -1,5 +1,5 @@
-import CloseButton from './closeButton';
 import { cn } from '@/lib/helpers';
+import CloseButton from './closeButton';
 
 interface ModalProps {
   onClose?: () => void;

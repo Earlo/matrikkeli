@@ -1,8 +1,8 @@
 import { cn } from '@/lib/helpers';
 import {
-  SparklesIcon,
   ArrowsPointingInIcon,
   ArrowsPointingOutIcon,
+  SparklesIcon,
 } from '@heroicons/react/24/solid';
 
 interface IconButtonProps {

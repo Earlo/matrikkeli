@@ -1,6 +1,6 @@
-import LabeledInput from './generic/labeledInput';
+import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/solid';
 import { useState } from 'react';
-import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/solid';
+import LabeledInput from './generic/labeledInput';
 
 const PositionCard = ({ position, onChange, onDelete }) => {
   const [expanded, setExpanded] = useState(false);

@@ -1,13 +1,13 @@
 'use client';
+import { useAuth } from '@/app/authProvider';
+import { client } from '@/lib/supabase';
+import { Person } from '@/schemas/user';
+import { useEffect, useState } from 'react';
 import Button from './generic/button';
 import ImageUploader from './generic/imageUploader';
 import Label from './generic/label';
 import LabeledInput from './generic/labeledInput';
 import Positions from './Positions';
-import { useAuth } from '@/app/authProvider';
-import { client } from '@/lib/supabase';
-import { Person } from '@/schemas/user';
-import { useState, useEffect } from 'react';
 
 interface PersonFormProps {
   onClose?: () => void;

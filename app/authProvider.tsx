@@ -1,6 +1,6 @@
 import { client } from '@/lib/supabase';
+import { AuthError, Session } from '@supabase/supabase-js';
 import { createContext, useContext, useEffect, useState } from 'react';
-import { Session, AuthError } from '@supabase/supabase-js';
 
 // Create a context for the auth state
 interface AuthContextProps {

@@ -1,7 +1,7 @@
 'use client';
+import { client } from '@/lib/supabase';
 import FormContainer from './formContainer';
 import Button from './generic/button';
-import { client } from '@/lib/supabase';
 interface AuthFormProps {
   onClose?: () => void;
 }

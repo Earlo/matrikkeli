@@ -1,9 +1,9 @@
 'use client';
-import AuthForm from '../authForm';
-import Button from '@/components/generic/button';
 import { useAuth } from '@/app/authProvider';
+import Button from '@/components/generic/button';
 import Link from 'next/link';
 import { useState } from 'react';
+import AuthForm from '../authForm';
 
 const TopBar: React.FC = () => {
   const { session, logout } = useAuth();

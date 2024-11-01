@@ -1,6 +1,6 @@
-import { cn } from '@/lib/helpers';
 import SelectOption from '@/components/generic/selectOption';
-import { useState, FC, useRef, useEffect, ChangeEvent } from 'react';
+import { cn } from '@/lib/helpers';
+import { ChangeEvent, FC, useEffect, useRef, useState } from 'react';
 
 interface Option {
   value: string;

@@ -1,9 +1,9 @@
 'use client';
-import { useAuth } from './authProvider';
-import LoadingSpinner from '@/components/generic/loadingSpinner';
 import Button from '@/components/generic/button';
-import { client } from '@/lib/supabase';
+import LoadingSpinner from '@/components/generic/loadingSpinner';
 import PersonForm from '@/components/personForm';
+import { client } from '@/lib/supabase';
+import { useAuth } from './authProvider';
 
 export default function Home() {
   const { session, loading } = useAuth();

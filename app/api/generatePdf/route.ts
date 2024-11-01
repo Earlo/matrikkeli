@@ -1,7 +1,7 @@
 import { client } from '@/lib/supabase'; // Import your Supabase client
-import { launch } from 'puppeteer-core';
-import { NextResponse } from 'next/server';
 import chromium from '@sparticuz/chromium';
+import { NextResponse } from 'next/server';
+import { launch } from 'puppeteer-core';
 
 // Optional: If you'd like to use the new headless mode. "shell" is the default.
 // NOTE: Because we build the shell binary, this option does not work.
