@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@heroicons/react": "2.1.5",
-    "@sparticuz/chromium": "130.0.0",
+    "@sparticuz/chromium": "131.0.0",
     "@supabase/auth-helpers-nextjs": "0.10.0",
     "@supabase/supabase-js": "2.46.1",
     "next": "15.0.3",
