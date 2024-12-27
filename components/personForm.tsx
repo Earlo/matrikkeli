@@ -13,99 +13,99 @@ interface PersonFormProps {
   onClose?: () => void;
 }
 
+const fetchUserData = async (userId: string, email: string) => {
+  const { data, error } = await client
+    .from('people')
+    .select()
+    .eq('user_id', userId)
+    .maybeSingle();
+
+  if (error) throw new Error(error.message);
+  if (!data) {
+    const newUser: Person = {
+      user_id: userId,
+      email,
+      contact_info: { email },
+      first_name: '',
+      last_name: '',
+      roles: [],
+      image_url_session: '',
+      description: '',
+      birthday: new Date(),
+      work_history: [],
+      joined: new Date(),
+      left: new Date(),
+      qr_code: '',
+    };
+    const { error: insertError } = await client
+      .from('people')
+      .insert(newUser)
+      .single();
+    if (insertError) throw new Error(insertError.message);
+    return newUser;
+  }
+  return {
+    ...data,
+    contact_info: {
+      ...data.contact_info,
+      email: data.contact_info.email || data.email,
+    },
+  };
+};
+
 export default function PersonForm({ onClose }: PersonFormProps) {
   const { session, loading } = useAuth();
   const [formState, setFormState] = useState<Person | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const getUser = async () => {
-      const { data, error } = await client
-        .from('people')
-        .select()
-        .eq('user_id', session.user.id)
-        .maybeSingle();
-      if (error) {
-        console.error('Error fetching user:', error.message);
-        return;
+    if (!session) return;
+
+    (async () => {
+      try {
+        const userData = await fetchUserData(
+          session.user.id,
+          session.user.email,
+        );
+        setFormState(userData);
+      } catch (err) {
+        setError(err.message);
       }
-      if (!data) {
-        const newUser = {
-          user_id: session.user.id,
-          email: session.user.email,
-          contact_info: {
-            email: session.user.email,
-          },
-          first_name: session.user.user_metadata.given_name,
-          last_name: session.user.user_metadata.family_name,
-          roles: [],
-          image_url_session: session.user.user_metadata.picture,
-          description: '',
-          birthday: new Date(),
-          work_history: [],
-          joined: new Date(),
-          left: new Date(),
-          qr_code: '',
-        } as Person;
-        const { error: newUserError } = await client
-          .from('people')
-          .insert(newUser)
-          .single();
-        if (!newUserError) {
-          setFormState(newUser);
-        }
-        return;
-      }
-      setFormState({
-        ...data,
-        contact_info: {
-          ...data.contact_info,
-          email: data.contact_info.email || data.email,
-        },
-      });
-    };
-    if (session) {
-      getUser();
-    }
+    })();
   }, [session]);
 
   const handleUpdate = async () => {
     if (!formState) return;
+    try {
+      const { error: updateError } = await client
+        .from('people')
+        .update(formState)
+        .eq('user_id', session?.user.id);
 
-    const updatedData = {
-      ...formState,
-    };
-
-    const { data, error } = await client
-      .from('people')
-      .update(updatedData)
-      .eq('user_id', session.user.id);
-
-    if (error) {
-      console.error('Failed to save person:', error.message);
-      return;
+      if (updateError) throw new Error(updateError.message);
+      console.log('Person updated successfully');
+    } catch (err) {
+      console.error('Update failed:', err.message);
     }
-
-    console.log('Person updated successfully:', data);
   };
 
-  if (loading || !formState) {
-    return <div>Loading...</div>;
-  }
+  if (loading || !formState) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="flex h-full w-full flex-col justify-center p-4 sm:w-96">
+    <div className="flex h-full w-full flex-col justify-center self-center p-4 sm:w-96">
       <ImageUploader
-        icon={formState.image_url_session}
-        path={'matrikkeli/user/' + session.user.id}
+        icon={formState?.image_url_session}
+        path={`matrikkeli/user/${session?.user.id}`}
         setIcon={(value) =>
-          setFormState({ ...formState, image_url_session: value })
+          setFormState((prev) => ({ ...prev!, image_url_session: value }))
         }
       />
       <LabeledInput
         name="Etunimi"
-        value={formState.first_name}
+        value={formState?.first_name}
         onChange={(e) =>
-          setFormState({ ...formState, first_name: e.target.value })
+          setFormState((prev) => ({ ...prev!, first_name: e.target.value }))
         }
       />
       <LabeledInput
@@ -114,6 +114,14 @@ export default function PersonForm({ onClose }: PersonFormProps) {
         onChange={(e) =>
           setFormState({ ...formState, last_name: e.target.value })
         }
+      />
+      <LabeledInput
+        name="birthday"
+        type="date"
+        onChange={(e) =>
+          setFormState({ ...formState, birthday: new Date(e.target.value) })
+        }
+        wrapperClassName="grow"
       />
       <LabeledInput
         name="Sähköposti"
@@ -147,7 +155,7 @@ export default function PersonForm({ onClose }: PersonFormProps) {
         }
         buttonText="Lisää työhistoriamerkintä"
       />
-      <Button label={'Tallenna'} type="button" onClick={handleUpdate} />
+      <Button label="Tallenna" type="button" onClick={handleUpdate} />
     </div>
   );
 }
