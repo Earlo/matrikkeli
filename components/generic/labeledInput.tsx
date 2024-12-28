@@ -16,6 +16,7 @@ interface LabeledInputProps {
   disabled?: boolean;
   className?: string;
   wrapperClassName?: string;
+  list?: string;
 }
 
 const LabeledInput: React.FC<LabeledInputProps> = ({
@@ -29,6 +30,7 @@ const LabeledInput: React.FC<LabeledInputProps> = ({
   disabled = false,
   className,
   wrapperClassName,
+  list,
 }) => (
   <div className={cn('mt-1', wrapperClassName)}>
     <Label
@@ -52,6 +54,7 @@ const LabeledInput: React.FC<LabeledInputProps> = ({
         'rounded-tl-none bg-slate-200 focus:outline-none',
         className,
       )}
+      list={!multiline ? list : undefined}
     />
   </div>
 );

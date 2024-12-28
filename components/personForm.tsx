@@ -3,11 +3,13 @@ import { useAuth } from '@/app/authProvider';
 import { client } from '@/lib/supabase';
 import { Person } from '@/schemas/user';
 import { useEffect, useState } from 'react';
+import ContactInfoList from './contactInfoList';
 import Button from './generic/button';
 import ImageUploader from './generic/imageUploader';
 import Label from './generic/label';
 import LabeledInput from './generic/labeledInput';
 import Positions from './Positions';
+import QAInput from './qaInput';
 
 interface PersonFormProps {
   onClose?: () => void;
@@ -25,7 +27,7 @@ const fetchUserData = async (userId: string, email: string) => {
     const newUser: Person = {
       user_id: userId,
       email,
-      contact_info: { email },
+      contact_info: { email: email },
       first_name: '',
       last_name: '',
       roles: [],
@@ -36,6 +38,7 @@ const fetchUserData = async (userId: string, email: string) => {
       joined: new Date(),
       left: new Date(),
       qr_code: '',
+      questions: [],
     };
     const { error: insertError } = await client
       .from('people')
@@ -46,10 +49,7 @@ const fetchUserData = async (userId: string, email: string) => {
   }
   return {
     ...data,
-    contact_info: {
-      ...data.contact_info,
-      email: data.contact_info.email || data.email,
-    },
+    contact_info: data.contact_info || {},
   };
 };
 
@@ -110,48 +110,94 @@ export default function PersonForm({ onClose }: PersonFormProps) {
       />
       <LabeledInput
         name="Sukunimi"
-        value={formState.last_name}
+        value={formState?.last_name}
         onChange={(e) =>
-          setFormState({ ...formState, last_name: e.target.value })
+          setFormState((prev) => ({ ...prev!, last_name: e.target.value }))
         }
       />
       <LabeledInput
         name="birthday"
         type="date"
         onChange={(e) =>
-          setFormState({ ...formState, birthday: new Date(e.target.value) })
+          setFormState((prev) => ({
+            ...prev!,
+            birthday: new Date(e.target.value),
+          }))
         }
         wrapperClassName="grow"
       />
-      <LabeledInput
-        name="Sähköposti"
-        value={formState.contact_info.email}
-        onChange={(e) =>
-          setFormState({
-            ...formState,
-            contact_info: { ...formState.contact_info, email: e.target.value },
-          })
+      <ContactInfoList
+        contactInfo={Object.entries(formState?.contact_info || {}).map(
+          ([type, value]) => ({ type, value }),
+        )}
+        onUpdate={(updatedInfo) =>
+          setFormState((prev) => ({
+            ...prev!,
+            contact_info: updatedInfo.reduce(
+              (acc, { type, value }) => {
+                acc[type] = value;
+                return acc;
+              },
+              {} as Record<string, string>,
+            ),
+          }))
+        }
+      />
+      {formState?.questions.map((q, index) => (
+        <QAInput
+          key={q.id || index}
+          question={q.question}
+          answer={q.type}
+          onQuestionChange={(newQuestion) => {
+            const updatedQuestions = [...formState.questions];
+            updatedQuestions[index] = { ...q, question: newQuestion };
+            setFormState((prev) => ({ ...prev!, questions: updatedQuestions }));
+          }}
+          onAnswerChange={(newAnswer) => {
+            const updatedQuestions = [...formState.questions];
+            updatedQuestions[index] = { ...q, type: newAnswer };
+            setFormState((prev) => ({ ...prev!, questions: updatedQuestions }));
+          }}
+        />
+      ))}
+      <Button
+        label="Add Question"
+        type="button"
+        onClick={() =>
+          setFormState((prev) => ({
+            ...prev!,
+            questions: [
+              ...prev!.questions,
+              {
+                id: Date.now(),
+                created_at: new Date().toISOString(),
+                question: '',
+                type: '',
+                priority: 0,
+              },
+            ],
+          }))
         }
       />
       <LabeledInput
         name="Esittely"
-        value={formState.description}
+        value={formState?.description}
         onChange={(e) =>
-          setFormState({ ...formState, description: e.target.value })
+          setFormState((prev) => ({ ...prev!, description: e.target.value }))
         }
         multiline
       />
       <Label name="Kamarihistoria:" className="mt-2" />
       <Positions
-        positions={formState.roles}
-        setPositions={(roles) => setFormState({ ...formState, roles })}
+        positions={formState?.roles}
+        setPositions={(roles) => setFormState((prev) => ({ ...prev!, roles }))}
         buttonText="Lisää merkintä"
       />
       <Label name="Työhistoria:" className="mt-2" />
       <Positions
-        positions={formState.work_history}
+        positions={formState?.work_history}
         setPositions={(work_history) =>
-          setFormState({ ...formState, work_history })
+          setFormState((prev) => ({ ...prev!, work_history }))
         }
         buttonText="Lisää työhistoriamerkintä"
       />

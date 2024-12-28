@@ -13,6 +13,7 @@ interface InputProps {
   multiline?: boolean;
   disabled?: boolean;
   className?: string;
+  list?: string;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -25,6 +26,7 @@ const Input: React.FC<InputProps> = ({
   multiline = false,
   disabled = false,
   className = '',
+  list,
 }) =>
   multiline ? (
     <textarea
@@ -54,6 +56,7 @@ const Input: React.FC<InputProps> = ({
       required={required}
       onChange={onChange}
       disabled={disabled}
+      list={list}
     />
   );
 

@@ -22,6 +22,7 @@ export interface Person {
   joined: Date;
   left: Date;
   qr_code: string;
+  questions: Question[];
 }
 
 export interface Position {
@@ -31,4 +32,12 @@ export interface Position {
   start: string;
   end: string;
   description: string;
+}
+
+export interface Question {
+  id: number;
+  created_at: string;
+  question: string;
+  type: string;
+  priority: number;
 }
