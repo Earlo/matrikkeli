@@ -27,7 +27,7 @@ const fetchUserData = async (userId: string, email: string) => {
     const newUser: Person = {
       user_id: userId,
       email,
-      contact_info: { email: email },
+      contact_info: { Email: email },
       first_name: '',
       last_name: '',
       roles: [],
