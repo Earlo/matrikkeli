@@ -1,5 +1,6 @@
+import { cn } from '@/lib/helpers';
 import { EnvelopeIcon, PhoneIcon } from '@heroicons/react/24/outline';
-import { PencilIcon, TrashIcon } from '@heroicons/react/24/solid';
+import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/solid';
 import React, { useState } from 'react';
 import ContactCard from './contactCard';
 
@@ -117,6 +118,7 @@ const ContactInfoList: React.FC<ContactInfoListProps> = ({
   onUpdate,
 }) => {
   const [isEditing, setIsEditing] = useState<number | null>(null);
+  const [isAdding, setIsAdding] = useState(false);
 
   const handleEditSave = (index: number, type: string, value: string) => {
     const updatedInfo = [...contactInfo];
@@ -127,6 +129,7 @@ const ContactInfoList: React.FC<ContactInfoListProps> = ({
 
   const handleAddSave = (type: string, value: string) => {
     onUpdate([...contactInfo, { type, value }]);
+    setIsAdding(false);
   };
 
   const handleDelete = (index: number) => {
@@ -135,13 +138,25 @@ const ContactInfoList: React.FC<ContactInfoListProps> = ({
   };
 
   return (
-    <div className="max-w-lg mt-4">
-      <h3 className="text-xl font-bold">Contact Information</h3>
-      <ul className="mt-4 space-y-4">
+    <div className="max-w-lg my-2">
+      <div className="flex items-center justify-between mb-2">
+        <h3 className="text-xl font-bold">Contact Information</h3>
+        <button
+          className={cn(
+            'p-2 bg-blue-500 text-white rounded-full transition',
+            isAdding ? 'bg-gray-500' : 'hover:bg-blue-600',
+          )}
+          disabled={isAdding}
+          onClick={() => setIsAdding(!isAdding)}
+        >
+          <PlusIcon className="h-5 w-5" />
+        </button>
+      </div>
+      <ul className="mb-2 space-y-4">
         {contactInfo.map((info, index) => (
           <li
             key={index}
-            className="flex items-center justify-between p-3 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow"
+            className="flex items-center justify-between p-2 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow"
           >
             {isEditing === index ? (
               <ContactCard
@@ -175,9 +190,15 @@ const ContactInfoList: React.FC<ContactInfoListProps> = ({
           </li>
         ))}
       </ul>
-      <div className="flex items-center justify-between p-3 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
-        <ContactCard types={contactInfoTypes} onSave={handleAddSave} />
-      </div>
+      {isAdding && (
+        <div className="flex items-center justify-between p-2 mt-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
+          <ContactCard
+            types={contactInfoTypes}
+            onSave={handleAddSave}
+            onCancel={() => setIsAdding(false)}
+          />
+        </div>
+      )}
     </div>
   );
 };

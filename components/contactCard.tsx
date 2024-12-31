@@ -32,13 +32,13 @@ const ContactCard: React.FC<ContactCardProps> = ({
   };
 
   return (
-    <div className={`flex flex-col`}>
+    <div className="flex flex-col w-full">
       <h4 className="text-lg font-semibold">
         {isEditMode ? 'Edit Contact' : 'Add New Contact'}
       </h4>
-      <div className="flex p-1 items-end">
+      <div className="flex pb-1 items-end">
         <select
-          className="mt-1 h-[2.7em] mr-1 rounded-md border rounded-br-none border-gray-200 p-2 shadow-sm sm:text-sm"
+          className="h-[2.7em] mr-1 rounded-md border rounded-br-none border-gray-200 pl-2 shadow-sm sm:text-sm"
           value={type}
           onChange={(e) => setType(e.target.value)}
         >
@@ -50,12 +50,13 @@ const ContactCard: React.FC<ContactCardProps> = ({
           ))}
         </select>
         <LabeledInput
+          className="w-full"
           name={types.find((t) => t.type === type)?.text || 'Value'}
           value={value}
           onChange={(e) => setValue(e.target.value)}
         />
       </div>
-      <div className="flex p-1 justify-end">
+      <div className="flex pb-1 justify-end">
         {onCancel && (
           <Button
             label="Cancel"
