@@ -1,5 +1,6 @@
 'use client';
 import { client } from '@/lib/supabase';
+import { TrashIcon } from '@heroicons/react/24/solid';
 import { useEffect, useState } from 'react';
 import LabeledInput from './generic/labeledInput';
 
@@ -8,6 +9,8 @@ interface QAInputProps {
   answer: string;
   onQuestionChange: (question: string) => void;
   onAnswerChange: (answer: string) => void;
+  onClose?: () => void;
+  index: number;
 }
 
 interface Question {
@@ -23,6 +26,8 @@ const QAInput: React.FC<QAInputProps> = ({
   answer,
   onQuestionChange,
   onAnswerChange,
+  onClose,
+  index,
 }) => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(true);
@@ -67,7 +72,17 @@ const QAInput: React.FC<QAInputProps> = ({
   }
 
   return (
-    <div className="mt-4">
+    <div className="p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
+      <h4 className="text-lg font-semibold flex items-center justify-between">
+        {`QA #${index}`}
+        <div className="flex gap-2">
+          <TrashIcon
+            className="h-5 w-5 text-red-500 cursor-pointer hover:text-red-700"
+            onClick={() => onClose()}
+          />
+        </div>
+      </h4>
+
       <LabeledInput
         name="Fun Fact Question"
         placeholder="Start typing or select a question..."
