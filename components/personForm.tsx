@@ -9,7 +9,7 @@ import ImageUploader from './generic/imageUploader';
 import Label from './generic/label';
 import LabeledInput from './generic/labeledInput';
 import Positions from './Positions';
-import QAInput from './qaInput';
+import QAInputList from './qaInputList';
 
 interface PersonFormProps {
   onClose?: () => void;
@@ -143,42 +143,6 @@ export default function PersonForm({ onClose }: PersonFormProps) {
           }))
         }
       />
-      {formState?.questions.map((q, index) => (
-        <QAInput
-          key={q.id || index}
-          question={q.question}
-          answer={q.type}
-          onQuestionChange={(newQuestion) => {
-            const updatedQuestions = [...formState.questions];
-            updatedQuestions[index] = { ...q, question: newQuestion };
-            setFormState((prev) => ({ ...prev!, questions: updatedQuestions }));
-          }}
-          onAnswerChange={(newAnswer) => {
-            const updatedQuestions = [...formState.questions];
-            updatedQuestions[index] = { ...q, type: newAnswer };
-            setFormState((prev) => ({ ...prev!, questions: updatedQuestions }));
-          }}
-        />
-      ))}
-      <Button
-        label="Add Question"
-        type="button"
-        onClick={() =>
-          setFormState((prev) => ({
-            ...prev!,
-            questions: [
-              ...prev!.questions,
-              {
-                id: Date.now(),
-                created_at: new Date().toISOString(),
-                question: '',
-                type: '',
-                priority: 0,
-              },
-            ],
-          }))
-        }
-      />
       <LabeledInput
         name="Esittely"
         value={formState?.description}
@@ -200,6 +164,12 @@ export default function PersonForm({ onClose }: PersonFormProps) {
           setFormState((prev) => ({ ...prev!, work_history }))
         }
         buttonText="Lisää työhistoriamerkintä"
+      />
+      <QAInputList
+        questions={formState?.questions || []}
+        onUpdate={(updatedQuestions) =>
+          setFormState((prev) => ({ ...prev!, questions: updatedQuestions }))
+        }
       />
       <Button label="Tallenna" type="button" onClick={handleUpdate} />
     </div>

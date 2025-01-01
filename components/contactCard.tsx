@@ -1,8 +1,7 @@
 'use client';
+import { ArrowsPointingInIcon, TrashIcon } from '@heroicons/react/24/solid';
 import React, { useState } from 'react';
-import Button from './generic/button';
 import LabeledInput from './generic/labeledInput';
-
 interface ContactCardProps {
   types: { type: string; text: string }[];
   initialType?: string;
@@ -33,8 +32,18 @@ const ContactCard: React.FC<ContactCardProps> = ({
 
   return (
     <div className="flex flex-col w-full">
-      <h4 className="text-lg font-semibold">
+      <h4 className="text-lg font-semibold flex items-center justify-between">
         {isEditMode ? 'Edit Contact' : 'Add New Contact'}
+        <div className="flex gap-2">
+          <ArrowsPointingInIcon
+            className="h-5 w-5 text-gray-500 cursor-pointer hover:text-gray-700"
+            onClick={handleSave}
+          />
+          <TrashIcon
+            className="h-5 w-5 text-red-500 cursor-pointer hover:text-red-700"
+            onClick={() => onCancel()}
+          />
+        </div>
       </h4>
       <div className="flex pb-1 items-end">
         <select
@@ -54,20 +63,6 @@ const ContactCard: React.FC<ContactCardProps> = ({
           name={types.find((t) => t.type === type)?.text || 'Value'}
           value={value}
           onChange={(e) => setValue(e.target.value)}
-        />
-      </div>
-      <div className="flex pb-1 justify-end">
-        {onCancel && (
-          <Button
-            label="Cancel"
-            onClick={onCancel}
-            className="bg-red-500 mr-4 text-white"
-          />
-        )}
-        <Button
-          label="Save"
-          onClick={handleSave}
-          className="bg-blue-500 text-white"
         />
       </div>
     </div>

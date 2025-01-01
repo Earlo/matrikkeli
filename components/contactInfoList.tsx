@@ -164,7 +164,10 @@ const ContactInfoList: React.FC<ContactInfoListProps> = ({
                 initialType={info.type}
                 initialValue={info.value}
                 onSave={(type, value) => handleEditSave(index, type, value)}
-                onCancel={() => setIsEditing(null)}
+                onCancel={() => {
+                  handleDelete(index);
+                  setIsEditing(null);
+                }}
                 isEditMode
               />
             ) : (
