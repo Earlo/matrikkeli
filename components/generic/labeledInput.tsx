@@ -35,11 +35,14 @@ const LabeledInput: React.FC<LabeledInputProps> = ({
   <div className={cn('mt-1', wrapperClassName)}>
     <Label
       name={name}
-      className={cn('h-[16px] w-fit text-gray-700 transition ease-in-out', {
-        'translate-x-[10px] translate-y-7 select-none bg-slate-200 text-gray-500':
-          !value && !placeholder && type != 'date',
-        'select-text': !!value,
-      })}
+      className={cn(
+        'h-[16px] w-fit text-gray-900 transition ease-in-out font-bold',
+        {
+          'translate-x-[10px] translate-y-[30px] select-none bg-slate-200 text-gray-500 font-medium':
+            !value && !placeholder && type != 'date',
+          'select-text': !!value,
+        },
+      )}
     />
     <Input
       name={name}

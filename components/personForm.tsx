@@ -116,7 +116,7 @@ export default function PersonForm({ onClose }: PersonFormProps) {
         }
       />
       <LabeledInput
-        name="birthday"
+        name="Syntymäpäivä"
         type="date"
         onChange={(e) =>
           setFormState((prev) => ({

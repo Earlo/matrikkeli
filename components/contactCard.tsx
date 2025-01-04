@@ -6,7 +6,7 @@ interface ContactCardProps {
   types: { type: string; text: string }[];
   initialType?: string;
   initialValue?: string;
-  onSave: (type: string, value: string) => void;
+  onMinimize: (type: string, value: string) => void;
   onCancel?: () => void;
   isEditMode?: boolean;
 }
@@ -15,7 +15,7 @@ const ContactCard: React.FC<ContactCardProps> = ({
   types,
   initialType = '',
   initialValue = '',
-  onSave,
+  onMinimize,
   onCancel,
   isEditMode = false,
 }) => {
@@ -24,7 +24,7 @@ const ContactCard: React.FC<ContactCardProps> = ({
 
   const handleSave = () => {
     if (type.trim() && value.trim()) {
-      onSave(type, value);
+      onMinimize(type, value);
       setType('');
       setValue('');
     }
