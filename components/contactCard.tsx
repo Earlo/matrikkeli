@@ -1,70 +1,104 @@
 'use client';
-import { ArrowsPointingInIcon, TrashIcon } from '@heroicons/react/24/solid';
+import {
+  ChevronDownIcon,
+  ChevronUpIcon,
+  TrashIcon,
+} from '@heroicons/react/24/solid';
 import React, { useState } from 'react';
+import { contactInfoTypes } from '../schemas/contactInfoTypes';
 import LabeledInput from './generic/labeledInput';
+
 interface ContactCardProps {
-  types: { type: string; text: string }[];
   initialType?: string;
   initialValue?: string;
-  onMinimize: (type: string, value: string) => void;
-  onCancel?: () => void;
-  isEditMode?: boolean;
+  isExpanded: boolean;
+  onTypeChange: (type: string) => void;
+  onValueChange: (value: string) => void;
+  onToggleExpand: () => void;
+  onDelete: () => void;
+  usedTypes: string[];
 }
 
 const ContactCard: React.FC<ContactCardProps> = ({
-  types,
   initialType = '',
   initialValue = '',
-  onMinimize,
-  onCancel,
-  isEditMode = false,
+  isExpanded,
+  onTypeChange,
+  onValueChange,
+  onToggleExpand,
+  onDelete,
+  usedTypes,
 }) => {
   const [type, setType] = useState(initialType);
   const [value, setValue] = useState(initialValue);
 
-  const handleSave = () => {
-    if (type.trim() && value.trim()) {
-      onMinimize(type, value);
-      setType('');
-      setValue('');
-    }
+  const handleTypeChange = (newType: string) => {
+    setType(newType);
+    onTypeChange(newType);
   };
 
+  const handleValueChange = (newValue: string) => {
+    setValue(newValue);
+    onValueChange(newValue);
+  };
+  console.log('type is', type);
   return (
     <div className="flex flex-col w-full">
-      <h4 className="text-lg font-semibold flex items-center justify-between">
-        {isEditMode ? 'Edit Contact' : 'Add New Contact'}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center">
+          {contactInfoTypes.find((t) => t.type === type)?.icon}
+          <span
+            className="ml-2 text-gray-700 font-medium cursor-pointer"
+            onClick={onToggleExpand}
+          >
+            {value || 'New Contact'}
+          </span>
+        </div>
         <div className="flex gap-2">
-          <ArrowsPointingInIcon
-            className="h-5 w-5 text-gray-500 cursor-pointer hover:text-gray-700"
-            onClick={handleSave}
-          />
+          {isExpanded ? (
+            <ChevronUpIcon
+              className="h-5 w-5 text-gray-500 cursor-pointer hover:text-gray-700"
+              onClick={onToggleExpand}
+            />
+          ) : (
+            <ChevronDownIcon
+              className="h-5 w-5 text-gray-500 cursor-pointer hover:text-gray-700"
+              onClick={onToggleExpand}
+            />
+          )}
           <TrashIcon
             className="h-5 w-5 text-red-500 cursor-pointer hover:text-red-700"
-            onClick={() => onCancel()}
+            onClick={onDelete}
           />
         </div>
-      </h4>
-      <div className="flex pb-1 items-end">
-        <select
-          className="h-[2.7em] mr-1 rounded-md border rounded-br-none border-gray-200 pl-2 shadow-sm sm:text-sm"
-          value={type}
-          onChange={(e) => setType(e.target.value)}
-        >
-          <option value="">Select Type</option>
-          {types.map((type) => (
-            <option key={type.type} value={type.type}>
-              {type.type}
-            </option>
-          ))}
-        </select>
-        <LabeledInput
-          className="w-full"
-          name={types.find((t) => t.type === type)?.text || 'Value'}
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-        />
       </div>
+      {isExpanded && (
+        <div className="flex items-end">
+          <select
+            className="h-[2.7em] mr-1 rounded-md border border-gray-200 pl-2 shadow-sm sm:text-sm"
+            value={type}
+            onChange={(e) => handleTypeChange(e.target.value)}
+          >
+            <option value="">Select Type</option>
+            {contactInfoTypes.map(
+              (t) =>
+                !usedTypes.includes(t.type) && (
+                  <option key={t.type} value={t.type}>
+                    {t.type}
+                  </option>
+                ),
+            )}
+          </select>
+          <LabeledInput
+            wrapperClassName="w-full"
+            name={
+              contactInfoTypes.find((t) => t.type === type)?.text || 'Value'
+            }
+            value={value}
+            onChange={(e) => handleValueChange(e.target.value)}
+          />
+        </div>
+      )}
     </div>
   );
 };

@@ -1,9 +1,10 @@
 import { cn } from '@/lib/helpers';
-import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/solid';
+import { PlusIcon } from '@heroicons/react/24/solid';
 import React, { useState } from 'react';
 import { contactInfoTypes } from '../schemas/contactInfoTypes';
 import ContactCard from './contactCard';
 import Label from './generic/label';
+
 interface ContactInfo {
   type: string;
   value: string;
@@ -18,24 +19,29 @@ const ContactInfoList: React.FC<ContactInfoListProps> = ({
   contactInfo,
   onUpdate,
 }) => {
-  const [isEditing, setIsEditing] = useState<number | null>(null);
-  const [isAdding, setIsAdding] = useState(false);
+  const [expandedIndices, setExpandedIndices] = useState<number[]>([]);
 
-  const handleEditSave = (index: number, type: string, value: string) => {
+  const toggleExpand = (index: number) => {
+    setExpandedIndices((prev) =>
+      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index],
+    );
+  };
+
+  const handleEdit = (index: number, type: string, value: string) => {
     const updatedInfo = [...contactInfo];
     updatedInfo[index] = { type, value };
     onUpdate(updatedInfo);
-    setIsEditing(null);
   };
 
-  const handleAddSave = (type: string, value: string) => {
-    onUpdate([...contactInfo, { type, value }]);
-    setIsAdding(false);
+  const handleAdd = () => {
+    onUpdate([...contactInfo, { type: '', value: '' }]);
+    setExpandedIndices((prev) => [...prev, contactInfo.length]);
   };
 
   const handleDelete = (index: number) => {
     const updatedInfo = contactInfo.filter((_, i) => i !== index);
     onUpdate(updatedInfo);
+    setExpandedIndices((prev) => prev.filter((i) => i !== index));
   };
 
   return (
@@ -49,11 +55,13 @@ const ContactInfoList: React.FC<ContactInfoListProps> = ({
         />
         <button
           className={cn(
-            'p-1 bg-blue-500 text-white rounded-full transition',
-            isAdding ? 'bg-gray-500' : 'hover:bg-blue-600',
+            'p-1 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition',
+            {
+              'bg-gray-500 hover:bg-gray-500 hover:cursor-default':
+                contactInfo.length === contactInfoTypes.length,
+            },
           )}
-          disabled={isAdding}
-          onClick={() => setIsAdding(!isAdding)}
+          onClick={handleAdd}
         >
           <PlusIcon className="h-4 w-4" />
         </button>
@@ -62,51 +70,20 @@ const ContactInfoList: React.FC<ContactInfoListProps> = ({
         {contactInfo.map((info, index) => (
           <li
             key={index}
-            className="flex items-center justify-between p-1 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow"
+            className="p-1 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow"
           >
-            {isEditing === index ? (
-              <ContactCard
-                types={contactInfoTypes}
-                initialType={info.type}
-                initialValue={info.value}
-                onMinimize={(type, value) => handleEditSave(index, type, value)}
-                onCancel={() => {
-                  handleDelete(index);
-                  setIsEditing(null);
-                }}
-                isEditMode
-              />
-            ) : (
-              <>
-                <div className="flex items-center">
-                  {contactInfoTypes.find((t) => t.type === info.type)?.icon}
-                  <span className="ml-2 text-gray-700 font-medium">
-                    {info.value}
-                  </span>
-                </div>
-                <div className="flex gap-2">
-                  <PencilIcon
-                    className="h-5 w-5 text-gray-500 cursor-pointer hover:text-gray-700"
-                    onClick={() => setIsEditing(index)}
-                  />
-                  <TrashIcon
-                    className="h-5 w-5 text-red-500 cursor-pointer hover:text-red-700"
-                    onClick={() => handleDelete(index)}
-                  />
-                </div>
-              </>
-            )}
-          </li>
-        ))}
-        {isAdding && (
-          <li className="flex items-center justify-between p-1 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
             <ContactCard
-              types={contactInfoTypes}
-              onMinimize={handleAddSave}
-              onCancel={() => setIsAdding(false)}
+              usedTypes={contactInfo.map((info) => info.type)}
+              initialType={info.type}
+              initialValue={info.value}
+              isExpanded={expandedIndices.includes(index)}
+              onTypeChange={(type) => handleEdit(index, type, info.value)}
+              onValueChange={(value) => handleEdit(index, info.type, value)}
+              onToggleExpand={() => toggleExpand(index)}
+              onDelete={() => handleDelete(index)}
             />
           </li>
-        )}
+        ))}
       </ul>
     </div>
   );
