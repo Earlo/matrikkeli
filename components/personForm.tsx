@@ -101,7 +101,7 @@ export default function PersonForm({ onClose }: PersonFormProps) {
             setFormState((prev) => ({ ...prev!, image_url_session: value }))
           }
         />
-        <div className="flex flex-col  ml-4">
+        <div className="flex flex-col ml-2">
           <LabeledInput
             name="Etunimi"
             value={formState?.first_name}
@@ -116,19 +116,28 @@ export default function PersonForm({ onClose }: PersonFormProps) {
               setFormState((prev) => ({ ...prev!, last_name: e.target.value }))
             }
           />
-          <LabeledInput
-            name="Syntymäpäivä"
-            type="date"
-            onChange={(e) =>
-              setFormState((prev) => ({
-                ...prev!,
-                birthday: new Date(e.target.value),
-              }))
-            }
-            wrapperClassName="grow"
-          />
         </div>
       </div>
+      <LabeledInput
+        name="Syntymäpäivä"
+        type="date"
+        onChange={(e) =>
+          setFormState((prev) => ({
+            ...prev!,
+            birthday: new Date(e.target.value),
+          }))
+        }
+        wrapperClassName="grow"
+      />
+
+      <LabeledInput
+        name="Esittely"
+        value={formState?.description}
+        onChange={(e) =>
+          setFormState((prev) => ({ ...prev!, description: e.target.value }))
+        }
+        multiline
+      />
       <ContactInfoList
         contactInfo={Object.entries(formState?.contact_info || {}).map(
           ([type, value]) => ({ type, value }),
@@ -142,14 +151,6 @@ export default function PersonForm({ onClose }: PersonFormProps) {
             ),
           }))
         }
-      />
-      <LabeledInput
-        name="Esittely"
-        value={formState?.description}
-        onChange={(e) =>
-          setFormState((prev) => ({ ...prev!, description: e.target.value }))
-        }
-        multiline
       />
       <Positions
         label="Kamarihistoria"

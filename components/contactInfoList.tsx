@@ -33,7 +33,6 @@ const ContactInfoList: React.FC<ContactInfoListProps> = ({
     const updatedInfo = contactInfo.filter((_, i) => i !== index);
     onUpdate(updatedInfo);
   };
-
   return (
     <div className="max-w-lg my-2">
       <div className="flex items-center justify-between mb-1">
@@ -59,7 +58,7 @@ const ContactInfoList: React.FC<ContactInfoListProps> = ({
       <div className="mb-2 space-y-1">
         {contactInfo.map((info, index) => (
           <ContactCard
-            key={index}
+            key={info.type}
             usedTypes={contactInfo.map((info) => info.type)}
             initialType={info.type}
             initialValue={info.value}
