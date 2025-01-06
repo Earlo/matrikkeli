@@ -55,6 +55,7 @@ const fetchUserData = async (userId: string, email: string) => {
 export default function PersonForm({ onClose }: PersonFormProps) {
   const { session, loading } = useAuth();
   const [formState, setFormState] = useState<Person | null>(null);
+  const [originalState, setOriginalState] = useState<Person | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -67,11 +68,16 @@ export default function PersonForm({ onClose }: PersonFormProps) {
           session.user.email,
         );
         setFormState(userData);
+        setOriginalState(userData); // Store the original state for comparison
       } catch (err) {
         setError(err.message);
       }
     })();
   }, [session]);
+
+  const hasPendingChanges = () => {
+    return JSON.stringify(formState) !== JSON.stringify(originalState);
+  };
 
   const handleUpdate = async () => {
     if (!formState) return;
@@ -83,6 +89,7 @@ export default function PersonForm({ onClose }: PersonFormProps) {
 
       if (updateError) throw new Error(updateError.message);
       console.log('Person updated successfully');
+      setOriginalState(formState); // Update the original state after saving
     } catch (err) {
       console.error('Update failed:', err.message);
     }
@@ -172,7 +179,12 @@ export default function PersonForm({ onClose }: PersonFormProps) {
           setFormState((prev) => ({ ...prev!, questions: updatedQuestions }))
         }
       />
-      <Button label="Tallenna" type="button" onClick={handleUpdate} />
+      <Button
+        label={hasPendingChanges() ? 'Tallenna' : 'Ei muutoksia'}
+        type="button"
+        onClick={handleUpdate}
+        disabled={!hasPendingChanges()}
+      />
     </div>
   );
 }

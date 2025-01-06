@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { contactInfoTypes } from '../schemas/contactInfoTypes';
 import EntryCard from './entryCard';
 import LabeledInput from './generic/labeledInput';
+
 interface ContactCardProps {
   initialType?: string;
   initialValue?: string;
@@ -32,6 +33,7 @@ const ContactCard: React.FC<ContactCardProps> = ({
     setValue(newValue);
     onValueChange(newValue);
   };
+
   return (
     <EntryCard
       onDelete={onDelete}
@@ -50,15 +52,16 @@ const ContactCard: React.FC<ContactCardProps> = ({
           value={type}
           onChange={(e) => handleTypeChange(e.target.value)}
         >
-          <option value="">Select Type</option>
-          {contactInfoTypes.map(
-            (t) =>
-              !usedTypes.includes(t.type) && (
-                <option key={t.type} value={t.type}>
-                  {t.type}
-                </option>
-              ),
-          )}
+          {type === '' && <option value="">Select Type</option>}
+          {contactInfoTypes.map((t) => (
+            <option
+              key={t.type}
+              value={t.type}
+              disabled={usedTypes.includes(t.type) && t.type !== type}
+            >
+              {t.type}
+            </option>
+          ))}
         </select>
         <LabeledInput
           wrapperClassName="w-full"

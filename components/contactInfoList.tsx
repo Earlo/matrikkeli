@@ -34,7 +34,7 @@ const ContactInfoList: React.FC<ContactInfoListProps> = ({
     onUpdate(updatedInfo);
   };
   return (
-    <div className="max-w-lg my-2">
+    <div className="max-w-lg mt-1">
       <div className="flex items-center justify-between mb-1">
         <Label
           name="Yhteystiedot"
