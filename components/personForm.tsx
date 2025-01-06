@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 import ContactInfoList from './contactInfoList';
 import Button from './generic/button';
 import ImageUploader from './generic/imageUploader';
-import Label from './generic/label';
 import LabeledInput from './generic/labeledInput';
 import Positions from './Positions';
 import QAInputList from './qaInputList';
@@ -93,39 +92,43 @@ export default function PersonForm({ onClose }: PersonFormProps) {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="flex h-full w-full flex-col justify-center self-center p-4 sm:w-96">
-      <ImageUploader
-        icon={formState?.image_url_session}
-        path={`matrikkeli/user/${session?.user.id}`}
-        setIcon={(value) =>
-          setFormState((prev) => ({ ...prev!, image_url_session: value }))
-        }
-      />
-      <LabeledInput
-        name="Etunimi"
-        value={formState?.first_name}
-        onChange={(e) =>
-          setFormState((prev) => ({ ...prev!, first_name: e.target.value }))
-        }
-      />
-      <LabeledInput
-        name="Sukunimi"
-        value={formState?.last_name}
-        onChange={(e) =>
-          setFormState((prev) => ({ ...prev!, last_name: e.target.value }))
-        }
-      />
-      <LabeledInput
-        name="Syntymäpäivä"
-        type="date"
-        onChange={(e) =>
-          setFormState((prev) => ({
-            ...prev!,
-            birthday: new Date(e.target.value),
-          }))
-        }
-        wrapperClassName="grow"
-      />
+    <div className="flex h-full w-full flex-col justify-center self-center p-2 sm:w-96">
+      <div className="flex flex-row">
+        <ImageUploader
+          icon={formState?.image_url_session}
+          path={`matrikkeli/user/${session?.user.id}`}
+          setIcon={(value) =>
+            setFormState((prev) => ({ ...prev!, image_url_session: value }))
+          }
+        />
+        <div className="flex flex-col  ml-4">
+          <LabeledInput
+            name="Etunimi"
+            value={formState?.first_name}
+            onChange={(e) =>
+              setFormState((prev) => ({ ...prev!, first_name: e.target.value }))
+            }
+          />
+          <LabeledInput
+            name="Sukunimi"
+            value={formState?.last_name}
+            onChange={(e) =>
+              setFormState((prev) => ({ ...prev!, last_name: e.target.value }))
+            }
+          />
+          <LabeledInput
+            name="Syntymäpäivä"
+            type="date"
+            onChange={(e) =>
+              setFormState((prev) => ({
+                ...prev!,
+                birthday: new Date(e.target.value),
+              }))
+            }
+            wrapperClassName="grow"
+          />
+        </div>
+      </div>
       <ContactInfoList
         contactInfo={Object.entries(formState?.contact_info || {}).map(
           ([type, value]) => ({ type, value }),
@@ -134,11 +137,8 @@ export default function PersonForm({ onClose }: PersonFormProps) {
           setFormState((prev) => ({
             ...prev!,
             contact_info: updatedInfo.reduce(
-              (acc, { type, value }) => {
-                acc[type] = value;
-                return acc;
-              },
-              {} as Record<string, string>,
+              (acc, { type, value }) => ({ ...acc, [type]: value }),
+              {},
             ),
           }))
         }
@@ -151,14 +151,14 @@ export default function PersonForm({ onClose }: PersonFormProps) {
         }
         multiline
       />
-      <Label name="Kamarihistoria:" className="mt-2" />
       <Positions
+        label="Kamarihistoria"
         positions={formState?.roles}
         setPositions={(roles) => setFormState((prev) => ({ ...prev!, roles }))}
         buttonText="Lisää merkintä"
       />
-      <Label name="Työhistoria:" className="mt-2" />
       <Positions
+        label="Työhistoria"
         positions={formState?.work_history}
         setPositions={(work_history) =>
           setFormState((prev) => ({ ...prev!, work_history }))

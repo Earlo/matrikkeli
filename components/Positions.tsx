@@ -1,10 +1,15 @@
+import { cn } from '@/lib/helpers';
+import { PlusIcon } from '@heroicons/react/24/solid';
+import Label from './generic/label';
 import PositionCard from './positionCard';
 
 const Positions = ({
+  label,
   positions = [],
   setPositions,
   buttonText,
 }: {
+  label: string;
   positions: {
     id: number;
     title: string;
@@ -25,7 +30,7 @@ const Positions = ({
   ) => void;
   buttonText?: string;
 }) => {
-  const handleAddPosition = () => {
+  const handleAdd = () => {
     setPositions([
       ...positions,
       {
@@ -57,21 +62,38 @@ const Positions = ({
   );
 
   return (
-    <div>
-      {positions.map((position) => (
-        <PositionCard
-          key={position.id}
-          position={position}
-          onChange={handleChange}
-          onDelete={handleDelete}
+    <div className="max-w-lg my-2">
+      <div className="flex items-center justify-between mb-1">
+        <Label
+          name={label}
+          className={cn(
+            'h-[16px] w-fit text-gray-900 transition ease-in-out font-bold',
+          )}
         />
-      ))}
-      <button
-        className="mb-4 rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-700"
-        onClick={handleAddPosition}
-      >
-        {buttonText || 'Add position'}
-      </button>
+        <button
+          className={cn(
+            'p-1 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition',
+            {
+              'bg-gray-500 hover:bg-gray-500 hover:cursor-default':
+                positions.length >= 5,
+            },
+          )}
+          disabled={positions.length >= 5}
+          onClick={handleAdd}
+        >
+          <PlusIcon className="h-4 w-4" />
+        </button>
+      </div>
+      <div className="mb-2 space-y-1">
+        {positions.map((position) => (
+          <PositionCard
+            key={position.id}
+            position={position}
+            onChange={handleChange}
+            onDelete={handleDelete}
+          />
+        ))}
+      </div>
     </div>
   );
 };

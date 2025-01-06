@@ -1,20 +1,13 @@
 'use client';
-import {
-  ChevronDownIcon,
-  ChevronUpIcon,
-  TrashIcon,
-} from '@heroicons/react/24/solid';
 import React, { useState } from 'react';
 import { contactInfoTypes } from '../schemas/contactInfoTypes';
+import EntryCard from './entryCard';
 import LabeledInput from './generic/labeledInput';
-
 interface ContactCardProps {
   initialType?: string;
   initialValue?: string;
-  isExpanded: boolean;
   onTypeChange: (type: string) => void;
   onValueChange: (value: string) => void;
-  onToggleExpand: () => void;
   onDelete: () => void;
   usedTypes: string[];
 }
@@ -22,10 +15,8 @@ interface ContactCardProps {
 const ContactCard: React.FC<ContactCardProps> = ({
   initialType = '',
   initialValue = '',
-  isExpanded,
   onTypeChange,
   onValueChange,
-  onToggleExpand,
   onDelete,
   usedTypes,
 }) => {
@@ -41,65 +32,42 @@ const ContactCard: React.FC<ContactCardProps> = ({
     setValue(newValue);
     onValueChange(newValue);
   };
-  console.log('type is', type);
   return (
-    <div className="flex flex-col w-full">
-      <div className="flex items-center justify-between">
+    <EntryCard
+      onDelete={onDelete}
+      label={
         <div className="flex items-center">
           {contactInfoTypes.find((t) => t.type === type)?.icon}
-          <span
-            className="ml-2 text-gray-700 font-medium cursor-pointer"
-            onClick={onToggleExpand}
-          >
+          <span className="ml-2 text-gray-700 font-medium">
             {value || 'New Contact'}
           </span>
         </div>
-        <div className="flex gap-2">
-          {isExpanded ? (
-            <ChevronUpIcon
-              className="h-5 w-5 text-gray-500 cursor-pointer hover:text-gray-700"
-              onClick={onToggleExpand}
-            />
-          ) : (
-            <ChevronDownIcon
-              className="h-5 w-5 text-gray-500 cursor-pointer hover:text-gray-700"
-              onClick={onToggleExpand}
-            />
+      }
+    >
+      <div className="flex items-end">
+        <select
+          className="h-[2.1em] mr-1 rounded-md border border-gray-200 pl-2 shadow-sm sm:text-sm"
+          value={type}
+          onChange={(e) => handleTypeChange(e.target.value)}
+        >
+          <option value="">Select Type</option>
+          {contactInfoTypes.map(
+            (t) =>
+              !usedTypes.includes(t.type) && (
+                <option key={t.type} value={t.type}>
+                  {t.type}
+                </option>
+              ),
           )}
-          <TrashIcon
-            className="h-5 w-5 text-red-500 cursor-pointer hover:text-red-700"
-            onClick={onDelete}
-          />
-        </div>
+        </select>
+        <LabeledInput
+          wrapperClassName="w-full"
+          name={contactInfoTypes.find((t) => t.type === type)?.text || 'Value'}
+          value={value}
+          onChange={(e) => handleValueChange(e.target.value)}
+        />
       </div>
-      {isExpanded && (
-        <div className="flex items-end">
-          <select
-            className="h-[2.7em] mr-1 rounded-md border border-gray-200 pl-2 shadow-sm sm:text-sm"
-            value={type}
-            onChange={(e) => handleTypeChange(e.target.value)}
-          >
-            <option value="">Select Type</option>
-            {contactInfoTypes.map(
-              (t) =>
-                !usedTypes.includes(t.type) && (
-                  <option key={t.type} value={t.type}>
-                    {t.type}
-                  </option>
-                ),
-            )}
-          </select>
-          <LabeledInput
-            wrapperClassName="w-full"
-            name={
-              contactInfoTypes.find((t) => t.type === type)?.text || 'Value'
-            }
-            value={value}
-            onChange={(e) => handleValueChange(e.target.value)}
-          />
-        </div>
-      )}
-    </div>
+    </EntryCard>
   );
 };
 

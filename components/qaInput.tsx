@@ -1,7 +1,8 @@
 'use client';
 import { client } from '@/lib/supabase';
-import { TrashIcon } from '@heroicons/react/24/solid';
+import { QuestionMarkCircleIcon } from '@heroicons/react/24/solid';
 import { useEffect, useState } from 'react';
+import EntryCard from './entryCard';
 import LabeledInput from './generic/labeledInput';
 
 interface QAInputProps {
@@ -70,19 +71,18 @@ const QAInput: React.FC<QAInputProps> = ({
   if (error) {
     return <div className="mt-4 text-red-500 text-sm">{error}</div>;
   }
-
   return (
-    <div className="p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
-      <h4 className="text-lg font-semibold flex items-center justify-between">
-        {`QA #${index}`}
-        <div className="flex gap-2">
-          <TrashIcon
-            className="h-5 w-5 text-red-500 cursor-pointer hover:text-red-700"
-            onClick={() => onClose()}
-          />
+    <EntryCard
+      label={
+        <div className="flex items-center">
+          <QuestionMarkCircleIcon className="h-5 w-5 text-gray-500" />
+          <span className="ml-2 text-gray-700 font-medium">
+            {`#${index + 1} ${question || 'New Question'}`}
+          </span>
         </div>
-      </h4>
-
+      }
+      onDelete={onClose}
+    >
       <LabeledInput
         name="Fun Fact Question"
         placeholder="Start typing or select a question..."
@@ -95,16 +95,14 @@ const QAInput: React.FC<QAInputProps> = ({
           <option key={q.id} value={q.question} />
         ))}
       </datalist>
-      <div className="mt-4">
-        <LabeledInput
-          name="Answer"
-          placeholder="Type your answer here..."
-          value={answer}
-          onChange={(e) => onAnswerChange(e.target.value)}
-          multiline
-        />
-      </div>
-    </div>
+      <LabeledInput
+        name="Vastaus"
+        placeholder="Type your answer here..."
+        value={answer}
+        onChange={(e) => onAnswerChange(e.target.value)}
+        multiline
+      />
+    </EntryCard>
   );
 };
 
