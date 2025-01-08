@@ -1,20 +1,14 @@
 import { cn } from '@/lib/helpers';
-import { HTMLInputTypeAttribute } from 'react';
 import Input from './input';
 import Label from './label';
 
-interface LabeledInputProps {
-  name: string;
-  type?: HTMLInputTypeAttribute;
-  value?: string;
-  required?: boolean;
+interface LabeledInputProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
   multiline?: boolean;
   placeholder?: string;
   onChange?: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void;
-  disabled?: boolean;
-  className?: string;
   wrapperClassName?: string;
   list?: string;
 }

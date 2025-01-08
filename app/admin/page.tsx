@@ -1,20 +1,13 @@
 'use client';
 
+import LoadingSpinner from '@/components/generic/loadingSpinner';
+import PersonForm from '@/components/personForm';
 import { client } from '@/lib/supabase';
+import { Person } from '@/schemas/user';
 import { useEffect, useState } from 'react';
 import { useAuth } from '../authProvider';
-
-// Optional: If you have a loading spinner component
-import LoadingSpinner from '@/components/generic/loadingSpinner';
-
+// Adjust or expand as needed
 type Role = 'user' | 'admin' | 'super_admin';
-
-interface Person {
-  id: string;
-  email: string;
-  role: Role;
-  [key: string]: any; // Adjust as needed for other columns
-}
 
 export default function AdminPage() {
   const { session, loading } = useAuth();
@@ -22,7 +15,8 @@ export default function AdminPage() {
   const [people, setPeople] = useState<Person[]>([]);
   const [loadingPeople, setLoadingPeople] = useState(true);
 
-  // Fetch the current user's role
+  const [selectedPerson, setSelectedPerson] = useState<Person | null>(null);
+
   useEffect(() => {
     if (!session) return;
 
@@ -47,7 +41,6 @@ export default function AdminPage() {
     fetchUserRole();
   }, [session]);
 
-  // Load all people if current user is an admin or super_admin
   useEffect(() => {
     if (currentUserRole !== 'admin' && currentUserRole !== 'super_admin') {
       setLoadingPeople(false);
@@ -56,10 +49,8 @@ export default function AdminPage() {
 
     const fetchPeople = async () => {
       setLoadingPeople(true);
-
       try {
         const { data, error } = await client.from('people').select('*');
-
         if (error) {
           console.error('Error fetching people:', error);
         } else if (data) {
@@ -75,20 +66,21 @@ export default function AdminPage() {
     fetchPeople();
   }, [currentUserRole]);
 
-  const handleChangeRole = async (personId: string, newRole: Role) => {
+  // For changing role
+  const handleChangeRole = async (personId: number, newRole: Role) => {
     if (currentUserRole !== 'super_admin') return;
     try {
       const { error } = await client
         .from('people')
         .update({ role: newRole })
-        .eq('user_id', personId);
+        .eq('id', personId);
+      // or .eq('user_id', personId) if your primary key is user_id
 
       if (error) {
         console.error('Error updating role:', error);
         return;
       }
-
-      // Update local state so we don't have to refetch
+      // Update local state
       setPeople((prev) =>
         prev.map((person) =>
           person.id === personId ? { ...person, role: newRole } : person,
@@ -97,6 +89,10 @@ export default function AdminPage() {
     } catch (error) {
       console.error('Unhandled error while changing role:', error);
     }
+  };
+
+  const handleEditPerson = (person: Person) => {
+    setSelectedPerson(person);
   };
 
   if (loading) {
@@ -115,7 +111,7 @@ export default function AdminPage() {
       </div>
     );
   }
-  console.log('role', currentUserRole);
+
   if (currentUserRole !== 'admin' && currentUserRole !== 'super_admin') {
     return (
       <div className="p-4">
@@ -138,9 +134,7 @@ export default function AdminPage() {
             <tr>
               <th className="px-4 py-2 text-left">Email</th>
               <th className="px-4 py-2 text-left">Current Role</th>
-              {currentUserRole === 'super_admin' && (
-                <th className="px-4 py-2 text-left">Actions</th>
-              )}
+              <th className="px-4 py-2 text-left">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -148,26 +142,54 @@ export default function AdminPage() {
               <tr key={person.id} className="border-b">
                 <td className="px-4 py-2">{person.email}</td>
                 <td className="px-4 py-2">{person.role}</td>
-                {currentUserRole === 'super_admin' && (
-                  <td className="px-4 py-2 space-x-2">
-                    <button
-                      onClick={() => handleChangeRole(person.id, 'user')}
-                      className="px-2 py-1 rounded bg-gray-200 hover:bg-gray-300"
-                    >
-                      Set User
-                    </button>
-                    <button
-                      onClick={() => handleChangeRole(person.id, 'admin')}
-                      className="px-2 py-1 rounded bg-gray-200 hover:bg-gray-300"
-                    >
-                      Set Admin
-                    </button>
-                  </td>
-                )}
+                <td className="px-4 py-2 space-x-2">
+                  {/* If super_admin => show role update buttons */}
+                  {currentUserRole === 'super_admin' && (
+                    <>
+                      <button
+                        onClick={() => handleChangeRole(person.id, 'user')}
+                        className="px-2 py-1 rounded bg-gray-200 hover:bg-gray-300"
+                      >
+                        Set User
+                      </button>
+                      <button
+                        onClick={() => handleChangeRole(person.id, 'admin')}
+                        className="px-2 py-1 rounded bg-gray-200 hover:bg-gray-300"
+                      >
+                        Set Admin
+                      </button>
+                    </>
+                  )}
+
+                  {/* === New: Edit button to open PersonForm === */}
+                  <button
+                    onClick={() => handleEditPerson(person)}
+                    className="px-2 py-1 rounded bg-blue-200 hover:bg-blue-300"
+                  >
+                    Edit
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
+      )}
+
+      {selectedPerson && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
+          <div className="bg-white p-6 rounded shadow-md w-11/12 max-w-lg relative">
+            <button
+              className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
+              onClick={() => setSelectedPerson(null)}
+            >
+              X
+            </button>
+            <PersonForm
+              person={selectedPerson}
+              onClose={() => setSelectedPerson(null)}
+            />
+          </div>
+        </div>
       )}
     </div>
   );

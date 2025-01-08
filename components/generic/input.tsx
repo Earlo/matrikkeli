@@ -1,10 +1,9 @@
 import { cn } from '@/lib/helpers';
 import { HTMLInputTypeAttribute } from 'react';
 
-interface InputProps {
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   name: string;
   type?: HTMLInputTypeAttribute;
-  value?: string;
   required?: boolean;
   placeholder?: string;
   onChange?: (

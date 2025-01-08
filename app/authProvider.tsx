@@ -2,21 +2,25 @@ import { client } from '@/lib/supabase';
 import { AuthError, Session } from '@supabase/supabase-js';
 import { createContext, useContext, useEffect, useState } from 'react';
 
+import { Person } from '@/schemas/user';
+
 interface AuthContextProps {
   session: Session | null;
   logout: () => Promise<{ error: AuthError | null }>;
   loading?: boolean;
+  person?: Person;
 }
+
 const AuthContext = createContext<AuthContextProps>({
   session: null,
-  logout: async () => ({
-    error: null,
-  }),
+  logout: async () => ({ error: null }),
   loading: false,
+  person: null,
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
+  const [person, setPerson] = useState<Person | null>(null);
   const [loading, setLoading] = useState(true);
 
   const attachUserRole = async (session: Session) => {
@@ -46,8 +50,70 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const fetchOrCreateUserData = async (
+    session: Session,
+  ): Promise<Person | null> => {
+    try {
+      const userId = session.user.id;
+      const email = session.user.email!;
+      // Check for existing person row
+      const { data, error } = await client
+        .from('people')
+        .select()
+        .eq('user_id', userId)
+        .maybeSingle();
+
+      if (error) {
+        console.error('Error fetching person data:', error);
+        return null;
+      }
+
+      if (!data) {
+        const newUser: Partial<Person> = {
+          user_id: userId,
+          email,
+          contact_info: { Email: email },
+          first_name: '',
+          last_name: '',
+          roles: [],
+          image_url_session: '',
+          description: '',
+          birthday: '',
+          work_history: [],
+          joined: '',
+          left: '',
+          qr_code: '',
+          questions: [],
+        };
+
+        const { error: insertError, data: insertedData } = await client
+          .from('people')
+          .insert(newUser)
+          .single();
+
+        if (insertError) {
+          console.error('Error inserting person data:', insertError);
+          return null;
+        }
+        return insertedData as Person;
+      }
+
+      // If row does exist, make sure we have a fallback for contact_info
+      return {
+        ...data,
+        contact_info: data.contact_info || {},
+      } as Person;
+    } catch (err) {
+      console.error('Unhandled error in fetchOrCreateUserData:', err);
+      return null;
+    }
+  };
+
+  /**
+   * Main effect that runs once on mount to initialize session + person data.
+   */
   useEffect(() => {
-    const fetchSessionAndRole = async () => {
+    const fetchSessionAndRoleAndPerson = async () => {
       setLoading(true);
       const { data, error } = await client.auth.getSession();
       if (error) {
@@ -56,25 +122,38 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return;
       }
 
+      // If we have a Supabase session, also attach role + fetch Person
       if (data?.session) {
         const sessionWithRole = await attachUserRole(data.session);
         setSession(sessionWithRole);
+
+        // Here we fetch or create the person row
+        const fetchedPerson = await fetchOrCreateUserData(sessionWithRole);
+        setPerson(fetchedPerson);
       } else {
+        // No session => user is logged out
         setSession(null);
+        setPerson(null);
       }
 
       setLoading(false);
     };
 
-    fetchSessionAndRole();
+    fetchSessionAndRoleAndPerson();
 
+    // Listen to onAuthStateChange so that we can update user data
+    // whenever the session changes (login/logout).
     const { data: listener } = client.auth.onAuthStateChange(
       async (event, newSession) => {
         if (newSession) {
           const sessionWithRole = await attachUserRole(newSession);
           setSession(sessionWithRole);
+
+          const fetchedPerson = await fetchOrCreateUserData(sessionWithRole);
+          setPerson(fetchedPerson);
         } else {
           setSession(null);
+          setPerson(null);
         }
       },
     );
@@ -84,8 +163,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
   }, []);
 
-  const value = {
+  const value: AuthContextProps = {
     session,
+    person,
     logout: () => client.auth.signOut(),
     loading,
   };

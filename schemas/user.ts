@@ -7,6 +7,7 @@ export interface IUser {
 }
 
 export interface Person {
+  id: number;
   user_id: string;
   email: string;
   contact_info: {
@@ -16,13 +17,14 @@ export interface Person {
   last_name: string;
   image_url_session: string;
   description: string;
-  birthday: Date;
+  birthday: string;
   roles: Position[];
   work_history: Position[];
-  joined: Date;
-  left: Date;
+  joined: string;
+  left: string;
   qr_code: string;
   questions: Question[];
+  role: string;
 }
 
 export interface Position {
