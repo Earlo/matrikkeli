@@ -2,7 +2,6 @@ import { client } from '@/lib/supabase';
 import { AuthError, Session } from '@supabase/supabase-js';
 import { createContext, useContext, useEffect, useState } from 'react';
 
-// Create a context for the auth state
 interface AuthContextProps {
   session: Session | null;
   logout: () => Promise<{ error: AuthError | null }>;
@@ -20,22 +19,63 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      // Check active sessions and set the user
-      const { data, error } = await client.auth.getSession();
-      if (!error && data) {
-        setSession(data.session);
-      } else {
-        console.error(error);
+  const attachUserRole = async (session: Session) => {
+    try {
+      const userId = session.user.id;
+      const { data: roleData, error: roleError } = await client
+        .from('people')
+        .select('role')
+        .eq('user_id', userId)
+        .single();
+
+      if (roleError) {
+        console.error('Error fetching role:', roleError);
+        return session;
       }
+
+      if (roleData?.role) {
+        session.user.user_metadata = {
+          ...session.user.user_metadata,
+          role: roleData.role,
+        };
+      }
+      return session;
+    } catch (err) {
+      console.error('Unhandled error while attaching user role:', err);
+      return session;
+    }
+  };
+
+  useEffect(() => {
+    const fetchSessionAndRole = async () => {
+      setLoading(true);
+      const { data, error } = await client.auth.getSession();
+      if (error) {
+        console.error('Error getting session:', error);
+        setLoading(false);
+        return;
+      }
+
+      if (data?.session) {
+        const sessionWithRole = await attachUserRole(data.session);
+        setSession(sessionWithRole);
+      } else {
+        setSession(null);
+      }
+
       setLoading(false);
     };
-    setLoading(true);
-    fetchData();
+
+    fetchSessionAndRole();
+
     const { data: listener } = client.auth.onAuthStateChange(
-      async (event, session) => {
-        setSession(session);
+      async (event, newSession) => {
+        if (newSession) {
+          const sessionWithRole = await attachUserRole(newSession);
+          setSession(sessionWithRole);
+        } else {
+          setSession(null);
+        }
       },
     );
 
