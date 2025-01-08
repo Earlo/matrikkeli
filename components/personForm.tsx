@@ -11,10 +11,9 @@ import QAInputList from './qaInputList';
 
 interface PersonFormProps {
   person: Person;
-  onClose?: () => void;
 }
 
-export default function PersonForm({ person, onClose }: PersonFormProps) {
+export default function PersonForm({ person }: PersonFormProps) {
   const [formState, setFormState] = useState<Person>(person);
   const originalState = JSON.stringify(person);
 

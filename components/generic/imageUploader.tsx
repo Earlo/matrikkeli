@@ -58,14 +58,14 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
           <Image
             src={icon || '/blank_user.png'}
             alt="Upload Image"
-            layout="fill"
-            objectFit="cover"
             className={cn(
               'rounded-tl-full rounded-tr-full rounded-bl-full rounded-br-none bg-orange-700',
               {
                 'cursor-pointer': !disabled,
               },
             )}
+            width={128}
+            height={128}
           />
           {children ? (
             <div className="absolute inset-0 flex items-center justify-between opacity-0 transition-opacity duration-200 hover:opacity-100">

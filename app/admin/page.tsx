@@ -4,9 +4,9 @@ import LoadingSpinner from '@/components/generic/loadingSpinner';
 import PersonForm from '@/components/personForm';
 import { client } from '@/lib/supabase';
 import { Person } from '@/schemas/user';
+import { XMarkIcon } from '@heroicons/react/24/solid';
 import { useEffect, useState } from 'react';
 import { useAuth } from '../authProvider';
-// Adjust or expand as needed
 type Role = 'user' | 'admin' | 'super_admin';
 
 export default function AdminPage() {
@@ -66,7 +66,6 @@ export default function AdminPage() {
     fetchPeople();
   }, [currentUserRole]);
 
-  // For changing role
   const handleChangeRole = async (personId: number, newRole: Role) => {
     if (currentUserRole !== 'super_admin') return;
     try {
@@ -74,7 +73,6 @@ export default function AdminPage() {
         .from('people')
         .update({ role: newRole })
         .eq('id', personId);
-      // or .eq('user_id', personId) if your primary key is user_id
 
       if (error) {
         console.error('Error updating role:', error);
@@ -176,19 +174,14 @@ export default function AdminPage() {
       )}
 
       {selectedPerson && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
-          <div className="bg-white p-6 rounded shadow-md w-11/12 max-w-lg relative">
-            <button
-              className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
+        <div className="bg-white p-1 rounded shadow-md relative scroll w-fit">
+          <div className="flex absolute top-1 right-1">
+            <XMarkIcon
+              className="h-5 w-5 text-black cursor-pointer hover:text-gray-700"
               onClick={() => setSelectedPerson(null)}
-            >
-              X
-            </button>
-            <PersonForm
-              person={selectedPerson}
-              onClose={() => setSelectedPerson(null)}
             />
           </div>
+          <PersonForm person={selectedPerson} />
         </div>
       )}
     </div>
