@@ -1,18 +1,8 @@
 'use client';
-import { client } from '@/lib/supabase';
 import { QuestionMarkCircleIcon } from '@heroicons/react/24/solid';
-import { useEffect, useState } from 'react';
+import React from 'react';
 import EntryCard from './entryCard';
 import LabeledInput from './generic/labeledInput';
-
-interface QAInputProps {
-  question: string;
-  answer: string;
-  onQuestionChange: (question: string) => void;
-  onAnswerChange: (answer: string) => void;
-  onClose?: () => void;
-  index: number;
-}
 
 interface Question {
   id: number;
@@ -22,6 +12,19 @@ interface Question {
   priority: number;
 }
 
+interface QAInputProps {
+  question: string; // current question text
+  answer: string; // current answer text
+  onQuestionChange: (question: string) => void;
+  onAnswerChange: (answer: string) => void;
+  onClose?: () => void; // for deleting this entry
+  index: number;
+  /**
+   * Newly added prop: the list of possible questions from the DB (only fetched once in parent)
+   */
+  questionOptions: Question[];
+}
+
 const QAInput: React.FC<QAInputProps> = ({
   question,
   answer,
@@ -29,48 +32,8 @@ const QAInput: React.FC<QAInputProps> = ({
   onAnswerChange,
   onClose,
   index,
+  questionOptions,
 }) => {
-  const [questions, setQuestions] = useState<Question[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchQuestions = async () => {
-      try {
-        const { data, error } = await client
-          .from('questions')
-          .select('*')
-          .order('priority', { ascending: true })
-          .order('question', { ascending: true });
-
-        if (error) {
-          throw new Error(error.message);
-        }
-
-        setQuestions(data || []);
-      } catch (err) {
-        console.error('Error fetching questions:', err.message);
-        setError('Failed to load questions. Please try again later.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchQuestions();
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center mt-4">
-        <div className="loader border-t-blue-500 border-4 h-6 w-6 rounded-full animate-spin"></div>
-        <span className="ml-2 text-gray-500">Loading questions...</span>
-      </div>
-    );
-  }
-
-  if (error) {
-    return <div className="mt-4 text-red-500 text-sm">{error}</div>;
-  }
   return (
     <EntryCard
       label={
@@ -86,15 +49,18 @@ const QAInput: React.FC<QAInputProps> = ({
       <LabeledInput
         name="Fun Fact Question"
         placeholder="Start typing or select a question..."
-        value={question || ''} // Ensure a controlled input
+        value={question}
         onChange={(e) => onQuestionChange(e.target.value)}
         list="question-options"
       />
+
+      {/* The datalist is generated from `questionOptions` passed from the parent */}
       <datalist id="question-options">
-        {questions.map((q) => (
+        {questionOptions.map((q) => (
           <option key={q.id} value={q.question} />
         ))}
       </datalist>
+
       <LabeledInput
         name="Vastaus"
         placeholder="Type your answer here..."

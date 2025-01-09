@@ -1,8 +1,11 @@
 'use client';
 import { cn } from '@/lib/helpers';
+import { client } from '@/lib/supabase';
 import { PlusIcon } from '@heroicons/react/24/solid';
+import { useEffect, useState } from 'react';
 import Label from './generic/label';
 import QAInput from './qaInput';
+
 interface Question {
   id: number;
   created_at: string;
@@ -17,6 +20,35 @@ interface QAInputListProps {
 }
 
 const QAInputList: React.FC<QAInputListProps> = ({ questions, onUpdate }) => {
+  const [questionOptions, setQuestionOptions] = useState<Question[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const { data, error } = await client
+          .from('questions')
+          .select('*')
+          .order('priority', { ascending: true })
+          .order('question', { ascending: true });
+
+        if (error) {
+          throw new Error(error.message);
+        }
+
+        setQuestionOptions(data || []);
+      } catch (err: any) {
+        console.error('Error fetching questions:', err.message);
+        setError('Failed to load questions. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchQuestions();
+  }, []);
+
   const handleAdd = () => {
     const newEntry: Question = {
       id: Date.now(),
@@ -46,11 +78,28 @@ const QAInputList: React.FC<QAInputListProps> = ({ questions, onUpdate }) => {
     const updatedQuestions = questions.filter((_, i) => i !== index);
     onUpdate(updatedQuestions);
   };
+
+  /**
+   * Show loading or error states if the fetch is not successful
+   */
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center mt-4">
+        <div className="loader border-t-blue-500 border-4 h-6 w-6 rounded-full animate-spin"></div>
+        <span className="ml-2 text-gray-500">Loading questions...</span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return <div className="mt-4 text-red-500 text-sm">{error}</div>;
+  }
+
   return (
     <div className="max-w-lg mt-1">
       <div className="flex items-center justify-between mb-1">
         <Label
-          name="Questions"
+          name="Kysymyksiä"
           className={cn(
             'h-[16px] w-fit text-gray-900 transition ease-in-out font-bold',
           )}
@@ -73,8 +122,10 @@ const QAInputList: React.FC<QAInputListProps> = ({ questions, onUpdate }) => {
         {questions.map((q, index) => (
           <QAInput
             key={q.id}
+            index={index}
             question={q.question}
             answer={q.type}
+            questionOptions={questionOptions}
             onQuestionChange={(newQuestion) =>
               handleEditSave(index, newQuestion, q.type)
             }
@@ -82,7 +133,6 @@ const QAInputList: React.FC<QAInputListProps> = ({ questions, onUpdate }) => {
               handleEditSave(index, q.question, newAnswer)
             }
             onClose={() => handleDelete(index)}
-            index={index}
           />
         ))}
       </div>
