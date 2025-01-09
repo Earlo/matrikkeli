@@ -11,7 +11,7 @@ export interface Person {
   user_id: string;
   email: string;
   contact_info: {
-    [key: string]: string;
+    [key: string]: ContactInfo;
   };
   first_name: string;
   last_name: string;
@@ -42,4 +42,10 @@ export interface Question {
   question: string;
   type: string;
   priority: number;
+}
+
+export interface ContactInfo {
+  data: string;
+  order: number;
+  id: string;
 }

@@ -119,11 +119,9 @@ export default function AdminPage() {
     );
   }
 
-  // Admin or Super_Admin view
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Admin Panel</h1>
-
       {loadingPeople ? (
         <LoadingSpinner />
       ) : (
@@ -141,7 +139,6 @@ export default function AdminPage() {
                 <td className="px-4 py-2">{person.email}</td>
                 <td className="px-4 py-2">{person.role}</td>
                 <td className="px-4 py-2 space-x-2">
-                  {/* If super_admin => show role update buttons */}
                   {currentUserRole === 'super_admin' && (
                     <>
                       <button
@@ -158,8 +155,6 @@ export default function AdminPage() {
                       </button>
                     </>
                   )}
-
-                  {/* === New: Edit button to open PersonForm === */}
                   <button
                     onClick={() => handleEditPerson(person)}
                     className="px-2 py-1 rounded bg-blue-200 hover:bg-blue-300"
@@ -172,18 +167,19 @@ export default function AdminPage() {
           </tbody>
         </table>
       )}
-
       {selectedPerson && (
-        <div className="bg-white p-1 rounded shadow-md relative scroll w-fit">
-          <div className="flex absolute top-1 right-1">
-            <XMarkIcon
-              className="h-5 w-5 text-black cursor-pointer hover:text-gray-700"
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="relative w-fit bg-white rounded shadow-md max-h-[90vh] overflow-y-auto">
+            <button
+              className="absolute top-2 right-2"
               onClick={() => setSelectedPerson(null)}
-            />
+            >
+              <XMarkIcon className="h-5 w-5 text-black cursor-pointer hover:text-gray-700" />
+            </button>
+            <PersonForm person={selectedPerson} />
           </div>
-          <PersonForm person={selectedPerson} />
         </div>
-      )}
+      )}{' '}
     </div>
   );
 }

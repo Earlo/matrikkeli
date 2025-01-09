@@ -1,38 +1,62 @@
 import { cn } from '@/lib/helpers';
+import { ContactInfo } from '@/schemas/user';
 import { PlusIcon } from '@heroicons/react/24/solid';
 import React from 'react';
 import { contactInfoTypes } from '../schemas/contactInfoTypes';
 import ContactCard from './contactCard';
 import Label from './generic/label';
 
-interface ContactInfo {
-  type: string;
-  value: string;
-}
-
 interface ContactInfoListProps {
-  contactInfo: ContactInfo[];
-  onUpdate: (updatedInfo: ContactInfo[]) => void;
+  contactInfo: {
+    [key: string]: ContactInfo;
+  };
+  onUpdate: (updatedInfo: { [key: string]: ContactInfo }) => void;
 }
 
 const ContactInfoList: React.FC<ContactInfoListProps> = ({
   contactInfo,
   onUpdate,
 }) => {
-  const handleEdit = (index: number, type: string, value: string) => {
-    const updatedInfo = [...contactInfo];
-    updatedInfo[index] = { type, value };
-    onUpdate(updatedInfo);
+  const handleEdit = (key: string, updatedValue: ContactInfo) => {
+    const newContactInfo = {
+      ...contactInfo,
+      [key]: updatedValue,
+    };
+    onUpdate(newContactInfo);
   };
 
+  const handleKeyChange = (newKey: string, oldKey: string) => {
+    if (newKey === oldKey) return;
+
+    if (Object.prototype.hasOwnProperty.call(contactInfo, newKey)) {
+      return;
+    }
+    const newContactInfo = { ...contactInfo };
+    newContactInfo[newKey] = newContactInfo[oldKey];
+    delete newContactInfo[oldKey];
+    onUpdate(newContactInfo);
+  };
   const handleAdd = () => {
-    onUpdate([...contactInfo, { type: '', value: '' }]);
+    const usedTypes = Object.keys(contactInfo);
+    const available = contactInfoTypes.find((t) => !usedTypes.includes(t.type));
+    if (!available) return;
+    const newContactInfo = { ...contactInfo };
+    newContactInfo[available.type] = {
+      id: crypto.randomUUID(),
+      data: '',
+      order: Object.keys(contactInfo).length,
+    };
+    onUpdate(newContactInfo);
   };
-
-  const handleDelete = (index: number) => {
-    const updatedInfo = contactInfo.filter((_, i) => i !== index);
-    onUpdate(updatedInfo);
+  const handleDelete = (key: string) => {
+    const newContactInfo = { ...contactInfo };
+    delete newContactInfo[key];
+    onUpdate(newContactInfo);
   };
+  const usedTypes = Object.keys(contactInfo);
+  const sortedContactInfo = Object.entries(contactInfo).sort(
+    ([, a], [, b]) => a.order - b.order,
+  );
   return (
     <div className="max-w-lg mt-1">
       <div className="flex items-center justify-between mb-1">
@@ -47,7 +71,7 @@ const ContactInfoList: React.FC<ContactInfoListProps> = ({
             'p-1 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition',
             {
               'bg-gray-500 hover:bg-gray-500 hover:cursor-default':
-                contactInfo.length === contactInfoTypes.length,
+                usedTypes.length === contactInfoTypes.length,
             },
           )}
           onClick={handleAdd}
@@ -56,15 +80,15 @@ const ContactInfoList: React.FC<ContactInfoListProps> = ({
         </button>
       </div>
       <div className="mb-2 space-y-1">
-        {contactInfo.map((info, index) => (
+        {sortedContactInfo.map(([key, info]) => (
           <ContactCard
-            key={info.type}
-            usedTypes={contactInfo.map((info) => info.type)}
-            initialType={info.type}
-            initialValue={info.value}
-            onTypeChange={(type) => handleEdit(index, type, info.value)}
-            onValueChange={(value) => handleEdit(index, info.type, value)}
-            onDelete={() => handleDelete(index)}
+            key={info.id}
+            usedTypes={usedTypes}
+            initialType={key}
+            initialValue={info.data}
+            onTypeChange={(newKey) => handleKeyChange(newKey, key)}
+            onValueChange={(value) => handleEdit(key, { ...info, data: value })}
+            onDelete={() => handleDelete(key)}
           />
         ))}
       </div>

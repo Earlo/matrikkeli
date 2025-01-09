@@ -1,8 +1,8 @@
 import { client } from '@/lib/supabase';
-import { AuthError, Session } from '@supabase/supabase-js';
-import { createContext, useContext, useEffect, useState } from 'react';
-
 import { Person } from '@/schemas/user';
+import { AuthError, Session } from '@supabase/supabase-js';
+import crypto from 'crypto';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 interface AuthContextProps {
   session: Session | null;
@@ -72,7 +72,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const newUser: Partial<Person> = {
           user_id: userId,
           email,
-          contact_info: { Email: email },
+          contact_info: {
+            Email: { data: email, order: 0, id: crypto.randomUUID() },
+          },
           first_name: '',
           last_name: '',
           roles: [],

@@ -15,7 +15,7 @@ interface PersonFormProps {
 
 export default function PersonForm({ person }: PersonFormProps) {
   const [formState, setFormState] = useState<Person>(person);
-  const originalState = JSON.stringify(person);
+  const [originalState, setOriginalState] = useState(JSON.stringify(person));
 
   const hasPendingChanges = () => {
     return JSON.stringify(formState) !== originalState;
@@ -28,9 +28,10 @@ export default function PersonForm({ person }: PersonFormProps) {
         .from('people')
         .update(formState)
         .eq('user_id', formState.user_id);
-
       if (updateError) {
         throw new Error(updateError.message);
+      } else {
+        setOriginalState(JSON.stringify(formState));
       }
     } catch (err: any) {
       console.error('Update failed:', err.message);
@@ -84,17 +85,9 @@ export default function PersonForm({ person }: PersonFormProps) {
         multiline
       />
       <ContactInfoList
-        contactInfo={Object.entries(formState.contact_info || {}).map(
-          ([type, value]) => ({ type, value }),
-        )}
+        contactInfo={formState.contact_info}
         onUpdate={(updatedInfo) =>
-          setFormState((prev) => ({
-            ...prev!,
-            contact_info: updatedInfo.reduce(
-              (acc, { type, value }) => ({ ...acc, [type]: value }),
-              {},
-            ),
-          }))
+          setFormState((prev) => ({ ...prev!, contact_info: updatedInfo }))
         }
       />
       <Positions
