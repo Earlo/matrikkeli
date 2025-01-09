@@ -19,12 +19,20 @@ const TopBar: React.FC = () => {
           Home
         </Link>
         {(userRole === 'admin' || userRole === 'super_admin') && (
-          <Link
-            className="text-xl pl-4 font-bold hover:opacity-20"
-            href="/admin"
-          >
-            Admin
-          </Link>
+          <>
+            <Link
+              className="text-xl pl-4 font-bold hover:opacity-20"
+              href="/admin"
+            >
+              Admin
+            </Link>
+            <Link
+              className="text-xl pl-4 font-bold hover:opacity-20"
+              href="/generate"
+            >
+              Generate PDF
+            </Link>
+          </>
         )}
       </div>
 

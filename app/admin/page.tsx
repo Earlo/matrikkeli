@@ -171,7 +171,6 @@ export default function AdminPage() {
         console.error('Error deleting question:', error);
         return;
       }
-      // Update local state
       setQuestions((prev) => prev.filter((q) => q.id !== id));
     } catch (error) {
       console.error('Unhandled error while deleting question:', error);
@@ -285,7 +284,6 @@ export default function AdminPage() {
           <table className="min-w-full border">
             <thead className="border-b bg-gray-100">
               <tr>
-                <th className="px-4 py-2 text-left">ID</th>
                 <th className="px-4 py-2 text-left">Question</th>
                 <th className="px-4 py-2 text-left">Priority</th>
                 <th className="px-4 py-2 text-left">Actions</th>
@@ -294,7 +292,6 @@ export default function AdminPage() {
             <tbody>
               {questions.map((q) => (
                 <tr key={q.id} className="border-b">
-                  <td className="px-4 py-2">{q.id}</td>
                   <td className="px-4 py-2">{q.question}</td>
                   <td className="px-4 py-2">{q.priority}</td>
                   <td className="px-4 py-2">
