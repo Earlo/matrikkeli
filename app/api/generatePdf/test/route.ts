@@ -131,6 +131,11 @@ export async function POST(req) {
           .checkbox-container input {
             margin-right: 8px;
           }
+          .svgicon{
+            width: 20px;
+            height: 20px;
+            display: inline;
+          }
         </style>
       </head>
       <body>
