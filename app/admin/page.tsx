@@ -7,15 +7,27 @@ import { Person } from '@/schemas/user';
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import { useEffect, useState } from 'react';
 import { useAuth } from '../authProvider';
+
 type Role = 'user' | 'admin' | 'super_admin';
+
+interface Question {
+  id: number;
+  created_at: string;
+  question: string;
+  type: string;
+  priority: number;
+}
 
 export default function AdminPage() {
   const { session, loading } = useAuth();
   const [currentUserRole, setCurrentUserRole] = useState<Role | null>(null);
   const [people, setPeople] = useState<Person[]>([]);
   const [loadingPeople, setLoadingPeople] = useState(true);
-
   const [selectedPerson, setSelectedPerson] = useState<Person | null>(null);
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [loadingQuestions, setLoadingQuestions] = useState(true);
+  const [newQuestionText, setNewQuestionText] = useState('');
+  const [newQuestionPriority, setNewQuestionPriority] = useState(0);
 
   useEffect(() => {
     if (!session) return;
@@ -66,6 +78,37 @@ export default function AdminPage() {
     fetchPeople();
   }, [currentUserRole]);
 
+  useEffect(() => {
+    if (currentUserRole !== 'admin' && currentUserRole !== 'super_admin') {
+      setLoadingQuestions(false);
+      return;
+    }
+    const fetchQuestions = async () => {
+      setLoadingQuestions(true);
+      try {
+        const { data, error } = await client
+          .from('questions')
+          .select('*')
+          .order('priority', { ascending: true })
+          .order('question', { ascending: true });
+
+        if (error) {
+          throw error;
+        }
+
+        if (data) {
+          setQuestions(data);
+        }
+      } catch (err: any) {
+        console.error('Error fetching questions:', err.message);
+      } finally {
+        setLoadingQuestions(false);
+      }
+    };
+
+    fetchQuestions();
+  }, [currentUserRole]);
+
   const handleChangeRole = async (personId: number, newRole: Role) => {
     if (currentUserRole !== 'super_admin') return;
     try {
@@ -78,7 +121,6 @@ export default function AdminPage() {
         console.error('Error updating role:', error);
         return;
       }
-      // Update local state
       setPeople((prev) =>
         prev.map((person) =>
           person.id === personId ? { ...person, role: newRole } : person,
@@ -91,6 +133,49 @@ export default function AdminPage() {
 
   const handleEditPerson = (person: Person) => {
     setSelectedPerson(person);
+  };
+
+  const handleAddQuestion = async () => {
+    try {
+      const { data, error } = await client
+        .from('questions')
+        .insert({
+          question: newQuestionText,
+          priority: newQuestionPriority,
+          type: '',
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error adding question:', error);
+        return;
+      }
+
+      if (data) {
+        setQuestions((prev) => [...prev, data]);
+        setNewQuestionText('');
+        setNewQuestionPriority(0);
+      }
+    } catch (error) {
+      console.error('Unhandled error while adding question:', error);
+    }
+  };
+
+  const handleDeleteQuestion = async (id: number) => {
+    if (!confirm('Are you sure you want to delete this question?')) return;
+
+    try {
+      const { error } = await client.from('questions').delete().eq('id', id);
+      if (error) {
+        console.error('Error deleting question:', error);
+        return;
+      }
+      // Update local state
+      setQuestions((prev) => prev.filter((q) => q.id !== id));
+    } catch (error) {
+      console.error('Unhandled error while deleting question:', error);
+    }
   };
 
   if (loading) {
@@ -122,11 +207,12 @@ export default function AdminPage() {
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Admin Panel</h1>
+      <h2 className="text-xl font-semibold mt-8 mb-2">Manage People</h2>
       {loadingPeople ? (
         <LoadingSpinner />
       ) : (
         <table className="min-w-full border">
-          <thead className="border-b">
+          <thead className="border-b bg-gray-100">
             <tr>
               <th className="px-4 py-2 text-left">Email</th>
               <th className="px-4 py-2 text-left">Current Role</th>
@@ -167,6 +253,65 @@ export default function AdminPage() {
           </tbody>
         </table>
       )}
+
+      <h2 className="text-xl font-semibold mt-8 mb-2">Manage Questions</h2>
+      {loadingQuestions ? (
+        <LoadingSpinner />
+      ) : (
+        <>
+          <div className="flex items-center gap-2 mb-4">
+            <input
+              type="text"
+              placeholder="New question..."
+              className="border p-1 rounded flex-1"
+              value={newQuestionText}
+              onChange={(e) => setNewQuestionText(e.target.value)}
+            />
+            <input
+              type="number"
+              placeholder="Priority"
+              className="border p-1 rounded w-20"
+              value={newQuestionPriority}
+              onChange={(e) => setNewQuestionPriority(Number(e.target.value))}
+            />
+            <button
+              onClick={handleAddQuestion}
+              className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
+            >
+              Add
+            </button>
+          </div>
+
+          <table className="min-w-full border">
+            <thead className="border-b bg-gray-100">
+              <tr>
+                <th className="px-4 py-2 text-left">ID</th>
+                <th className="px-4 py-2 text-left">Question</th>
+                <th className="px-4 py-2 text-left">Priority</th>
+                <th className="px-4 py-2 text-left">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {questions.map((q) => (
+                <tr key={q.id} className="border-b">
+                  <td className="px-4 py-2">{q.id}</td>
+                  <td className="px-4 py-2">{q.question}</td>
+                  <td className="px-4 py-2">{q.priority}</td>
+                  <td className="px-4 py-2">
+                    <button
+                      onClick={() => handleDeleteQuestion(q.id)}
+                      className="px-2 py-1 rounded bg-red-200 hover:bg-red-300"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
+
       {selectedPerson && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="relative w-fit bg-white rounded shadow-md max-h-[90vh] overflow-y-auto">
@@ -179,7 +324,7 @@ export default function AdminPage() {
             <PersonForm person={selectedPerson} />
           </div>
         </div>
-      )}{' '}
+      )}
     </div>
   );
 }
