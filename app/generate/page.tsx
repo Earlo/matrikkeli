@@ -7,7 +7,7 @@ export default function GeneratePage() {
   const generatePdf = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/generatePdf', {
+      const response = await fetch('/api/generatePdf/test', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

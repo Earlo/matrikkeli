@@ -47,10 +47,7 @@ export async function POST(req) {
   const browser = await launch({
     ...(isLocal
       ? {
-          args: chromeArgs,
           executablePath: await chromium.executablePath(),
-          ignoreHTTPSErrors: true,
-          headless: true,
         }
       : {
           args: chromeArgs,
@@ -223,10 +220,5 @@ export async function POST(req) {
 
   await browser.close();
 
-  return new NextResponse(pdfBuffer, {
-    headers: {
-      'Content-Type': 'application/pdf',
-      'Content-Disposition': 'attachment; filename=people_booklet.pdf',
-    },
-  });
+  return new NextResponse(content, {});
 }
