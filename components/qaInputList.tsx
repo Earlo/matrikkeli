@@ -22,7 +22,6 @@ interface QAInputListProps {
 const QAInputList: React.FC<QAInputListProps> = ({ questions, onUpdate }) => {
   const [questionOptions, setQuestionOptions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -40,7 +39,6 @@ const QAInputList: React.FC<QAInputListProps> = ({ questions, onUpdate }) => {
         setQuestionOptions(data || []);
       } catch (err: any) {
         console.error('Error fetching questions:', err.message);
-        setError('Failed to load questions. Please try again later.');
       } finally {
         setLoading(false);
       }
@@ -79,9 +77,6 @@ const QAInputList: React.FC<QAInputListProps> = ({ questions, onUpdate }) => {
     onUpdate(updatedQuestions);
   };
 
-  /**
-   * Show loading or error states if the fetch is not successful
-   */
   if (loading) {
     return (
       <div className="flex items-center justify-center mt-4">
@@ -89,10 +84,6 @@ const QAInputList: React.FC<QAInputListProps> = ({ questions, onUpdate }) => {
         <span className="ml-2 text-gray-500">Loading questions...</span>
       </div>
     );
-  }
-
-  if (error) {
-    return <div className="mt-4 text-red-500 text-sm">{error}</div>;
   }
 
   return (
