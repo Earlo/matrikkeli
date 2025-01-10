@@ -1,27 +1,17 @@
 'use client';
+import { Question } from '@/schemas/user';
 import { QuestionMarkCircleIcon } from '@heroicons/react/24/solid';
 import React from 'react';
 import EntryCard from './entryCard';
 import LabeledInput from './generic/labeledInput';
 
-interface Question {
-  id: number;
-  created_at: string;
-  question: string;
-  type: string;
-  priority: number;
-}
-
 interface QAInputProps {
-  question: string; // current question text
-  answer: string; // current answer text
+  question: string;
+  answer: string;
   onQuestionChange: (question: string) => void;
   onAnswerChange: (answer: string) => void;
-  onClose?: () => void; // for deleting this entry
+  onClose?: () => void;
   index: number;
-  /**
-   * Newly added prop: the list of possible questions from the DB (only fetched once in parent)
-   */
   questionOptions: Question[];
 }
 

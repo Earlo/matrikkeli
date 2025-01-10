@@ -1,8 +1,10 @@
 import { client } from '@/lib/supabase'; // Import your Supabase client
 import { iconSVGS } from '@/schemas/contactInfoTypes';
+import { Person } from '@/schemas/user';
 import chromium from '@sparticuz/chromium';
 import { NextResponse } from 'next/server';
 import { launch } from 'puppeteer-core';
+
 // Optional: If you'd like to use the new headless mode. "shell" is the default.
 // NOTE: Because we build the shell binary, this option does not work.
 //       However, this option will stay so when we migrate to full chromium it will work.
@@ -28,7 +30,8 @@ const chromeArgs = [
 const isLocal = process.env.IS_LOCAL == 'true';
 
 export async function POST(req) {
-  const { data: people, error } = await client.from('people').select('*');
+  const { data, error } = await client.from('people').select('*');
+  const people = data as Person[];
   if (error) {
     return new NextResponse('Error fetching people data', { status: 500 });
   }
@@ -109,8 +112,8 @@ export async function POST(req) {
           .section-title {
             font-size: 18px;
             font-weight: bold;
-            margin-top: 8px;
-            margin-bottom: 4px;
+            margin-top: 4px;
+            margin-bottom: 2px;
           }
           .list-item {
             font-size: 12px;
@@ -139,11 +142,34 @@ export async function POST(req) {
             height: 20px;
             display: inline;
           }
+          .splitter {
+            display: flex;
+            justify-content: space-between;
+          }
+          .contact {
+            white-space: nowrap;
+          }
+          .contact-list {
+            width: fit-content;
+            margin: 0;
+            padding: 0;
+          }
         </style>
       </head>
       <body>
   `;
-
+  const formatTimeWindow = (start: string, end?: string) => {
+    // format is "YYYY-MM-DD" in the database
+    // we want to display "Month Year - Month Year"
+    // If end is not provided, we display "Month Year -> "
+    const startDate = new Date(start);
+    const endDate = end ? new Date(end) : new Date();
+    const startMonth = startDate.toLocaleString('default', { month: 'long' });
+    const startYear = startDate.getFullYear();
+    const endMonth = endDate.toLocaleString('default', { month: 'long' });
+    const endYear = endDate.getFullYear();
+    return `${startMonth} ${startYear} - ${endMonth} ${end ? endYear : 'Present'}`;
+  };
   people.forEach((person) => {
     const {
       first_name,
@@ -156,6 +182,10 @@ export async function POST(req) {
       contact_info,
       questions,
     } = person;
+    const sortedContactInfo = Object.entries(contact_info).sort(
+      ([, a], [, b]) => a.order - b.order,
+    );
+
     content += `
       <div class="page">
         <div class="profile">
@@ -173,7 +203,7 @@ export async function POST(req) {
               .map(
                 (role) => `
                 <li class="list-item">
-                  <strong>${role.title}</strong> at ${role.organization} (${role.start} - ${role.end || 'Present'})
+                  <strong>${role.title}</strong> at ${role.organization} (${formatTimeWindow(role.start, role.end)})
                 </li>
               `,
               )
@@ -185,34 +215,52 @@ export async function POST(req) {
               .map(
                 (work) => `
                 <li class="list-item">
-                  <strong>${work.title}</strong> at ${work.organization} (${work.start} - ${work.end || 'Present'})
+                  <strong>${work.title}</strong> at ${work.organization} (${formatTimeWindow(work.start, work.end)})
                 </li>
               `,
               )
               .join('')}
           </ul>
-          <ul>
-            ${Object.entries(contact_info)
-              .map(
-                ([key, info]) => `
-                <li class="list-item">
-                  ${iconSVGS[key]}: ${info.data}
-                </li>
-              `,
-              )
-              .join('')}
-          </ul>
-        </div>
-        <div class="footer">
-          <div>Notes:</div>
-          <div class="checkbox-container">
-            <input type="checkbox" id="met-person" />
-            <label for="met-person">I've met this person</label>
+          <div class="splitter">
+            <ul>
+              <div class="section-title">Questions</div>
+              ${questions
+                .map(
+                  (qa) => `
+                  <li class="list-item">
+                    <strong>${qa.question}</strong>: ${qa.answer}
+                  </li>
+                `,
+                )
+                .join('')}
+            </ul>
+            <ul class="contact-list">
+              <div class="section-title">Contact Info</div>
+              ${sortedContactInfo
+                .map(
+                  ([key, info]) => `
+                  <li class="list-item contact">
+                    ${iconSVGS[key]}: ${info.data}
+                  </li>
+                `,
+                )
+                .join('')}
+            </ul>
           </div>
         </div>
       </div>
     `;
   });
+
+  /**
+  <div class="footer">
+    <div>Notes:</div>
+    <div class="checkbox-container">
+      <input type="checkbox" id="met-person" />
+      <label for="met-person">I've met this person</label>
+    </div>
+  </div>
+  */
 
   content += `
       </body>

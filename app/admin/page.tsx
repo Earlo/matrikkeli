@@ -3,20 +3,10 @@
 import LoadingSpinner from '@/components/generic/loadingSpinner';
 import PersonForm from '@/components/personForm';
 import { client } from '@/lib/supabase';
-import { Person } from '@/schemas/user';
+import { Person, Question, Role } from '@/schemas/user';
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import { useEffect, useState } from 'react';
 import { useAuth } from '../authProvider';
-
-type Role = 'user' | 'admin' | 'super_admin';
-
-interface Question {
-  id: number;
-  created_at: string;
-  question: string;
-  type: string;
-  priority: number;
-}
 
 export default function AdminPage() {
   const { session, loading } = useAuth();
@@ -99,8 +89,8 @@ export default function AdminPage() {
         if (data) {
           setQuestions(data);
         }
-      } catch (err: any) {
-        console.error('Error fetching questions:', err.message);
+      } catch (err) {
+        console.error('Error fetching questions:', err);
       } finally {
         setLoadingQuestions(false);
       }

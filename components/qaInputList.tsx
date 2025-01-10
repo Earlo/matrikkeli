@@ -1,22 +1,14 @@
 'use client';
+import QAInput from '@/components/qaInput';
 import { cn } from '@/lib/helpers';
 import { client } from '@/lib/supabase';
+import { QA, Question } from '@/schemas/user';
 import { PlusIcon } from '@heroicons/react/24/solid';
 import { useEffect, useState } from 'react';
 import Label from './generic/label';
-import QAInput from './qaInput';
-
-interface Question {
-  id: number;
-  created_at: string;
-  question: string;
-  type: string;
-  priority: number;
-}
-
 interface QAInputListProps {
-  questions: Question[];
-  onUpdate: (updatedQuestions: Question[]) => void;
+  questions: QA[];
+  onUpdate: (updatedQuestions: QA[]) => void;
 }
 
 const QAInputList: React.FC<QAInputListProps> = ({ questions, onUpdate }) => {
@@ -37,7 +29,7 @@ const QAInputList: React.FC<QAInputListProps> = ({ questions, onUpdate }) => {
         }
 
         setQuestionOptions(data || []);
-      } catch (err: any) {
+      } catch (err) {
         console.error('Error fetching questions:', err.message);
       } finally {
         setLoading(false);
@@ -48,11 +40,11 @@ const QAInputList: React.FC<QAInputListProps> = ({ questions, onUpdate }) => {
   }, []);
 
   const handleAdd = () => {
-    const newEntry: Question = {
+    const newEntry: QA = {
       id: Date.now(),
       created_at: new Date().toISOString(),
       question: '',
-      type: '',
+      answer: '',
       priority: questions.length,
     };
     onUpdate([...questions, newEntry]);
@@ -67,7 +59,7 @@ const QAInputList: React.FC<QAInputListProps> = ({ questions, onUpdate }) => {
     updatedQuestions[index] = {
       ...updatedQuestions[index],
       question: updatedQuestion,
-      type: updatedAnswer,
+      answer: updatedAnswer,
     };
     onUpdate(updatedQuestions);
   };
@@ -115,10 +107,10 @@ const QAInputList: React.FC<QAInputListProps> = ({ questions, onUpdate }) => {
             key={q.id}
             index={index}
             question={q.question}
-            answer={q.type}
+            answer={q.answer}
             questionOptions={questionOptions}
             onQuestionChange={(newQuestion) =>
-              handleEditSave(index, newQuestion, q.type)
+              handleEditSave(index, newQuestion, q.answer)
             }
             onAnswerChange={(newAnswer) =>
               handleEditSave(index, q.question, newAnswer)

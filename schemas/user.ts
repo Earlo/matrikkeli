@@ -23,8 +23,16 @@ export interface Person {
   joined: string;
   left: string;
   qr_code: string;
-  questions: Question[];
+  questions: QA[];
   role: string;
+}
+
+export interface QA {
+  id: number;
+  question: string;
+  answer: string;
+  priority: number;
+  created_at: string;
 }
 
 export interface Position {
@@ -49,3 +57,5 @@ export interface ContactInfo {
   order: number;
   id: string;
 }
+
+export type Role = 'user' | 'admin' | 'super_admin';

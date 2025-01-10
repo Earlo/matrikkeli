@@ -33,7 +33,7 @@ export default function PersonForm({ person }: PersonFormProps) {
       } else {
         setOriginalState(JSON.stringify(formState));
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error('Update failed:', err.message);
     }
   };

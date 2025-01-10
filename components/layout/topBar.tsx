@@ -1,11 +1,10 @@
 'use client';
 import { useAuth } from '@/app/authProvider';
 import Button from '@/components/generic/button';
+import { Role } from '@/schemas/user';
 import Link from 'next/link';
 import { useState } from 'react';
 import AuthForm from '../authForm';
-
-type Role = 'user' | 'admin' | 'super_admin';
 
 const TopBar: React.FC = () => {
   const { session, logout } = useAuth();
