@@ -46,12 +46,12 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
         disabled={disabled}
       />
       {isLoading ? (
-        <div className="flex h-32 w-32 items-center justify-center">
+        <div className="flex h-48 w-48 items-center justify-center">
           <LoadingSpinner />
         </div>
       ) : (
         <div
-          className={`relative h-32 w-32 overflow-hidden ${className}`}
+          className={`relative h-48 w-48 overflow-hidden ${className}`}
           onMouseEnter={() => {}}
           onMouseLeave={() => {}}
         >
@@ -64,8 +64,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
                 'cursor-pointer': !disabled,
               },
             )}
-            width={128}
-            height={128}
+            width={192}
+            height={192}
           />
           {children ? (
             <div className="absolute inset-0 flex items-center justify-between opacity-0 transition-opacity duration-200 hover:opacity-100">

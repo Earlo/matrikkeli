@@ -42,14 +42,16 @@ export default function PersonForm({ person }: PersonFormProps) {
     <div className="flex h-full w-full flex-col justify-center self-center p-2 sm:w-96">
       <div className="flex flex-row">
         <ImageUploader
+          className="w-40 h-40"
           icon={formState?.image_url_session}
           path={`matrikkeli/user/${formState.user_id}`}
           setIcon={(value) =>
             setFormState((prev) => ({ ...prev!, image_url_session: value }))
           }
         />
-        <div className="flex flex-col ml-2">
+        <div className="flex flex-col ml-1 justify-between">
           <LabeledInput
+            wrapperClassName="mt-0"
             name="Etunimi"
             value={formState.first_name}
             onChange={(e) =>
@@ -57,25 +59,27 @@ export default function PersonForm({ person }: PersonFormProps) {
             }
           />
           <LabeledInput
+            wrapperClassName="mt-0"
             name="Sukunimi"
             value={formState.last_name}
             onChange={(e) =>
               setFormState((prev) => ({ ...prev!, last_name: e.target.value }))
             }
           />
+          <LabeledInput
+            wrapperClassName="mt-0"
+            name="Syntymäpäivä"
+            type="date"
+            onChange={(e) =>
+              setFormState((prev) => ({
+                ...prev!,
+                birthday: e.target.value,
+              }))
+            }
+            value={formState.birthday || ''}
+          />
         </div>
       </div>
-      <LabeledInput
-        name="Syntymäpäivä"
-        type="date"
-        onChange={(e) =>
-          setFormState((prev) => ({
-            ...prev!,
-            birthday: e.target.value,
-          }))
-        }
-        value={formState.birthday || ''}
-      />
       <LabeledInput
         name="Esittely"
         value={formState.description}
