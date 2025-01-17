@@ -14,22 +14,22 @@ const TopBar: React.FC = () => {
   return (
     <div className="flex items-center justify-between bg-gray-800 p-4 text-white">
       <div>
-        <Link className="text-xl font-bold hover:opacity-20" href="/">
+        <Link className="text-l md:text-xl font-bold hover:opacity-20" href="/">
           Home
         </Link>
         {(userRole === 'admin' || userRole === 'super_admin') && (
           <>
             <Link
-              className="text-xl pl-4 font-bold hover:opacity-20"
+              className="text-l md:text-xl pl-4 font-bold hover:opacity-20"
               href="/admin"
             >
               Admin
             </Link>
             <Link
-              className="text-xl pl-4 font-bold hover:opacity-20"
+              className="text-l md:text-xl pl-4 font-bold hover:opacity-20"
               href="/generate"
             >
-              Generate PDF
+              PDF
             </Link>
           </>
         )}
