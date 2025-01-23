@@ -37,7 +37,7 @@ export default function GeneratePage() {
     <div className="mx-auto max-w-4xl">
       <button
         onClick={generatePdf}
-        className="mt-5 transform cursor-pointer rounded-md border-none bg-gradient-to-r from-orange-500 to-red-500 p-3 text-lg text-white shadow-lg transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl"
+        className="mt-5 transform cursor-pointer rounded-md border-none bg-linear-to-r from-orange-500 to-red-500 p-3 text-lg text-white shadow-lg transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl"
         disabled={loading}
       >
         {loading ? 'Generating...' : 'Generate PDF'}

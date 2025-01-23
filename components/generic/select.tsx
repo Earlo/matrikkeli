@@ -55,10 +55,10 @@ const Select: FC<SelectProps> = ({
   return (
     <div
       className={cn(
-        'flex h-8 min-w-[20%] flex-grow items-center overflow-hidden rounded border-2 border-black bg-white text-left align-middle font-archivo text-gray-700 md:w-[0px]',
+        'flex h-8 min-w-[20%] grow items-center overflow-hidden rounded border-2 border-black bg-white text-left align-middle font-archivo text-gray-700 md:w-[0px]',
         !value ? 'text-gray-400' : 'text-gray-700',
         disabled && !value ? 'bg-gray-200' : 'bg-white',
-        { 'z-[2] border-2 border-blue-700': customValue !== null },
+        { 'z-2 border-2 border-blue-700': customValue !== null },
         { 'hidden sm:flex': disabled && !value },
         { 'cursor-pointer': !disabled },
         { 'pl-1': !children },
@@ -79,7 +79,7 @@ const Select: FC<SelectProps> = ({
             setCustomValue(e.target.value);
             onChange(e.target.value);
           }}
-          className="block w-full text-left text-gray-700 focus:outline-none"
+          className="block w-full text-left text-gray-700 focus:outline-hidden"
           onBlur={() => {
             onChange(customValue);
             setCustomValue(null);

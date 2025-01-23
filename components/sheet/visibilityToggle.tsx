@@ -18,7 +18,7 @@ const VisibilityToggle: React.FC<VisibilityToggleProps> = ({
       event.stopPropagation();
       onChange(!visible);
     }}
-    className={cn('focus:outline-none', className)}
+    className={cn('focus:outline-hidden', className)}
   >
     {visible ? (
       <EyeIcon

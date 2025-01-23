@@ -48,7 +48,7 @@ const ContactCard: React.FC<ContactCardProps> = ({
     >
       <div className="flex items-end">
         <select
-          className="h-[2.1em] mr-1 rounded-md border border-gray-200 pl-2 shadow-sm sm:text-sm"
+          className="h-[2.1em] mr-1 rounded-md border border-gray-200 pl-2 shadow-xs sm:text-sm"
           value={type}
           onChange={(e) => handleTypeChange(e.target.value)}
         >

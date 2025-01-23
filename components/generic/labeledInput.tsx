@@ -48,7 +48,7 @@ const LabeledInput: React.FC<LabeledInputProps> = ({
       onChange={onChange}
       disabled={disabled}
       className={cn(
-        'rounded-tl-none bg-slate-200 focus:outline-none',
+        'rounded-tl-none bg-slate-200 focus:outline-hidden',
         className,
       )}
       list={!multiline ? list : undefined}

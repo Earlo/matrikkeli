@@ -51,7 +51,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
         </div>
       ) : (
         <div
-          className={`relative h-48 w-48 overflow-hidden ${className}`}
+          className={cn('relative h-48 w-48 overflow-hidden', className)}
           onMouseEnter={() => {}}
           onMouseLeave={() => {}}
         >
@@ -68,19 +68,19 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
             height={192}
           />
           {children ? (
-            <div className="absolute inset-0 flex items-center justify-between opacity-0 transition-opacity duration-200 hover:opacity-100">
-              <div className="flex h-full w-full items-center justify-center rounded-tl-full rounded-tr-full rounded-bl-full rounded-br-none bg-black bg-opacity-40 hover:bg-opacity-20">
+            <div className="absolute inset-0 flex items-center justify-between transition-opacity duration-200 opacity-0 hover:opacity-100">
+              <div className="flex h-full w-full items-center justify-center rounded-tl-full rounded-tr-full rounded-bl-full rounded-br-none bg-black/30">
                 {children}
               </div>
             </div>
           ) : (
             !disabled && (
-              <div className="absolute inset-0 flex items-center justify-between opacity-0 transition-opacity duration-200 hover:opacity-100">
-                <div
-                  className="flex h-full w-full items-center justify-center rounded-tl-full rounded-tr-full rounded-bl-full rounded-br-none bg-black bg-opacity-40 transition-opacity hover:bg-opacity-20"
-                  onClick={() => !disabled && fileInputRef.current?.click()}
-                >
-                  <ArrowUpOnSquareIcon className="h-6 w-6" />
+              <div className="absolute inset-0 flex items-center justify-between transition-opacity duration-200 opacity-0 hover:opacity-100">
+                <div className="flex h-full w-full items-center justify-center rounded-tl-full rounded-tr-full rounded-bl-full rounded-br-none bg-black/30">
+                  <ArrowUpOnSquareIcon
+                    onClick={() => !disabled && fileInputRef.current?.click()}
+                    className="h-6 w-6"
+                  />
                 </div>
               </div>
             )

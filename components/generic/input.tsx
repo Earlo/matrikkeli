@@ -34,7 +34,7 @@ const Input: React.FC<InputProps> = ({
       value={value}
       placeholder={placeholder}
       className={cn(
-        'mt-1 block w-full rounded-md border rounded-br-none border-gray-200 p-2 shadow-sm sm:text-sm',
+        'mt-1 block w-full rounded-md border rounded-br-none border-gray-200 p-2 shadow-xs sm:text-sm',
         className,
       )}
       required={required}
@@ -49,7 +49,7 @@ const Input: React.FC<InputProps> = ({
       value={value}
       placeholder={placeholder}
       className={cn(
-        'mt-1 block w-full rounded-md border rounded-br-none border-gray-200 p-1 shadow-sm sm:text-sm',
+        'mt-1 block w-full rounded-md border rounded-br-none border-gray-200 p-1 shadow-xs sm:text-sm',
         className,
       )}
       required={required}
