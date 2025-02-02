@@ -20,12 +20,14 @@ const TopBar: FC = () => {
         >
           Home
         </Link>
-        <Link
-          className="text-lg md:text-xl pl-4 font-bold hover:opacity-80"
-          href="/gallery"
-        >
-          Gallery
-        </Link>
+        {session ? (
+          <Link
+            className="text-lg md:text-xl pl-4 font-bold hover:opacity-80"
+            href="/gallery"
+          >
+            Gallery
+          </Link>
+        ) : null}
         {(userRole === 'admin' || userRole === 'super_admin') && (
           <>
             <Link
