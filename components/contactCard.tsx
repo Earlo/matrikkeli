@@ -4,13 +4,14 @@ import { contactInfoTypes } from '../schemas/contactInfoTypes';
 import EntryCard from './entryCard';
 import LabeledInput from './generic/labeledInput';
 
-interface ContactCardProps {
+export interface ContactCardProps {
   initialType?: string;
   initialValue?: string;
   onTypeChange: (type: string) => void;
   onValueChange: (value: string) => void;
   onDelete: () => void;
   usedTypes: string[];
+  disabled?: boolean;
 }
 
 const ContactCard: React.FC<ContactCardProps> = ({
@@ -20,23 +21,26 @@ const ContactCard: React.FC<ContactCardProps> = ({
   onValueChange,
   onDelete,
   usedTypes,
+  disabled = false,
 }) => {
   const [type, setType] = useState(initialType);
   const [value, setValue] = useState(initialValue);
 
   const handleTypeChange = (newType: string) => {
+    if (disabled) return;
     setType(newType);
     onTypeChange(newType);
   };
 
   const handleValueChange = (newValue: string) => {
+    if (disabled) return;
     setValue(newValue);
     onValueChange(newValue);
   };
 
   return (
     <EntryCard
-      onDelete={onDelete}
+      onDelete={disabled ? undefined : onDelete}
       label={
         <div className="flex items-center">
           {contactInfoTypes.find((t) => t.type === type)?.icon}
@@ -45,12 +49,14 @@ const ContactCard: React.FC<ContactCardProps> = ({
           </span>
         </div>
       }
+      disabled={disabled}
     >
       <div className="flex items-end">
         <select
           className="h-[2.1em] mr-1 rounded-md border border-gray-200 pl-2 shadow-xs sm:text-sm"
           value={type}
           onChange={(e) => handleTypeChange(e.target.value)}
+          disabled={disabled}
         >
           {type === '' && <option value="">Select Type</option>}
           {contactInfoTypes.map((t) => (
@@ -68,6 +74,7 @@ const ContactCard: React.FC<ContactCardProps> = ({
           name={contactInfoTypes.find((t) => t.type === type)?.text || 'Value'}
           value={value}
           onChange={(e) => handleValueChange(e.target.value)}
+          disabled={disabled}
         />
       </div>
     </EntryCard>

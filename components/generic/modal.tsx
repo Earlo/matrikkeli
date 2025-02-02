@@ -15,14 +15,14 @@ const Modal: React.FC<ModalProps> = ({ onClose, className, children }) => {
         className,
       )}
     >
-      <div className="relative w-3/4 overflow-hidden rounded-lg bg-white shadow-lg md:w-1/2">
+      <div className="relative w-lg m-1 overflow-hidden rounded-lg bg-white shadow-lg md:w-1/2">
         {onClose && (
           <CloseButton
             onClick={onClose}
-            className="absolute right-2 top-2 z-10"
+            className="absolute right-0.5 top-0.5 z-100"
           />
         )}
-        <div className="p-4">{children}</div>
+        {children}
       </div>
     </div>
   );

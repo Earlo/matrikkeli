@@ -11,9 +11,13 @@ import QAInputList from './qaInputList';
 
 interface PersonFormProps {
   person: Person;
+  disabled?: boolean;
 }
 
-export default function PersonForm({ person }: PersonFormProps) {
+export default function PersonForm({
+  person,
+  disabled = false,
+}: PersonFormProps) {
   const [formState, setFormState] = useState<Person>(person);
   const [originalState, setOriginalState] = useState(JSON.stringify(person));
 
@@ -48,6 +52,7 @@ export default function PersonForm({ person }: PersonFormProps) {
           setIcon={(value) =>
             setFormState((prev) => ({ ...prev!, image_url_session: value }))
           }
+          disabled={disabled}
         />
         <div className="flex flex-col ml-1 grow justify-between">
           <LabeledInput
@@ -55,28 +60,31 @@ export default function PersonForm({ person }: PersonFormProps) {
             name="Etunimi"
             value={formState.first_name}
             onChange={(e) =>
+              !disabled &&
               setFormState((prev) => ({ ...prev!, first_name: e.target.value }))
             }
+            disabled={disabled}
           />
           <LabeledInput
             wrapperClassName="mt-0"
             name="Sukunimi"
             value={formState.last_name}
             onChange={(e) =>
+              !disabled &&
               setFormState((prev) => ({ ...prev!, last_name: e.target.value }))
             }
+            disabled={disabled}
           />
           <LabeledInput
             wrapperClassName="mt-0"
             name="Syntymäpäivä"
             type="date"
             onChange={(e) =>
-              setFormState((prev) => ({
-                ...prev!,
-                birthday: e.target.value,
-              }))
+              !disabled &&
+              setFormState((prev) => ({ ...prev!, birthday: e.target.value }))
             }
             value={formState.birthday || ''}
+            disabled={disabled}
           />
         </div>
       </div>
@@ -84,44 +92,55 @@ export default function PersonForm({ person }: PersonFormProps) {
         name="Esittely"
         value={formState.description}
         onChange={(e) =>
+          !disabled &&
           setFormState((prev) => ({ ...prev!, description: e.target.value }))
         }
         multiline
         className="max-w-lg"
+        wrapperClassName="mt-0"
+        disabled={disabled}
       />
       <ContactInfoList
         contactInfo={formState.contact_info}
         onUpdate={(updatedInfo) =>
+          !disabled &&
           setFormState((prev) => ({ ...prev!, contact_info: updatedInfo }))
         }
+        disabled={disabled}
       />
       <Positions
         label="Kamarihistoria"
         positions={formState.roles}
-        setPositions={(roles) => setFormState((prev) => ({ ...prev!, roles }))}
-        buttonText="Lisää merkintä"
+        setPositions={(roles) =>
+          !disabled && setFormState((prev) => ({ ...prev!, roles }))
+        }
+        disabled={disabled}
       />
       <Positions
         label="Työhistoria"
         positions={formState.work_history}
         setPositions={(work_history) =>
-          setFormState((prev) => ({ ...prev!, work_history }))
+          !disabled && setFormState((prev) => ({ ...prev!, work_history }))
         }
-        buttonText="Lisää työhistoriamerkintä"
+        disabled={disabled}
       />
       <QAInputList
         questions={formState.questions || []}
         onUpdate={(updatedQuestions) =>
+          !disabled &&
           setFormState((prev) => ({ ...prev!, questions: updatedQuestions }))
         }
+        disabled={disabled}
       />
-      <Button
-        label={hasPendingChanges() ? 'Tallenna' : 'Ei muutoksia'}
-        type="button"
-        onClick={handleUpdate}
-        disabled={!hasPendingChanges()}
-        className="max-w-lg"
-      />
+      {!disabled && (
+        <Button
+          label={hasPendingChanges() ? 'Tallenna' : 'Ei muutoksia'}
+          type="button"
+          onClick={handleUpdate}
+          disabled={!hasPendingChanges()}
+          className="max-w-lg mt-1"
+        />
+      )}
     </div>
   );
 }

@@ -14,7 +14,7 @@ const AddLabel: React.FC<AddLabelProps> = ({
   handleAdd,
 }) => {
   return (
-    <div className="flex items-center justify-between mb-1">
+    <div className="flex items-center justify-between mb-0.5">
       <Label
         name={label}
         className={cn(

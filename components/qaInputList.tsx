@@ -5,12 +5,17 @@ import { QA, Question } from '@/schemas/user';
 import { useEffect, useState } from 'react';
 import AddLabel from './generic/addLabel';
 
-interface QAInputListProps {
+export interface QAInputListProps {
   questions: QA[];
   onUpdate: (updatedQuestions: QA[]) => void;
+  disabled?: boolean;
 }
 
-const QAInputList: React.FC<QAInputListProps> = ({ questions, onUpdate }) => {
+const QAInputList: React.FC<QAInputListProps> = ({
+  questions,
+  onUpdate,
+  disabled = false,
+}) => {
   const [questionOptions, setQuestionOptions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -28,7 +33,7 @@ const QAInputList: React.FC<QAInputListProps> = ({ questions, onUpdate }) => {
         }
 
         setQuestionOptions(data || []);
-      } catch (err) {
+      } catch (err: any) {
         console.error('Error fetching questions:', err.message);
       } finally {
         setLoading(false);
@@ -39,6 +44,7 @@ const QAInputList: React.FC<QAInputListProps> = ({ questions, onUpdate }) => {
   }, []);
 
   const handleAdd = () => {
+    if (disabled) return;
     const newEntry: QA = {
       id: Date.now(),
       created_at: new Date().toISOString(),
@@ -54,6 +60,7 @@ const QAInputList: React.FC<QAInputListProps> = ({ questions, onUpdate }) => {
     updatedQuestion: string,
     updatedAnswer: string,
   ) => {
+    if (disabled) return;
     const updatedQuestions = [...questions];
     updatedQuestions[index] = {
       ...updatedQuestions[index],
@@ -64,6 +71,7 @@ const QAInputList: React.FC<QAInputListProps> = ({ questions, onUpdate }) => {
   };
 
   const handleDelete = (index: number) => {
+    if (disabled) return;
     const updatedQuestions = questions.filter((_, i) => i !== index);
     onUpdate(updatedQuestions);
   };
@@ -82,9 +90,9 @@ const QAInputList: React.FC<QAInputListProps> = ({ questions, onUpdate }) => {
       <AddLabel
         label="Kysymyksiä"
         handleAdd={handleAdd}
-        disabled={questions.length >= 5}
+        disabled={disabled || questions.length >= 5}
       />
-      <div className="mb-2 space-y-1">
+      <div className="space-y-1">
         {questions.map((q, index) => (
           <QAInput
             key={q.id}
@@ -99,6 +107,7 @@ const QAInputList: React.FC<QAInputListProps> = ({ questions, onUpdate }) => {
               handleEditSave(index, q.question, newAnswer)
             }
             onClose={() => handleDelete(index)}
+            disabled={disabled}
           />
         ))}
       </div>

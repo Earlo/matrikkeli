@@ -2,13 +2,17 @@
 import { cn } from '@/lib/helpers';
 import { Person } from '@/schemas/user';
 import Image from 'next/image';
-import Link from 'next/link';
+import { useState } from 'react';
+import Modal from './generic/modal';
+import PersonForm from './personForm';
 
 interface PersonCardProps {
   person: Person;
 }
 
 export default function PersonCard({ person }: PersonCardProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const shortDescription = person.description
     ? person.description.length > 50
       ? `${person.description.substring(0, 50)}...`
@@ -16,8 +20,11 @@ export default function PersonCard({ person }: PersonCardProps) {
     : '';
 
   return (
-    <Link href={`/profile/${person.user_id}`}>
-      <div className="border rounded p-4 hover:shadow-lg transition duration-200 cursor-pointer">
+    <>
+      <div
+        className="border rounded p-4 hover:shadow-lg transition duration-200 cursor-pointer"
+        onClick={() => setIsModalOpen(true)}
+      >
         <div className="flex items-center">
           {person.image_url_session ? (
             <Image
@@ -30,9 +37,9 @@ export default function PersonCard({ person }: PersonCardProps) {
               height={192}
             />
           ) : (
-            <div className=" rounded-full bg-gray-300 mr-4" />
+            <div className="rounded-full bg-gray-300 mr-4 w-16 h-16" />
           )}
-          <div>
+          <div className="ml-4">
             <h2 className="text-xl font-semibold">
               {person.first_name} {person.last_name}
             </h2>
@@ -40,6 +47,11 @@ export default function PersonCard({ person }: PersonCardProps) {
           </div>
         </div>
       </div>
-    </Link>
+      {isModalOpen && (
+        <Modal onClose={() => setIsModalOpen(false)}>
+          <PersonForm person={person} disabled />
+        </Modal>
+      )}
+    </>
   );
 }

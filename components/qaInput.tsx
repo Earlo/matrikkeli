@@ -4,7 +4,7 @@ import { QuestionMarkCircleIcon } from '@heroicons/react/24/solid';
 import EntryCard from './entryCard';
 import LabeledInput from './generic/labeledInput';
 
-interface QAInputProps {
+export interface QAInputProps {
   question: string;
   answer: string;
   onQuestionChange: (question: string) => void;
@@ -12,6 +12,7 @@ interface QAInputProps {
   onClose?: () => void;
   index: number;
   questionOptions: Question[];
+  disabled?: boolean;
 }
 
 const QAInput: React.FC<QAInputProps> = ({
@@ -22,9 +23,11 @@ const QAInput: React.FC<QAInputProps> = ({
   onClose,
   index,
   questionOptions,
+  disabled = false,
 }) => {
   return (
     <EntryCard
+      onDelete={disabled ? undefined : onClose}
       label={
         <div className="flex items-center">
           <QuestionMarkCircleIcon className="h-5 w-5 text-gray-500" />
@@ -33,14 +36,15 @@ const QAInput: React.FC<QAInputProps> = ({
           </span>
         </div>
       }
-      onDelete={onClose}
+      disabled={disabled}
     >
       <LabeledInput
         name="Fun Fact Question"
         placeholder="Start typing or select a question..."
         value={question}
-        onChange={(e) => onQuestionChange(e.target.value)}
+        onChange={(e) => !disabled && onQuestionChange(e.target.value)}
         list="question-options"
+        disabled={disabled}
       />
 
       <datalist id="question-options">
@@ -53,8 +57,9 @@ const QAInput: React.FC<QAInputProps> = ({
         name="Vastaus"
         placeholder="Type your answer here..."
         value={answer}
-        onChange={(e) => onAnswerChange(e.target.value)}
+        onChange={(e) => !disabled && onAnswerChange(e.target.value)}
         multiline
+        disabled={disabled}
       />
     </EntryCard>
   );

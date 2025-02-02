@@ -3,18 +3,19 @@ import { contactInfoTypes } from '../schemas/contactInfoTypes';
 import ContactCard from './contactCard';
 import AddLabel from './generic/addLabel';
 
-interface ContactInfoListProps {
-  contactInfo: {
-    [key: string]: ContactInfo;
-  };
+export interface ContactInfoListProps {
+  contactInfo: { [key: string]: ContactInfo };
   onUpdate: (updatedInfo: { [key: string]: ContactInfo }) => void;
+  disabled?: boolean;
 }
 
 const ContactInfoList: React.FC<ContactInfoListProps> = ({
   contactInfo,
   onUpdate,
+  disabled = false,
 }) => {
   const handleEdit = (key: string, updatedValue: ContactInfo) => {
+    if (disabled) return;
     const newContactInfo = {
       ...contactInfo,
       [key]: updatedValue,
@@ -23,8 +24,8 @@ const ContactInfoList: React.FC<ContactInfoListProps> = ({
   };
 
   const handleKeyChange = (newKey: string, oldKey: string) => {
+    if (disabled) return;
     if (newKey === oldKey) return;
-
     if (Object.prototype.hasOwnProperty.call(contactInfo, newKey)) {
       return;
     }
@@ -33,7 +34,9 @@ const ContactInfoList: React.FC<ContactInfoListProps> = ({
     delete newContactInfo[oldKey];
     onUpdate(newContactInfo);
   };
+
   const handleAdd = () => {
+    if (disabled) return;
     const usedTypes = Object.keys(contactInfo);
     const available = contactInfoTypes.find((t) => !usedTypes.includes(t.type));
     if (!available) return;
@@ -45,11 +48,14 @@ const ContactInfoList: React.FC<ContactInfoListProps> = ({
     };
     onUpdate(newContactInfo);
   };
+
   const handleDelete = (key: string) => {
+    if (disabled) return;
     const newContactInfo = { ...contactInfo };
     delete newContactInfo[key];
     onUpdate(newContactInfo);
   };
+
   const usedTypes = Object.keys(contactInfo);
   const sortedContactInfo = Object.entries(contactInfo).sort(
     ([, a], [, b]) => a.order - b.order,
@@ -57,11 +63,11 @@ const ContactInfoList: React.FC<ContactInfoListProps> = ({
   return (
     <div className="max-w-lg mt-1">
       <AddLabel
-        label={'Yhteystiedot'}
+        label="Yhteystiedot"
         handleAdd={handleAdd}
-        disabled={usedTypes.length === contactInfoTypes.length}
+        disabled={disabled || usedTypes.length === contactInfoTypes.length}
       />
-      <div className="mb-2 space-y-1">
+      <div className="space-y-1">
         {sortedContactInfo.map(([key, info]) => (
           <ContactCard
             key={info.id}
@@ -71,6 +77,7 @@ const ContactInfoList: React.FC<ContactInfoListProps> = ({
             onTypeChange={(newKey) => handleKeyChange(newKey, key)}
             onValueChange={(value) => handleEdit(key, { ...info, data: value })}
             onDelete={() => handleDelete(key)}
+            disabled={disabled}
           />
         ))}
       </div>

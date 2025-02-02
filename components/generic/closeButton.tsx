@@ -1,38 +1,31 @@
 import { cn } from '@/lib/helpers';
+import { XMarkIcon } from '@heroicons/react/24/solid';
 
 interface CloseButtonProps {
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   className?: string;
+  disabled?: boolean;
 }
 
 const CloseButton: React.FC<CloseButtonProps> = ({
   onClick,
   className = '',
+  disabled = false,
 }) => (
   <button
     type="button"
+    disabled={disabled}
     className={cn(
-      'inline-flex h-fit items-center justify-center rounded-md bg-white text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-hidden focus:ring-2 focus:ring-inset focus:ring-indigo-500',
+      'hover:cursor-pointer  text-gray-700  hover:text-gray-500 transition',
+      {
+        'hover:cursor-default': disabled,
+      },
       className,
     )}
     onClick={onClick}
   >
     <span className="sr-only">Close</span>
-    <svg
-      className="size-6"
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      aria-hidden="true"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        d="M6 18L18 6M6 6l12 12"
-      />
-    </svg>
+    <XMarkIcon className="h-5 w-5" />
   </button>
 );
 

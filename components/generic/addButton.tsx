@@ -4,7 +4,7 @@ import { PlusIcon } from '@heroicons/react/24/solid';
 interface AddButtonProps {
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   className?: string;
-  disabled: boolean;
+  disabled?: boolean;
 }
 
 const AddButton: React.FC<AddButtonProps> = ({
@@ -13,6 +13,8 @@ const AddButton: React.FC<AddButtonProps> = ({
   className = '',
 }) => (
   <button
+    type="button"
+    disabled={disabled}
     className={cn(
       'p-1 bg-blue-500 text-white rounded-full hover:bg-blue-600 hover:cursor-pointer transition',
       {
