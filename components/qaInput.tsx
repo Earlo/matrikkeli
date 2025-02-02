@@ -1,7 +1,6 @@
 'use client';
 import { Question } from '@/schemas/user';
 import { QuestionMarkCircleIcon } from '@heroicons/react/24/solid';
-import React from 'react';
 import EntryCard from './entryCard';
 import LabeledInput from './generic/labeledInput';
 
@@ -44,7 +43,6 @@ const QAInput: React.FC<QAInputProps> = ({
         list="question-options"
       />
 
-      {/* The datalist is generated from `questionOptions` passed from the parent */}
       <datalist id="question-options">
         {questionOptions.map((q) => (
           <option key={q.id} value={q.question} />

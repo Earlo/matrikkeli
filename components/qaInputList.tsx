@@ -1,11 +1,10 @@
 'use client';
 import QAInput from '@/components/qaInput';
-import { cn } from '@/lib/helpers';
 import { client } from '@/lib/supabase';
 import { QA, Question } from '@/schemas/user';
-import { PlusIcon } from '@heroicons/react/24/solid';
 import { useEffect, useState } from 'react';
-import Label from './generic/label';
+import AddLabel from './generic/addLabel';
+
 interface QAInputListProps {
   questions: QA[];
   onUpdate: (updatedQuestions: QA[]) => void;
@@ -80,27 +79,11 @@ const QAInputList: React.FC<QAInputListProps> = ({ questions, onUpdate }) => {
 
   return (
     <div className="max-w-lg mt-1">
-      <div className="flex items-center justify-between mb-1">
-        <Label
-          name="Kysymyksiä"
-          className={cn(
-            'h-[16px] w-fit text-gray-900 transition ease-in-out font-bold',
-          )}
-        />
-        <button
-          className={cn(
-            'p-1 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition',
-            {
-              'bg-gray-500 hover:bg-gray-500 hover:cursor-default':
-                questions.length >= 5,
-            },
-          )}
-          disabled={questions.length >= 5}
-          onClick={handleAdd}
-        >
-          <PlusIcon className="h-4 w-4" />
-        </button>
-      </div>
+      <AddLabel
+        label="Kysymyksiä"
+        handleAdd={handleAdd}
+        disabled={questions.length >= 5}
+      />
       <div className="mb-2 space-y-1">
         {questions.map((q, index) => (
           <QAInput

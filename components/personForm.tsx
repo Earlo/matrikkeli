@@ -39,7 +39,7 @@ export default function PersonForm({ person }: PersonFormProps) {
   };
 
   return (
-    <div className="flex h-full w-full flex-col justify-center self-center p-2 sm:w-96">
+    <div className="flex h-full w-full flex-col justify-center self-center p-2 sm:w-lg">
       <div className="flex flex-row">
         <ImageUploader
           className="w-40 h-40"
@@ -49,7 +49,7 @@ export default function PersonForm({ person }: PersonFormProps) {
             setFormState((prev) => ({ ...prev!, image_url_session: value }))
           }
         />
-        <div className="flex flex-col ml-1 justify-between">
+        <div className="flex flex-col ml-1 grow justify-between">
           <LabeledInput
             wrapperClassName="mt-0"
             name="Etunimi"
@@ -87,6 +87,7 @@ export default function PersonForm({ person }: PersonFormProps) {
           setFormState((prev) => ({ ...prev!, description: e.target.value }))
         }
         multiline
+        className="max-w-lg"
       />
       <ContactInfoList
         contactInfo={formState.contact_info}
@@ -119,6 +120,7 @@ export default function PersonForm({ person }: PersonFormProps) {
         type="button"
         onClick={handleUpdate}
         disabled={!hasPendingChanges()}
+        className="max-w-lg"
       />
     </div>
   );

@@ -1,6 +1,4 @@
-import { cn } from '@/lib/helpers';
-import { PlusIcon } from '@heroicons/react/24/solid';
-import Label from './generic/label';
+import AddLabel from './generic/addLabel';
 import PositionCard from './positionCard';
 
 const Positions = ({
@@ -63,27 +61,11 @@ const Positions = ({
 
   return (
     <div className="max-w-lg mt-1">
-      <div className="flex items-center justify-between mb-1">
-        <Label
-          name={label}
-          className={cn(
-            'h-[16px] w-fit text-gray-900 transition ease-in-out font-bold',
-          )}
-        />
-        <button
-          className={cn(
-            'p-1 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition',
-            {
-              'bg-gray-500 hover:bg-gray-500 hover:cursor-default':
-                positions.length >= 5,
-            },
-          )}
-          disabled={positions.length >= 5}
-          onClick={handleAdd}
-        >
-          <PlusIcon className="h-4 w-4" />
-        </button>
-      </div>
+      <AddLabel
+        label={label}
+        handleAdd={handleAdd}
+        disabled={positions.length >= 5}
+      />
       <div className="mb-2 space-y-1">
         {positions.map((position) => (
           <PositionCard
