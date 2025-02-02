@@ -35,7 +35,7 @@ const QAInputList: React.FC<QAInputListProps> = ({
           throw new Error(error.message);
         }
         setQuestionOptions(data || []);
-      } catch (err: any) {
+      } catch (err) {
         console.error('Error fetching questions:', err.message);
       }
     };

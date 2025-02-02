@@ -41,7 +41,7 @@ export default function PersonForm({
       } else {
         setOriginalState(JSON.stringify(formState));
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error('Update failed:', err.message);
     }
   };
