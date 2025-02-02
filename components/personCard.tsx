@@ -2,6 +2,7 @@
 import { cn } from '@/lib/helpers';
 import { Person } from '@/schemas/user';
 import Image from 'next/image';
+import { useRef } from 'react';
 
 interface PersonCardProps {
   person: Person;
@@ -9,16 +10,31 @@ interface PersonCardProps {
 }
 
 export default function PersonCard({ person, onClick }: PersonCardProps) {
+  const cardRef = useRef<HTMLDivElement>(null);
+
   const shortDescription = person.description
     ? person.description.length > 50
       ? `${person.description.substring(0, 50)}...`
       : person.description
     : '';
 
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (cardRef.current) {
+      const rect = cardRef.current.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      cardRef.current.style.transformOrigin = `${x}px ${y}px`;
+    }
+  };
+
   return (
     <div
-      className="border rounded p-2 hover:shadow-lg transition duration-200 cursor-pointer"
+      ref={cardRef}
+      onPointerDown={handlePointerDown}
       onClick={onClick}
+      className={cn(
+        'border rounded p-2 transition transform duration-200 cursor-pointer hover:shadow-lg active:scale-98',
+      )}
     >
       <div className="flex items-center">
         {person.image_url_session ? (
@@ -26,7 +42,7 @@ export default function PersonCard({ person, onClick }: PersonCardProps) {
             src={person.image_url_session || '/blank_user.png'}
             alt={`${person.first_name} ${person.last_name}`}
             className={cn(
-              'rounded-tl-full rounded-tr-full rounded-bl-full rounded-br-none bg-orange-700 w-16 h-16',
+              'rounded-tl-full rounded-tr-full rounded-bl-full rounded-br-none w-16 h-16',
             )}
             width={192}
             height={192}

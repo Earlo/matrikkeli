@@ -44,7 +44,7 @@ const TopBar: FC = () => {
         )}
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-1">
         {session && <Button label="Log Out" onClick={() => logout()} />}
       </div>
 
