@@ -21,6 +21,7 @@ const AddLabel: React.FC<AddLabelProps> = ({
           'h-[16px] w-fit text-gray-900 transition ease-in-out font-bold',
         )}
       />
+
       <AddButton onClick={handleAdd} disabled={disabled} />
     </div>
   );

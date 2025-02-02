@@ -1,6 +1,8 @@
 'use client';
 import { client } from '@/lib/supabase';
 import { Person } from '@/schemas/user';
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
+import Image from 'next/image';
 import { useState } from 'react';
 import ContactInfoList from './contactInfoList';
 import Button from './generic/button';
@@ -9,21 +11,23 @@ import LabeledInput from './generic/labeledInput';
 import Positions from './Positions';
 import QAInputList from './qaInputList';
 
-interface PersonFormProps {
+export interface PersonFormProps {
   person: Person;
   disabled?: boolean;
+  onPrev?: () => void;
+  onNext?: () => void;
 }
 
 export default function PersonForm({
   person,
   disabled = false,
+  onPrev,
+  onNext,
 }: PersonFormProps) {
   const [formState, setFormState] = useState<Person>(person);
   const [originalState, setOriginalState] = useState(JSON.stringify(person));
 
-  const hasPendingChanges = () => {
-    return JSON.stringify(formState) !== originalState;
-  };
+  const hasPendingChanges = () => JSON.stringify(formState) !== originalState;
 
   const handleUpdate = async () => {
     if (!formState) return;
@@ -37,10 +41,78 @@ export default function PersonForm({
       } else {
         setOriginalState(JSON.stringify(formState));
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Update failed:', err.message);
     }
   };
+
+  if (disabled) {
+    return (
+      <div className="flex flex-col p-1 sm:w-lg">
+        <div className="flex items-center justify-between">
+          <button
+            onClick={onPrev}
+            disabled={!onPrev}
+            className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+          >
+            <ChevronLeftIcon className="h-4 w-4" />
+          </button>
+
+          <h1 className="text-2xl font-bold">
+            {person.first_name} {person.last_name}
+          </h1>
+          <button
+            onClick={onNext}
+            disabled={!onNext}
+            className="mr-6 p-2 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+          >
+            <ChevronRightIcon className="h-4 w-4" />
+          </button>
+        </div>
+        <div className="flex mt-1">
+          <div className="relative w-32 h-32 flex-shrink-0">
+            {person.image_url_session ? (
+              <Image
+                src={person.image_url_session}
+                alt={`${person.first_name} ${person.last_name}`}
+                className="rounded-tl-full rounded-tr-full rounded-bl-full rounded-br-none object-cover"
+                fill
+              />
+            ) : (
+              <div className="w-32 h-32 rounded-full bg-gray-300" />
+            )}
+          </div>
+          <div className="ml-1 flex-grow">
+            <p className="text-sm text-gray-700 whitespace-pre-wrap">
+              {person.description}
+            </p>
+          </div>
+        </div>
+        <ContactInfoList
+          contactInfo={person.contact_info}
+          onUpdate={() => {}}
+          disabled={true}
+        />
+        <Positions
+          label="Kamarihistoria"
+          positions={person.roles}
+          setPositions={() => {}}
+          disabled={true}
+        />
+        <Positions
+          label="Työhistoria"
+          positions={person.work_history}
+          setPositions={() => {}}
+          disabled={true}
+        />
+        <QAInputList
+          questions={person.questions || []}
+          onUpdate={() => {}}
+          disabled={true}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-full w-full flex-col justify-center self-center p-2 sm:w-lg">
@@ -61,7 +133,10 @@ export default function PersonForm({
             value={formState.first_name}
             onChange={(e) =>
               !disabled &&
-              setFormState((prev) => ({ ...prev!, first_name: e.target.value }))
+              setFormState((prev) => ({
+                ...prev!,
+                first_name: e.target.value,
+              }))
             }
             disabled={disabled}
           />
@@ -71,7 +146,10 @@ export default function PersonForm({
             value={formState.last_name}
             onChange={(e) =>
               !disabled &&
-              setFormState((prev) => ({ ...prev!, last_name: e.target.value }))
+              setFormState((prev) => ({
+                ...prev!,
+                last_name: e.target.value,
+              }))
             }
             disabled={disabled}
           />
