@@ -40,7 +40,7 @@ export default function PersonForm({ person }: PersonFormProps) {
 
   return (
     <div className="flex h-full w-full flex-col justify-center self-center p-2 sm:w-lg">
-      <div className="flex flex-row">
+      <div className="flex flex-row max-w-lg">
         <ImageUploader
           className="w-40 h-40"
           icon={formState?.image_url_session}
