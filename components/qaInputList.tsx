@@ -17,9 +17,12 @@ const QAInputList: React.FC<QAInputListProps> = ({
   disabled = false,
 }) => {
   const [questionOptions, setQuestionOptions] = useState<Question[]>([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (disabled) {
+      setQuestionOptions([]);
+      return;
+    }
     const fetchQuestions = async () => {
       try {
         const { data, error } = await client
@@ -31,17 +34,13 @@ const QAInputList: React.FC<QAInputListProps> = ({
         if (error) {
           throw new Error(error.message);
         }
-
         setQuestionOptions(data || []);
       } catch (err: any) {
         console.error('Error fetching questions:', err.message);
-      } finally {
-        setLoading(false);
       }
     };
-
     fetchQuestions();
-  }, []);
+  }, [disabled]);
 
   const handleAdd = () => {
     if (disabled) return;
@@ -75,15 +74,6 @@ const QAInputList: React.FC<QAInputListProps> = ({
     const updatedQuestions = questions.filter((_, i) => i !== index);
     onUpdate(updatedQuestions);
   };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center mt-4">
-        <div className="loader border-t-blue-500 border-4 h-6 w-6 rounded-full animate-spin"></div>
-        <span className="ml-2 text-gray-500">Loading questions...</span>
-      </div>
-    );
-  }
 
   return (
     <div className="max-w-lg mt-1">

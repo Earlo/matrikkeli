@@ -22,7 +22,7 @@ export default function PersonCard({ person }: PersonCardProps) {
   return (
     <>
       <div
-        className="border rounded p-4 hover:shadow-lg transition duration-200 cursor-pointer"
+        className="border rounded p-2 hover:shadow-lg transition duration-200 cursor-pointer"
         onClick={() => setIsModalOpen(true)}
       >
         <div className="flex items-center">
