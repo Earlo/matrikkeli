@@ -30,8 +30,8 @@ export default function Home() {
     return (
       <div className="container mx-auto pt-20 text-center">
         <div className="container mx-auto pt-20 text-center">
-          <h1 className="mb-5 text-6xl font-extrabold font-montserrat">ENKK</h1>
-          <p className="mb-8 text-2xl font-montserrat">Jäsenmatrikkeli</p>
+          <h1 className="mb-5 text-6xl font-extrabold">ENKK</h1>
+          <p className="mb-8 text-2xl">Jäsenmatrikkeli</p>
           <div className="flex justify-center">
             <Button
               label={'Login with LinkedIn'}

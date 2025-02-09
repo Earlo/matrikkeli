@@ -58,7 +58,7 @@ export default function PersonForm({
             <ChevronLeftIcon className="h-4 w-4" />
           </button>
 
-          <h1 className="text-2xl font-bold font-montserrat">
+          <h1 className="text-2xl font-bold">
             {person.first_name} {person.last_name}
           </h1>
 

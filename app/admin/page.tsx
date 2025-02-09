@@ -195,10 +195,8 @@ export default function AdminPage() {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4 font-montserrat">Admin Panel</h1>
-      <h2 className="text-xl font-semibold mt-8 mb-2 font-montserrat">
-        Manage People
-      </h2>
+      <h1 className="text-2xl font-bold mb-4">Admin Panel</h1>
+      <h2 className="text-xl font-semibold mt-8 mb-2">Manage People</h2>
       {loadingPeople ? (
         <LoadingSpinner />
       ) : (
