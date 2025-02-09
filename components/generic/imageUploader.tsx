@@ -59,7 +59,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
             src={icon || '/blank_user.png'}
             alt="Upload Image"
             className={cn(
-              'rounded-tl-full rounded-tr-full rounded-bl-full rounded-br-none bg-orange-700',
+              'rounded-tl-full rounded-tr-full rounded-bl-full rounded-br-none bg-[#F1742B]',
               {
                 'cursor-pointer': !disabled,
               },

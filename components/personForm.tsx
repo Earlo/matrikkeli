@@ -58,9 +58,10 @@ export default function PersonForm({
             <ChevronLeftIcon className="h-4 w-4" />
           </button>
 
-          <h1 className="text-2xl font-bold">
+          <h1 className="text-2xl font-bold font-montserrat">
             {person.first_name} {person.last_name}
           </h1>
+
           <button
             onClick={onNext}
             disabled={!onNext}
@@ -127,19 +128,33 @@ export default function PersonForm({
           disabled={disabled}
         />
         <div className="flex flex-col ml-1 grow justify-between">
-          <LabeledInput
-            wrapperClassName="mt-0"
-            name="Etunimi"
-            value={formState.first_name}
-            onChange={(e) =>
-              !disabled &&
-              setFormState((prev) => ({
-                ...prev!,
-                first_name: e.target.value,
-              }))
-            }
-            disabled={disabled}
-          />
+          <div className="flex items-center space-x-2">
+            <LabeledInput
+              wrapperClassName="mt-0"
+              name="Etunimi"
+              value={formState.first_name}
+              onChange={(e) =>
+                !disabled &&
+                setFormState((prev) => ({
+                  ...prev!,
+                  first_name: e.target.value,
+                }))
+              }
+              disabled={disabled}
+            />
+            <input
+              type="checkbox"
+              checked={formState.public}
+              onChange={() =>
+                setFormState((prev) => ({ ...prev!, public: !prev!.public }))
+              }
+              disabled={disabled}
+              className="w-5 h-5 accent-orange-600 self-end"
+            />
+            <span className="text-sm text-gray-700 self-end">
+              {formState.public ? 'julkinen' : 'piilotettu'}
+            </span>
+          </div>
           <LabeledInput
             wrapperClassName="mt-0"
             name="Sukunimi"

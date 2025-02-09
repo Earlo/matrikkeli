@@ -25,6 +25,7 @@ export interface Person {
   qr_code: string;
   questions: QA[];
   role: string;
+  public: boolean;
 }
 
 export interface QA {
