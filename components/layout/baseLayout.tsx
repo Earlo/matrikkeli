@@ -9,7 +9,7 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({ children, className }) => {
   return (
     <div
       className={cn(
-        'flex flex-auto flex-col bg-[#F1742B] font-prompt ',
+        'flex flex-auto flex-col bg-[#F37121] font-prompt ',
         className,
       )}
     >
