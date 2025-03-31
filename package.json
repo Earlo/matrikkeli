@@ -16,7 +16,7 @@
     "@heroicons/react": "2.2.0",
     "@sparticuz/chromium": "133.0.0",
     "@supabase/auth-helpers-nextjs": "0.10.0",
-    "@supabase/supabase-js": "2.49.3",
+    "@supabase/supabase-js": "2.49.4",
     "next": "15.2.4",
     "puppeteer-core": "24.4.0",
     "react": "19.1.0",
