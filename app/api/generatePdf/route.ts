@@ -39,7 +39,7 @@ export async function POST(req) {
   if (!people || people.length === 0) {
     return new NextResponse('No people data available', { status: 400 });
   }
-  console.log('local?', isLocal, JSON.stringify(people, null, 2));
+
   // Validate that `people` is an array and not empty
   if (!people || !Array.isArray(people) || people.length === 0) {
     return new NextResponse('Invalid or missing "people" data', {
@@ -189,7 +189,7 @@ export async function POST(req) {
     content += `
       <div class="page">
         <div class="profile">
-          <img src="${image_url_session || '/blank_user.png'}" alt="Profile Picture" />
+          <img src="${image_url_session || '/blank_user_filled.png'}" alt="Profile Picture" />
           <div class="content">
             <h1>${first_name} ${last_name}</h1>
             <p>${email}</p>

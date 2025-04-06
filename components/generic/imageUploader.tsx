@@ -56,7 +56,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
           onMouseLeave={() => {}}
         >
           <Image
-            src={icon || '/blank_user.png'}
+            src={icon || '/blank_user_filled.png'}
             alt="Upload Image"
             className={cn(
               'rounded-tl-full rounded-tr-full rounded-bl-full rounded-br-none bg-[#F1742B]',

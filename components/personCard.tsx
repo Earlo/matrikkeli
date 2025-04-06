@@ -39,7 +39,7 @@ export default function PersonCard({ person, onClick }: PersonCardProps) {
       <div className="flex items-center">
         {person.image_url_session ? (
           <Image
-            src={person.image_url_session || '/blank_user.png'}
+            src={person.image_url_session || '/blank_user_filled.png'}
             alt={`${person.first_name} ${person.last_name}`}
             className={cn(
               'rounded-tl-full rounded-tr-full rounded-bl-full rounded-br-none w-16 h-16',

@@ -15,6 +15,9 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   list?: string;
 }
 
+const baseInputClasses =
+  'mt-1 block w-full rounded-md border rounded-br-none border-gray-200 p-1 shadow-xs text-sm';
+
 const Input: React.FC<InputProps> = ({
   name,
   type = 'text',
@@ -26,17 +29,16 @@ const Input: React.FC<InputProps> = ({
   disabled = false,
   className = '',
   list,
-}) =>
-  multiline ? (
+}) => {
+  const combinedClasses = cn(baseInputClasses, className);
+
+  return multiline ? (
     <textarea
       id={name}
       name={name}
       value={value}
       placeholder={placeholder}
-      className={cn(
-        'mt-1 block w-full rounded-md border rounded-br-none border-gray-200 p-2 shadow-xs text-sm',
-        className,
-      )}
+      className={combinedClasses}
       required={required}
       onChange={onChange}
       disabled={disabled}
@@ -48,15 +50,13 @@ const Input: React.FC<InputProps> = ({
       name={name}
       value={value}
       placeholder={placeholder}
-      className={cn(
-        'mt-1 block w-full rounded-md border rounded-br-none border-gray-200 p-1 shadow-xs text-sm',
-        className,
-      )}
+      className={combinedClasses}
       required={required}
       onChange={onChange}
       disabled={disabled}
       list={list}
     />
   );
+};
 
 export default Input;
