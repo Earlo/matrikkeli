@@ -1,8 +1,8 @@
 import { client } from '@/lib/supabase';
 import { Person } from '@/schemas/user';
 import { AuthError, Session } from '@supabase/supabase-js';
-import crypto from 'crypto';
 import { createContext, useContext, useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 interface AuthContextProps {
   session: Session | null;
@@ -73,17 +73,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           user_id: userId,
           email,
           contact_info: {
-            Email: { data: email, order: 0, id: crypto.randomUUID() },
+            Email: { data: email, order: 0, id: uuidv4() },
           },
           first_name: '',
           last_name: '',
           roles: [],
           image_url_session: '',
           description: '',
-          birthday: '',
           work_history: [],
-          joined: '',
-          left: '',
           qr_code: '',
           questions: [],
         };
