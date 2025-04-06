@@ -23,9 +23,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [person, setPerson] = useState<Person | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const attachUserRole = async (session: Session) => {
+  const attachUserRole = async (newSession: Session) => {
     try {
-      const userId = session.user.id;
+      const userId = newSession.user.id;
       const { data: roleData, error: roleError } = await client
         .from('people')
         .select('role')
@@ -34,19 +34,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (roleError) {
         console.error('Error fetching role:', roleError);
-        return session;
+        return newSession;
       }
 
       if (roleData?.role) {
-        session.user.user_metadata = {
-          ...session.user.user_metadata,
+        newSession.user.user_metadata = {
+          ...newSession.user.user_metadata,
           role: roleData.role,
         };
       }
-      return session;
+      return newSession;
     } catch (err) {
       console.error('Unhandled error while attaching user role:', err);
-      return session;
+      return newSession;
     }
   };
 
@@ -75,16 +75,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           contact_info: {
             Email: { data: email, order: 0, id: uuidv4() },
           },
-          first_name: '',
-          last_name: '',
+          first_name: session.user.user_metadata.given_name || '',
+          last_name: session.user.user_metadata.family_name || '',
           roles: [],
           image_url_session: '',
-          description: '',
           work_history: [],
           qr_code: '',
           questions: [],
         };
-
         const { error: insertError, data: insertedData } = await client
           .from('people')
           .insert(newUser)
@@ -125,7 +123,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (data?.session) {
         const sessionWithRole = await attachUserRole(data.session);
         setSession(sessionWithRole);
-
         // Here we fetch or create the person row
         const fetchedPerson = await fetchOrCreateUserData(sessionWithRole);
         setPerson(fetchedPerson);
