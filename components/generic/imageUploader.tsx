@@ -51,7 +51,10 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
         </div>
       ) : (
         <div
-          className={cn('relative h-48 w-48 overflow-hidden', className)}
+          className={cn(
+            'relative  rounded-tl-full rounded-tr-full rounded-bl-full rounded-br-none h-48 w-48 overflow-hidden',
+            className,
+          )}
           onMouseEnter={() => {}}
           onMouseLeave={() => {}}
         >

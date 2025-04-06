@@ -77,11 +77,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           },
           first_name: session.user.user_metadata.given_name || '',
           last_name: session.user.user_metadata.family_name || '',
-          roles: [],
-          image_url_session: '',
-          work_history: [],
-          qr_code: '',
-          questions: [],
+          image_url_session: session.user.user_metadata.picture || '',
+          //qr_code: '', //generate this here?
         };
         const { error: insertError, data: insertedData } = await client
           .from('people')
