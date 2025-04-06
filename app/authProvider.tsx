@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         .from('people')
         .select('role')
         .eq('user_id', userId)
-        .single();
+        .maybeSingle();
 
       if (roleError) {
         console.error('Error fetching role:', roleError);
@@ -85,7 +85,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         };
         const { error: insertError, data: insertedData } = await client
           .from('people')
-          .insert(newUser)
+          .upsert([newUser], { onConflict: 'user_id' })
+          .select()
           .single();
 
         if (insertError) {

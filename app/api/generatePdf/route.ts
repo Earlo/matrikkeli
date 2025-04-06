@@ -8,7 +8,7 @@ import { launch } from 'puppeteer-core';
 // Optional: If you'd like to use the new headless mode. "shell" is the default.
 // NOTE: Because we build the shell binary, this option does not work.
 //       However, this option will stay so when we migrate to full chromium it will work.
-chromium.setHeadlessMode = true;
+// chromium.setHeadlessMode = true;
 
 // Optional: If you'd like to disable webgl, true is the default.
 chromium.setGraphicsMode = false;
