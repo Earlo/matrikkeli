@@ -9,19 +9,23 @@ export default function Home() {
   const { session, person, loading } = useAuth();
 
   const handleLinkedIn = async () => {
+    const redirectTo = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
     const { data, error } = await client.auth.signInWithOAuth({
       provider: 'linkedin_oidc',
       options: {
-        redirectTo: process.env.NEXT_PUBLIC_URL || 'http://localhost:3000',
+        redirectTo: `${redirectTo}/auth/callback`,
       },
     });
     if (error) {
       throw new Error(error.message);
     }
-    if (!data) {
+    if (data?.url) {
+      window.location.href = data.url;
+    } else {
       throw new Error('Failed to sign in with LinkedIn');
     }
   };
+
   if (loading) {
     return <LoadingSpinner />;
   }

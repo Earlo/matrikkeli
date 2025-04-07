@@ -3,13 +3,10 @@ import { useAuth } from '@/app/authProvider';
 import Button from '@/components/generic/button';
 import { Role } from '@/schemas/user';
 import Link from 'next/link';
-import { FC, useState } from 'react';
-import AuthForm from '../authForm';
+import { FC } from 'react';
 
 const TopBar: FC = () => {
   const { session, logout } = useAuth();
-  const [showAuthForm, setShowAuthForm] = useState(false);
-
   const userRole = session?.user?.user_metadata?.role as Role | undefined;
   return (
     <div className="flex items-center justify-between bg-gray-800 p-4 text-white">
@@ -45,12 +42,9 @@ const TopBar: FC = () => {
           </>
         )}
       </div>
-
       <div className="flex items-center gap-1">
         {session && <Button label="Log Out" onClick={() => logout()} />}
       </div>
-
-      {showAuthForm && <AuthForm onClose={() => setShowAuthForm(false)} />}
     </div>
   );
 };
