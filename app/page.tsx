@@ -9,7 +9,9 @@ export default function Home() {
   const { session, person, loading } = useAuth();
 
   const handleLinkedIn = async () => {
+    console.log('HHASHADSJKHJK');
     const redirectTo = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
+    console.log(`${redirectTo}/auth/callback`);
     const { data, error } = await client.auth.signInWithOAuth({
       provider: 'linkedin_oidc',
       options: {
