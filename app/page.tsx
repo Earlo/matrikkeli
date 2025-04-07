@@ -10,12 +10,10 @@ export default function Home() {
 
   const handleLinkedIn = async () => {
     console.log('HHASHADSJKHJK');
-    const redirectTo = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
-    console.log(`${redirectTo}/auth/callback`);
     const { data, error } = await client.auth.signInWithOAuth({
       provider: 'linkedin_oidc',
       options: {
-        redirectTo: `${redirectTo}/auth/callback`,
+        redirectTo: `${process.env.NEXT_PUBLIC_URL || 'http://localhost:3000/'}auth/callback`,
       },
     });
     if (error) {
