@@ -12,8 +12,16 @@ export async function GET(request: Request) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {
-      // ✅ Clean and deterministic redirect
-      return NextResponse.redirect(next);
+      const forwardedHost = request.headers.get('x-forwarded-host');
+      const isLocalEnv = process.env.NODE_ENV === 'development';
+      console.log(isLocalEnv, origin, next, forwardedHost);
+      if (isLocalEnv) {
+        return NextResponse.redirect(`${origin}${next}`);
+      } else if (forwardedHost) {
+        return NextResponse.redirect(`https://${forwardedHost}${next}`);
+      } else {
+        return NextResponse.redirect(`${origin}${next}`);
+      }
     }
 
     console.error('Supabase session exchange error:', error.message);
