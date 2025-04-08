@@ -13,7 +13,7 @@ export default function Home() {
     const { data, error } = await client.auth.signInWithOAuth({
       provider: 'linkedin_oidc',
       options: {
-        redirectTo: `${process.env.NEXT_PUBLIC_URL || 'http://localhost:3000/'}auth/callback`,
+        redirectTo: `${process.env.NEXT_PUBLIC_URL || 'http://localhost:3000/'}auth/callback?next=/`,
       },
     });
     if (error) {
