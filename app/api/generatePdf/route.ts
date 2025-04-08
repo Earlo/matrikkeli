@@ -1,4 +1,4 @@
-import { client } from '@/lib/supabase'; // Import your Supabase client
+import { client } from '@/lib/supabase/client'; // Import your Supabase client
 import { iconSVGS } from '@/schemas/contactInfoTypes';
 import { Person } from '@/schemas/user';
 import chromium from '@sparticuz/chromium';

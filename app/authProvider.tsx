@@ -1,4 +1,4 @@
-import { client } from '@/lib/supabase';
+import { client } from '@/lib/supabase/client';
 import { Person } from '@/schemas/user';
 import { AuthError, Session } from '@supabase/supabase-js';
 import { createContext, useContext, useEffect, useState } from 'react';

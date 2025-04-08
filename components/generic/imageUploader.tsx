@@ -1,6 +1,6 @@
 'use client';
 import { cn } from '@/lib/helpers';
-import { handleUpload } from '@/lib/supabase';
+import { handleUpload } from '@/lib/supabase/client';
 import { ArrowUpOnSquareIcon } from '@heroicons/react/24/solid';
 import Image from 'next/image';
 import { ChangeEvent, useRef, useState } from 'react';

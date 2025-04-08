@@ -2,7 +2,7 @@
 import Button from '@/components/generic/button';
 import LoadingSpinner from '@/components/generic/loadingSpinner';
 import PersonForm from '@/components/personForm';
-import { client } from '@/lib/supabase';
+import { client } from '@/lib/supabase/client';
 import { useAuth } from './authProvider';
 
 export default function Home() {

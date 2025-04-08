@@ -2,7 +2,7 @@
 
 import LoadingSpinner from '@/components/generic/loadingSpinner';
 import PersonForm from '@/components/personForm';
-import { client } from '@/lib/supabase';
+import { client } from '@/lib/supabase/client';
 import { Person, Question, Role } from '@/schemas/user';
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import { useEffect, useState } from 'react';

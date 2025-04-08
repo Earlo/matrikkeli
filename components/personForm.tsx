@@ -1,5 +1,5 @@
 'use client';
-import { client } from '@/lib/supabase';
+import { client } from '@/lib/supabase/client';
 import { Person } from '@/schemas/user';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 import Image from 'next/image';

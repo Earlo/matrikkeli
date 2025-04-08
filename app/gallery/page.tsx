@@ -1,7 +1,7 @@
 'use client';
 
 import Gallery from '@/components/gallery';
-import { client } from '@/lib/supabase';
+import { client } from '@/lib/supabase/client';
 import { Person, Role } from '@/schemas/user';
 import { useEffect, useState } from 'react';
 import { useAuth } from '../authProvider';
