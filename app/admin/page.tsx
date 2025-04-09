@@ -6,11 +6,10 @@ import { client } from '@/lib/supabase/client';
 import { Person, Question, Role } from '@/schemas/user';
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import { useEffect, useState } from 'react';
-import { useAuth } from '../authProvider';
+import { useUser } from '../userProvider';
 
 export default function AdminPage() {
-  const { session, loading } = useAuth();
-  const [currentUserRole, setCurrentUserRole] = useState<Role | null>(null);
+  const { person, loading } = useUser();
   const [people, setPeople] = useState<Person[]>([]);
   const [loadingPeople, setLoadingPeople] = useState(true);
   const [selectedPerson, setSelectedPerson] = useState<Person | null>(null);
@@ -19,32 +18,12 @@ export default function AdminPage() {
   const [newQuestionText, setNewQuestionText] = useState('');
   const [newQuestionPriority, setNewQuestionPriority] = useState(0);
 
-  useEffect(() => {
-    if (!session) return;
-
-    const fetchUserRole = async () => {
-      try {
-        const { data, error } = await client
-          .from('people')
-          .select('role')
-          .eq('user_id', session.user.id)
-          .single();
-
-        if (error) {
-          console.error('Error fetching user role:', error);
-        } else if (data && data.role) {
-          setCurrentUserRole(data.role);
-        }
-      } catch (error) {
-        console.error('Unhandled error while fetching user role:', error);
-      }
-    };
-
-    fetchUserRole();
-  }, [session]);
+  const currentUserRole = person?.role ?? null;
+  const isAdmin =
+    currentUserRole === 'admin' || currentUserRole === 'super_admin';
 
   useEffect(() => {
-    if (currentUserRole !== 'admin' && currentUserRole !== 'super_admin') {
+    if (!isAdmin) {
       setLoadingPeople(false);
       return;
     }
@@ -55,7 +34,7 @@ export default function AdminPage() {
         const { data, error } = await client.from('people').select('*');
         if (error) {
           console.error('Error fetching people:', error);
-        } else if (data) {
+        } else {
           setPeople(data as Person[]);
         }
       } catch (error) {
@@ -66,13 +45,14 @@ export default function AdminPage() {
     };
 
     fetchPeople();
-  }, [currentUserRole]);
+  }, [isAdmin]);
 
   useEffect(() => {
-    if (currentUserRole !== 'admin' && currentUserRole !== 'super_admin') {
+    if (!isAdmin) {
       setLoadingQuestions(false);
       return;
     }
+
     const fetchQuestions = async () => {
       setLoadingQuestions(true);
       try {
@@ -97,7 +77,7 @@ export default function AdminPage() {
     };
 
     fetchQuestions();
-  }, [currentUserRole]);
+  }, [isAdmin]);
 
   const handleChangeRole = async (personId: number, newRole: Role) => {
     if (currentUserRole !== 'super_admin') return;
@@ -111,6 +91,7 @@ export default function AdminPage() {
         console.error('Error updating role:', error);
         return;
       }
+
       setPeople((prev) =>
         prev.map((person) =>
           person.id === personId ? { ...person, role: newRole } : person,
@@ -175,7 +156,7 @@ export default function AdminPage() {
     );
   }
 
-  if (!session) {
+  if (!person) {
     return (
       <div className="p-4">
         <h2>Access Denied</h2>
@@ -184,7 +165,7 @@ export default function AdminPage() {
     );
   }
 
-  if (currentUserRole !== 'admin' && currentUserRole !== 'super_admin') {
+  if (!isAdmin) {
     return (
       <div className="p-4">
         <h2>Access Denied</h2>

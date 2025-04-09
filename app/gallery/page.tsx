@@ -2,50 +2,28 @@
 
 import Gallery from '@/components/gallery';
 import { client } from '@/lib/supabase/client';
-import { Person, Role } from '@/schemas/user';
+import { Person } from '@/schemas/user';
 import { useEffect, useState } from 'react';
-import { useAuth } from '../authProvider';
+import { useUser } from '../userProvider';
 
 export default function GalleryPage() {
-  const { session } = useAuth();
+  const { person } = useUser();
   const [people, setPeople] = useState<Person[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAll, setShowAll] = useState(false);
-  const [currentUserRole, setCurrentUserRole] = useState<Role | null>(null);
+
+  const isAdmin = person?.role === 'admin' || person?.role === 'super_admin';
 
   useEffect(() => {
-    if (!session) return;
-    const fetchUserRole = async () => {
-      try {
-        const { data, error } = await client
-          .from('people')
-          .select('role')
-          .eq('user_id', session.user.id)
-          .single();
+    if (!person) return;
 
-        if (error) {
-          console.error('Error fetching user role:', error);
-        } else if (data && data.role) {
-          setCurrentUserRole(data.role);
-        }
-      } catch (error) {
-        console.error('Unhandled error while fetching user role:', error);
-      }
-    };
-    fetchUserRole();
-  }, [session]);
-
-  useEffect(() => {
     setLoading(true);
 
     const fetchPeople = async () => {
       try {
         let query = client.from('people').select('*');
 
-        if (
-          !showAll ||
-          (currentUserRole !== 'admin' && currentUserRole !== 'super_admin')
-        ) {
+        if (!showAll || !isAdmin) {
           query = query.eq('public', true);
         }
 
@@ -64,13 +42,13 @@ export default function GalleryPage() {
     };
 
     fetchPeople();
-  }, [showAll, currentUserRole]);
+  }, [showAll, person]);
 
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Matrikkeli Gallery</h1>
 
-      {currentUserRole === 'admin' || currentUserRole === 'super_admin' ? (
+      {isAdmin && (
         <div className="mb-4 flex items-center space-x-2">
           <input
             type="checkbox"
@@ -83,7 +61,7 @@ export default function GalleryPage() {
             Näytä kaikki (Tämän pitäisi näkyä vain admin-käyttäjille)
           </label>
         </div>
-      ) : null}
+      )}
 
       {loading ? <p>Ladataan...</p> : <Gallery people={people} />}
     </div>

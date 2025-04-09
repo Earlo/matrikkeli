@@ -1,7 +1,7 @@
 'use client';
 import { ReactNode } from 'react';
-import { AuthProvider } from './authProvider';
+import { UserProvider } from './userProvider';
 
 export default function Provider({ children }: { children: ReactNode }) {
-  return <AuthProvider>{children}</AuthProvider>;
+  return <UserProvider>{children}</UserProvider>;
 }

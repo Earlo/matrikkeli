@@ -8,13 +8,11 @@ export async function GET(request: Request) {
 
   if (code) {
     const supabase = await createClient();
-
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {
       const forwardedHost = request.headers.get('x-forwarded-host');
       const isLocalEnv = process.env.NODE_ENV === 'development';
-      console.log(isLocalEnv, origin, next, forwardedHost);
       if (isLocalEnv) {
         return NextResponse.redirect(`${origin}${next}`);
       } else if (forwardedHost) {
@@ -23,10 +21,11 @@ export async function GET(request: Request) {
         return NextResponse.redirect(`${origin}${next}`);
       }
     }
-
-    console.error('Supabase session exchange error:', error.message);
+    return NextResponse.json(
+      { error: `Supabase error: ${error.message}` },
+      { status: 500 },
+    );
   }
 
-  // ❌ If we got here, either no code or session exchange failed
   return NextResponse.redirect('/auth/auth-code-error');
 }

@@ -6,6 +6,7 @@ import type { Metadata } from 'next';
 import { Archivo } from 'next/font/google';
 import type { ReactNode } from 'react';
 import Provider from './providers';
+
 export const metadata: Metadata = {
   title: 'ENKK Matrikkeli Tool',
   description: 'A tool for generating a booklet of people in an organization',

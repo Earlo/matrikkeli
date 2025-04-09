@@ -1,13 +1,14 @@
 'use client';
-import { useAuth } from '@/app/authProvider';
+import { useUser } from '@/app/userProvider';
 import Button from '@/components/generic/button';
 import { Role } from '@/schemas/user';
 import Link from 'next/link';
 import { FC } from 'react';
 
 const TopBar: FC = () => {
-  const { session, logout } = useAuth();
-  const userRole = session?.user?.user_metadata?.role as Role | undefined;
+  const { person, logout } = useUser();
+  const userRole = person?.role as Role | undefined;
+
   return (
     <div className="flex items-center justify-between bg-gray-800 p-4 text-white">
       <div className="flex items-center">
@@ -17,14 +18,14 @@ const TopBar: FC = () => {
         >
           Home
         </Link>
-        {session ? (
+        {person && (
           <Link
             className="text-lg md:text-xl pl-4 font-bold hover:opacity-80"
             href="/gallery"
           >
             Gallery
           </Link>
-        ) : null}
+        )}
         {(userRole === 'admin' || userRole === 'super_admin') && (
           <>
             <Link
@@ -43,7 +44,7 @@ const TopBar: FC = () => {
         )}
       </div>
       <div className="flex items-center gap-1">
-        {session && <Button label="Log Out" onClick={() => logout()} />}
+        {person && <Button label="Log Out" onClick={logout} />}
       </div>
     </div>
   );
