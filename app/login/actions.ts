@@ -8,17 +8,15 @@ import { redirect } from 'next/navigation';
 export async function login() {
   const supabase = await createClient();
   const origin = (await headers()).get('origin');
-  console.log('origin is', origin);
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'linkedin_oidc',
     options: {
       //redirectTo: `${process.env.NEXT_PUBLIC_URL || 'http://localhost:3000/'}auth/callback`,
-      redirectTo: origin,
+      redirectTo: `${origin}/auth/callback`,
     },
   });
 
   if (data.url) {
-    console.log('redirecting to data.url', data.url);
     redirect(data.url); // use the redirect API for your server framework
   }
   if (error) {
@@ -28,3 +26,9 @@ export async function login() {
   revalidatePath('/', 'layout');
   redirect('/');
 }
+
+export const signOutAction = async () => {
+  const supabase = await createClient();
+  await supabase.auth.signOut();
+  return redirect('/');
+};
