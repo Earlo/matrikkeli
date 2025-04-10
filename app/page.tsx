@@ -1,14 +1,13 @@
 'use client';
 import LoadingSpinner from '@/components/generic/loadingSpinner';
 import PersonForm from '@/components/personForm';
-import { useUser } from './userProvider';
+import { useUserProfile } from '@/hooks/userProfile';
 
 export default function Home() {
-  const { person, loading } = useUser();
-  console.log('person', person);
-  if (loading) {
-    return <LoadingSpinner />;
-  }
+  const { person, loading } = useUserProfile();
+
+  if (loading) return <LoadingSpinner />;
+  if (!person) return <div>No profile found.</div>;
 
   return <PersonForm person={person} />;
 }

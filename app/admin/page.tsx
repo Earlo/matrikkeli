@@ -2,14 +2,14 @@
 
 import LoadingSpinner from '@/components/generic/loadingSpinner';
 import PersonForm from '@/components/personForm';
-import { client } from '@/lib/supabase/client';
+import { useUserProfile } from '@/hooks/userProfile';
+import { client } from '@/lib/supabase/browser';
 import { Person, Question, Role } from '@/schemas/user';
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import { useEffect, useState } from 'react';
-import { useUser } from '../userProvider';
 
 export default function AdminPage() {
-  const { person, loading } = useUser();
+  const { person, loading } = useUserProfile();
   const [people, setPeople] = useState<Person[]>([]);
   const [loadingPeople, setLoadingPeople] = useState(true);
   const [selectedPerson, setSelectedPerson] = useState<Person | null>(null);

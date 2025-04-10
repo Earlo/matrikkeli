@@ -55,3 +55,8 @@ export const getImageUrl = async (path: string, bucketName: string) => {
     console.error('Get image URL failed:', error);
   }
 };
+
+export const logout = async () => {
+  await client.auth.signOut();
+  window.location.href = '/login';
+};

@@ -1,12 +1,13 @@
 'use client';
-import { useUser } from '@/app/userProvider';
 import Button from '@/components/generic/button';
+import { useUserProfile } from '@/hooks/userProfile';
+import { logout } from '@/lib/supabase/browser';
 import { Role } from '@/schemas/user';
 import Link from 'next/link';
 import { FC } from 'react';
 
 const TopBar: FC = () => {
-  const { person, logout } = useUser();
+  const { person } = useUserProfile();
   const userRole = person?.role as Role | undefined;
 
   return (

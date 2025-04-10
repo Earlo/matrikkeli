@@ -1,6 +1,6 @@
 'use client';
 import { cn } from '@/lib/helpers';
-import { handleUpload } from '@/lib/supabase/client';
+import { handleUpload } from '@/lib/supabase/browser';
 import { ArrowUpOnSquareIcon } from '@heroicons/react/24/solid';
 import Image from 'next/image';
 import { ChangeEvent, useRef, useState } from 'react';
@@ -69,6 +69,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
             )}
             width={192}
             height={192}
+            priority
           />
           {children ? (
             <div className="absolute inset-0 flex items-center justify-between transition-opacity duration-200 opacity-0 hover:opacity-100">

@@ -1,13 +1,13 @@
 'use client';
 
 import Gallery from '@/components/gallery';
-import { client } from '@/lib/supabase/client';
+import { useUserProfile } from '@/hooks/userProfile';
+import { client } from '@/lib/supabase/browser';
 import { Person } from '@/schemas/user';
 import { useEffect, useState } from 'react';
-import { useUser } from '../userProvider';
 
 export default function GalleryPage() {
-  const { person } = useUser();
+  const { person } = useUserProfile();
   const [people, setPeople] = useState<Person[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAll, setShowAll] = useState(false);

@@ -1,5 +1,5 @@
 'use client';
-import { client } from '@/lib/supabase/client';
+import { client } from '@/lib/supabase/browser';
 import { Person } from '@/schemas/user';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 import Image from 'next/image';
@@ -77,6 +77,7 @@ export default function PersonForm({
                 src={person.image_url_session}
                 alt={`${person.first_name} ${person.last_name}`}
                 className="rounded-tl-full rounded-tr-full rounded-bl-full rounded-br-none object-cover"
+                priority
                 fill
               />
             ) : (

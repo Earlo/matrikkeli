@@ -1,5 +1,5 @@
 'use client';
-import { client } from '@/lib/supabase/client';
+import { client } from '@/lib/supabase/browser';
 import { Person } from '@/schemas/user';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
@@ -21,11 +21,12 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   const fetchOrCreatePerson = async () => {
+    console.log('getting session');
     const {
       data: { session },
       error,
     } = await client.auth.getSession();
-
+    console.log('getSession result', session, error); // Add this
     if (error || !session?.user) {
       console.warn('No session found');
       return null;
@@ -73,17 +74,20 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const init = async () => {
+      console.log('init called'); // Add
       setLoading(true);
       const fetched = await fetchOrCreatePerson();
+      console.log('fetched person', fetched); // Add
       setPerson(fetched);
       setLoading(false);
     };
 
-    init();
+    // init();
 
     const { data: listener } = client.auth.onAuthStateChange(
       async (_, session) => {
         if (session) {
+          console.log('state change');
           const fetched = await fetchOrCreatePerson();
           setPerson(fetched);
         } else {
@@ -109,7 +113,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         },
       }}
     >
-      {!loading && children}
+      {children}
     </UserContext.Provider>
   );
 };

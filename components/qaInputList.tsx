@@ -1,6 +1,6 @@
 'use client';
 import QAInput from '@/components/qaInput';
-import { client } from '@/lib/supabase/client';
+import { client } from '@/lib/supabase/browser';
 import { QA, Question } from '@/schemas/user';
 import { useEffect, useState } from 'react';
 import AddLabel from './generic/addLabel';
