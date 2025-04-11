@@ -42,7 +42,7 @@ export default function GalleryPage() {
     };
 
     fetchPeople();
-  }, [showAll, person]);
+  }, [showAll, person, isAdmin]);
 
   return (
     <div className="p-4">
