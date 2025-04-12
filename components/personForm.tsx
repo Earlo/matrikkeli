@@ -8,6 +8,7 @@ import ContactInfoList from './contactInfoList';
 import Button from './generic/button';
 import ImageUploader from './generic/imageUploader';
 import LabeledInput from './generic/labeledInput';
+import ToggleSwitch from './generic/toggleSwitch';
 import Positions from './Positions';
 import QAInputList from './qaInputList';
 
@@ -129,9 +130,9 @@ export default function PersonForm({
           disabled={disabled}
         />
         <div className="flex flex-col ml-1 grow justify-between">
-          <div className="flex items-center space-x-2">
+          <div className="flex">
             <LabeledInput
-              wrapperClassName="mt-0"
+              wrapperClassName="mt-0 mr-2"
               name="Etunimi"
               value={formState.first_name}
               onChange={(e) =>
@@ -143,18 +144,14 @@ export default function PersonForm({
               }
               disabled={disabled}
             />
-            <input
-              type="checkbox"
+            <ToggleSwitch
+              label="Julkinen profiili"
               checked={formState.public}
-              onChange={() =>
-                setFormState((prev) => ({ ...prev!, public: !prev!.public }))
+              onChange={(checked) =>
+                setFormState((prev) => ({ ...prev!, public: checked }))
               }
               disabled={disabled}
-              className="w-5 h-5 accent-orange-600 self-end"
             />
-            <span className="text-sm text-gray-700 self-end">
-              {formState.public ? 'julkinen' : 'piilotettu'}
-            </span>
           </div>
           <LabeledInput
             wrapperClassName="mt-0"

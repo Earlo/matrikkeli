@@ -9,7 +9,10 @@ interface LabelProps {
 
 const Label: React.FC<LabelProps> = ({ label, name, children, className }) => (
   <label
-    className={cn('block text-sm font-medium text-white ', className)}
+    className={cn(
+      'block text-sm font-medium text-white whitespace-nowrap',
+      className,
+    )}
     htmlFor={name}
   >
     {label ? label : name}
