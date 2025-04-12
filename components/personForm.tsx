@@ -2,12 +2,12 @@
 import { client } from '@/lib/supabase/browser';
 import { Person } from '@/schemas/user';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
-import Image from 'next/image';
 import { useState } from 'react';
 import ContactInfoList from './contactInfoList';
 import Button from './generic/button';
 import ImageUploader from './generic/imageUploader';
 import LabeledInput from './generic/labeledInput';
+import PorfileImage from './generic/profileImage';
 import ToggleSwitch from './generic/toggleSwitch';
 import Positions from './Positions';
 import QAInputList from './qaInputList';
@@ -73,17 +73,12 @@ export default function PersonForm({
         </div>
         <div className="flex mt-1">
           <div className="relative w-32 h-32 flex-shrink-0">
-            {person.image_url_session ? (
-              <Image
-                src={person.image_url_session}
-                alt={`${person.first_name} ${person.last_name}`}
-                className="rounded-tl-full rounded-tr-full rounded-bl-full rounded-br-none object-cover"
-                priority
-                fill
-              />
-            ) : (
-              <div className="w-32 h-32 rounded-full bg-gray-300" />
-            )}
+            <PorfileImage
+              src={person.image_url_session}
+              alt={`${person.first_name} ${person.last_name}`}
+              size={128}
+              className="w-32 h-32"
+            />
           </div>
           <div className="ml-1 flex-grow">
             <p className="text-sm text-gray-700 whitespace-pre-wrap">

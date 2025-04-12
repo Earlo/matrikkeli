@@ -2,9 +2,9 @@
 import { cn } from '@/lib/helpers';
 import { handleUpload } from '@/lib/supabase/browser';
 import { ArrowUpOnSquareIcon } from '@heroicons/react/24/solid';
-import Image from 'next/image';
 import { ChangeEvent, useRef, useState } from 'react';
 import LoadingSpinner from './loadingSpinner';
+import ProfileImage from './profileImage';
 
 interface ImageUploaderProps {
   setIcon: (icon: string) => void;
@@ -50,27 +50,12 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
           <LoadingSpinner />
         </div>
       ) : (
-        <div
-          className={cn(
-            'relative  rounded-tl-full rounded-tr-full rounded-bl-full rounded-br-none h-48 w-48 overflow-hidden',
-            className,
-          )}
-          onMouseEnter={() => {}}
-          onMouseLeave={() => {}}
+        <ProfileImage
+          src={icon}
+          alt="Upload Image"
+          className={cn({ className, 'cursor-pointer': !disabled })}
+          size={192}
         >
-          <Image
-            src={icon || '/blank_user_filled.png'}
-            alt="Upload Image"
-            className={cn(
-              'rounded-tl-full rounded-tr-full rounded-bl-full rounded-br-none bg-[#F1742B]',
-              {
-                'cursor-pointer': !disabled,
-              },
-            )}
-            width={192}
-            height={192}
-            priority
-          />
           {children ? (
             <div className="absolute inset-0 flex items-center justify-between transition-opacity duration-200 opacity-0 hover:opacity-100">
               <div className="flex h-full w-full items-center justify-center rounded-tl-full rounded-tr-full rounded-bl-full rounded-br-none bg-black/30">
@@ -89,7 +74,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
               </div>
             )
           )}
-        </div>
+        </ProfileImage>
       )}
     </div>
   );

@@ -1,8 +1,8 @@
 'use client';
 import { cn } from '@/lib/helpers';
 import { Person } from '@/schemas/user';
-import Image from 'next/image';
 import { useRef } from 'react';
+import PorfileImage from './generic/profileImage';
 
 interface PersonCardProps {
   person: Person;
@@ -37,19 +37,12 @@ export default function PersonCard({ person, onClick }: PersonCardProps) {
       )}
     >
       <div className="flex items-center">
-        {person.image_url_session ? (
-          <Image
-            src={person.image_url_session || '/blank_user_filled.png'}
-            alt={`${person.first_name} ${person.last_name}`}
-            className={cn(
-              'rounded-tl-full rounded-tr-full rounded-bl-full rounded-br-none w-16 h-16',
-            )}
-            width={192}
-            height={192}
-          />
-        ) : (
-          <div className="rounded-full bg-gray-300 mr-4 w-16 h-16" />
-        )}
+        <PorfileImage
+          src={person.image_url_session}
+          alt={`${person.first_name} ${person.last_name}`}
+          size={64}
+          className="w-16 h-16"
+        />
         <div className="ml-4">
           <h2 className="text-xl font-semibold">
             {person.first_name} {person.last_name}
