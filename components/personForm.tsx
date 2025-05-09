@@ -54,7 +54,7 @@ export default function PersonForm({
           <button
             onClick={onPrev}
             disabled={!onPrev}
-            className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+            className="rounded-full bg-gray-200 p-2 hover:bg-gray-300 disabled:opacity-50"
           >
             <ChevronLeftIcon className="h-4 w-4" />
           </button>
@@ -66,22 +66,22 @@ export default function PersonForm({
           <button
             onClick={onNext}
             disabled={!onNext}
-            className="mr-6 p-2 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+            className="mr-6 rounded-full bg-gray-200 p-2 hover:bg-gray-300 disabled:opacity-50"
           >
             <ChevronRightIcon className="h-4 w-4" />
           </button>
         </div>
-        <div className="flex mt-1">
-          <div className="relative w-32 h-32 flex-shrink-0">
+        <div className="mt-1 flex">
+          <div className="relative h-32 w-32 flex-shrink-0">
             <PorfileImage
               src={person.image_url_session}
               alt={`${person.first_name} ${person.last_name}`}
               size={128}
-              className="w-32 h-32"
+              className="h-32 w-32"
             />
           </div>
           <div className="ml-1 flex-grow">
-            <p className="text-sm text-gray-700 whitespace-pre-wrap">
+            <p className="text-sm whitespace-pre-wrap text-gray-700">
               {person.description}
             </p>
           </div>
@@ -114,9 +114,9 @@ export default function PersonForm({
 
   return (
     <div className="flex h-full w-full flex-col justify-center self-center p-2 sm:w-lg">
-      <div className="flex flex-row max-w-lg">
+      <div className="flex max-w-lg flex-row">
         <ImageUploader
-          className="w-40 h-40"
+          className="h-40 w-40"
           icon={formState?.image_url_session}
           path={`matrikkeli/user/${formState.user_id}`}
           setIcon={(value) =>
@@ -124,7 +124,7 @@ export default function PersonForm({
           }
           disabled={disabled}
         />
-        <div className="flex flex-col ml-1 grow justify-between">
+        <div className="ml-1 flex grow flex-col justify-between">
           <div className="flex">
             <LabeledInput
               wrapperClassName="mt-0 mr-2"
@@ -224,7 +224,7 @@ export default function PersonForm({
           type="button"
           onClick={handleUpdate}
           disabled={!hasPendingChanges()}
-          className="max-w-lg mt-1"
+          className="mt-1 max-w-lg"
         />
       )}
     </div>

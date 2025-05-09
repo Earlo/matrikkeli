@@ -16,7 +16,7 @@ const CloseButton: React.FC<CloseButtonProps> = ({
     type="button"
     disabled={disabled}
     className={cn(
-      'hover:cursor-pointer  text-gray-700  hover:text-gray-500 transition',
+      'text-gray-700 transition hover:cursor-pointer hover:text-gray-500',
       {
         'hover:cursor-default': disabled,
       },

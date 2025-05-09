@@ -14,11 +14,11 @@ const AddLabel: React.FC<AddLabelProps> = ({
   handleAdd,
 }) => {
   return (
-    <div className="flex items-center justify-between mb-0.5">
+    <div className="mb-0.5 flex items-center justify-between">
       <Label
         name={label}
         className={cn(
-          'h-[16px] w-fit text-gray-900 transition ease-in-out font-bold',
+          'h-[16px] w-fit font-bold text-white transition ease-in-out',
         )}
       />
       <AddButton onClick={handleAdd} disabled={disabled} />

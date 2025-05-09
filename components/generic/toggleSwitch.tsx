@@ -20,17 +20,17 @@ export default function ToggleSwitch({
   };
 
   return (
-    <div className="flex flex-col justify-end h-full">
+    <div className="flex h-full flex-col justify-end">
       {label && (
-        <Label className="text-gray-900 font-bold leading-tight" name={label} />
+        <Label className="leading-tight font-bold text-white" name={label} />
       )}
       <button
         id={label}
         type="button"
         onClick={handleToggle}
         disabled={disabled}
-        className={`flex items-center h-10 mt-1 rounded-md px-0 ${
-          disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+        className={`mt-1 flex h-10 items-center rounded-md px-0 ${
+          disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
         }`}
       >
         <div

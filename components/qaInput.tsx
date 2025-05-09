@@ -31,7 +31,7 @@ const QAInput: React.FC<QAInputProps> = ({
       label={
         <div className="flex items-center">
           <QuestionMarkCircleIcon className="h-5 w-5 text-gray-500" />
-          <span className="ml-2 text-gray-700 font-medium">
+          <span className="ml-2 font-medium text-gray-700">
             {`#${index + 1} ${question || 'New Question'}`}
           </span>
         </div>

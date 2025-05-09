@@ -19,7 +19,7 @@ const IconButton: React.FC<IconButtonProps> = ({
   <button
     type="button"
     className={cn(
-      'inline-flex h-fit items-center justify-center rounded-md bg-white text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-hidden focus:ring-2 focus:ring-inset focus:ring-indigo-500',
+      'inline-flex h-fit items-center justify-center rounded-md bg-white text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500 focus:outline-hidden focus:ring-inset',
       className,
     )}
     onClick={onClick}

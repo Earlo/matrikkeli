@@ -46,7 +46,7 @@ export default function GalleryPage() {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Matrikkeli Gallery</h1>
+      <h1 className="mb-4 text-2xl font-bold text-white">Matrikkeli Gallery</h1>
 
       {isAdmin && (
         <div className="mb-4 flex items-center space-x-2">
@@ -55,7 +55,7 @@ export default function GalleryPage() {
             id="toggleShowAll"
             checked={showAll}
             onChange={() => setShowAll((prev) => !prev)}
-            className="w-5 h-5 accent-blue-600"
+            className="h-5 w-5 accent-blue-600"
           />
           <label htmlFor="toggleShowAll" className="text-sm text-gray-700">
             Näytä kaikki (Tämän pitäisi näkyä vain admin-käyttäjille)

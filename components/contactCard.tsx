@@ -44,7 +44,7 @@ const ContactCard: React.FC<ContactCardProps> = ({
       label={
         <div className="flex items-center">
           {contactInfoTypes.find((t) => t.type === type)?.icon}
-          <span className="ml-2 text-gray-700 font-medium">
+          <span className="ml-2 font-medium text-gray-700">
             {value || 'New Contact'}
           </span>
         </div>
@@ -53,7 +53,7 @@ const ContactCard: React.FC<ContactCardProps> = ({
     >
       <div className="flex items-end">
         <select
-          className="h-[2.1em] mr-1 rounded-md border border-gray-200 pl-2 shadow-xs sm:text-sm"
+          className="mr-1 h-[2.1em] rounded-md border border-gray-200 pl-2 shadow-xs sm:text-sm"
           value={type}
           onChange={(e) => handleTypeChange(e.target.value)}
           disabled={disabled}

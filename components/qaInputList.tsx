@@ -76,7 +76,7 @@ const QAInputList: React.FC<QAInputListProps> = ({
   };
 
   return (
-    <div className="max-w-lg mt-1">
+    <div className="mt-1 max-w-lg">
       <AddLabel
         label="Kysymyksiä"
         handleAdd={handleAdd}

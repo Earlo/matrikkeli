@@ -33,7 +33,7 @@ export default function PersonCard({ person, onClick }: PersonCardProps) {
       onPointerDown={handlePointerDown}
       onClick={onClick}
       className={cn(
-        'border rounded p-2 transition transform duration-200 cursor-pointer hover:shadow-lg active:scale-98',
+        'transform cursor-pointer rounded border p-2 transition duration-200 hover:shadow-lg active:scale-98',
       )}
     >
       <div className="flex items-center">
@@ -41,10 +41,10 @@ export default function PersonCard({ person, onClick }: PersonCardProps) {
           src={person.image_url_session}
           alt={`${person.first_name} ${person.last_name}`}
           size={64}
-          className="w-16 h-16"
+          className="h-16 w-16"
         />
         <div className="ml-4">
-          <h2 className="text-xl font-semibold">
+          <h2 className="text-xl font-semibold text-white">
             {person.first_name} {person.last_name}
           </h2>
           <p className="text-sm text-gray-600">{shortDescription}</p>

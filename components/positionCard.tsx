@@ -22,7 +22,7 @@ const PositionCard: React.FC<PositionCardProps> = ({
     <EntryCard
       onDelete={disabled ? undefined : () => onDelete(position.id)}
       label={
-        <span className="text-gray-700 font-medium">
+        <span className="font-medium text-gray-700">
           {position.title || 'New Position'}
         </span>
       }

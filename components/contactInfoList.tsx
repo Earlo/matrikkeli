@@ -61,7 +61,7 @@ const ContactInfoList: React.FC<ContactInfoListProps> = ({
     ([, a], [, b]) => a.order - b.order,
   );
   return (
-    <div className="max-w-lg mt-1">
+    <div className="mt-1 max-w-lg">
       <AddLabel
         label="Yhteystiedot"
         handleAdd={handleAdd}

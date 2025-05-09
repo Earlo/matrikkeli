@@ -20,9 +20,9 @@ const Button: React.FC<ButtonProps> = ({
     disabled={disabled}
     onClick={onClick}
     className={cn(
-      'focus:shadow-outline rounded bg-blue-600 px-2 py-1 font-bold text-white hover:bg-blue-700 focus:outline-hidden hover:cursor-pointer min-w-fit whitespace-nowrap',
+      'focus:shadow-outline min-w-fit rounded bg-blue-600 px-2 py-1 font-bold whitespace-nowrap text-white hover:cursor-pointer hover:bg-blue-700 focus:outline-hidden',
       className,
-      { 'bg-gray-400 hover:bg-gray-400 cursor-default': disabled },
+      { 'cursor-default bg-gray-400 hover:bg-gray-400': disabled },
     )}
   >
     {label}

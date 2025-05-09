@@ -16,9 +16,9 @@ const AddButton: React.FC<AddButtonProps> = ({
     type="button"
     disabled={disabled}
     className={cn(
-      'p-1 bg-blue-500 text-white rounded-full hover:bg-blue-600 hover:cursor-pointer transition',
+      'rounded-full bg-blue-500 p-1 text-white transition hover:cursor-pointer hover:bg-blue-600',
       {
-        'bg-gray-500 hover:bg-gray-500 hover:cursor-default': disabled,
+        'bg-gray-500 hover:cursor-default hover:bg-gray-500': disabled,
       },
       className,
     )}

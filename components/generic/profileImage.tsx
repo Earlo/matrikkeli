@@ -20,7 +20,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
   return (
     <div
       className={cn(
-        'relative rounded-tl-full rounded-tr-full rounded-bl-full rounded-br-none h-48 w-48 overflow-hidden',
+        'relative h-48 w-48 overflow-hidden rounded-tl-full rounded-tr-full rounded-br-none rounded-bl-full',
         className,
       )}
     >
@@ -30,7 +30,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
         width={size}
         height={size}
         className={cn(
-          'rounded-tl-full rounded-tr-full rounded-bl-full rounded-br-none object-cover bg-[#F1742B]',
+          'rounded-tl-full rounded-tr-full rounded-br-none rounded-bl-full bg-[#F1742B] object-cover',
         )}
         priority
       />

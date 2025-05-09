@@ -16,7 +16,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 const baseInputClasses =
-  'mt-1 block w-full rounded-md border rounded-br-none border-gray-200 p-1 shadow-xs text-sm';
+  'mt-1 block w-full rounded-md border rounded-br-none border-gray-200 p-1 shadow-xs text-sm text-black';
 
 const Input: React.FC<InputProps> = ({
   name,

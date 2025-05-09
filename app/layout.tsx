@@ -21,7 +21,7 @@ const archivo = Archivo({
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={`${archivo.variable}`}>
-      <body className="flex min-h-[100dvh] flex-col font-prompt">
+      <body className="font-prompt flex min-h-[100dvh] flex-col">
         <TopBar />
         <BaseLayout>{children}</BaseLayout>
         <Footer />

@@ -14,14 +14,14 @@ const TopBar: FC = () => {
     <div className="flex items-center justify-between bg-gray-800 p-4 text-white">
       <div className="flex items-center">
         <Link
-          className="text-lg md:text-xl font-bold hover:opacity-80"
+          className="text-lg font-bold hover:opacity-80 md:text-xl"
           href="/"
         >
           Home
         </Link>
         {person && (
           <Link
-            className="text-lg md:text-xl pl-4 font-bold hover:opacity-80"
+            className="pl-4 text-lg font-bold hover:opacity-80 md:text-xl"
             href="/gallery"
           >
             Gallery
@@ -30,13 +30,13 @@ const TopBar: FC = () => {
         {(userRole === 'admin' || userRole === 'super_admin') && (
           <>
             <Link
-              className="text-lg md:text-xl pl-4 font-bold hover:opacity-80"
+              className="pl-4 text-lg font-bold hover:opacity-80 md:text-xl"
               href="/admin"
             >
               Admin
             </Link>
             <Link
-              className="text-lg md:text-xl pl-4 font-bold hover:opacity-80"
+              className="pl-4 text-lg font-bold hover:opacity-80 md:text-xl"
               href="/generate"
             >
               PDF

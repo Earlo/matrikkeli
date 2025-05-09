@@ -176,8 +176,8 @@ export default function AdminPage() {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Admin Panel</h1>
-      <h2 className="text-xl font-semibold mt-8 mb-2">Manage People</h2>
+      <h1 className="mb-4 text-2xl font-bold">Admin Panel</h1>
+      <h2 className="mt-8 mb-2 text-xl font-semibold">Manage People</h2>
       {loadingPeople ? (
         <LoadingSpinner />
       ) : (
@@ -194,18 +194,18 @@ export default function AdminPage() {
               <tr key={person.id} className="border-b">
                 <td className="px-4 py-2">{person.email}</td>
                 <td className="px-4 py-2">{person.role}</td>
-                <td className="px-4 py-2 space-x-2">
+                <td className="space-x-2 px-4 py-2">
                   {currentUserRole === 'super_admin' && (
                     <>
                       <button
                         onClick={() => handleChangeRole(person.id, 'user')}
-                        className="px-2 py-1 rounded bg-gray-200 hover:bg-gray-300"
+                        className="rounded bg-gray-200 px-2 py-1 hover:bg-gray-300"
                       >
                         Set User
                       </button>
                       <button
                         onClick={() => handleChangeRole(person.id, 'admin')}
-                        className="px-2 py-1 rounded bg-gray-200 hover:bg-gray-300"
+                        className="rounded bg-gray-200 px-2 py-1 hover:bg-gray-300"
                       >
                         Set Admin
                       </button>
@@ -213,7 +213,7 @@ export default function AdminPage() {
                   )}
                   <button
                     onClick={() => handleEditPerson(person)}
-                    className="px-2 py-1 rounded bg-blue-200 hover:bg-blue-300"
+                    className="rounded bg-blue-200 px-2 py-1 hover:bg-blue-300"
                   >
                     Edit
                   </button>
@@ -224,29 +224,29 @@ export default function AdminPage() {
         </table>
       )}
 
-      <h2 className="text-xl font-semibold mt-8 mb-2">Manage Questions</h2>
+      <h2 className="mt-8 mb-2 text-xl font-semibold">Manage Questions</h2>
       {loadingQuestions ? (
         <LoadingSpinner />
       ) : (
         <>
-          <div className="flex items-center gap-2 mb-4">
+          <div className="mb-4 flex items-center gap-2">
             <input
               type="text"
               placeholder="New question..."
-              className="border p-1 rounded flex-1"
+              className="flex-1 rounded border p-1"
               value={newQuestionText}
               onChange={(e) => setNewQuestionText(e.target.value)}
             />
             <input
               type="number"
               placeholder="Priority"
-              className="border p-1 rounded w-20"
+              className="w-20 rounded border p-1"
               value={newQuestionPriority}
               onChange={(e) => setNewQuestionPriority(Number(e.target.value))}
             />
             <button
               onClick={handleAddQuestion}
-              className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
+              className="rounded bg-green-500 px-3 py-1 text-white hover:bg-green-600"
             >
               Add
             </button>
@@ -268,7 +268,7 @@ export default function AdminPage() {
                   <td className="px-4 py-2">
                     <button
                       onClick={() => handleDeleteQuestion(q.id)}
-                      className="px-2 py-1 rounded bg-red-200 hover:bg-red-300"
+                      className="rounded bg-red-200 px-2 py-1 hover:bg-red-300"
                     >
                       Delete
                     </button>
@@ -282,12 +282,12 @@ export default function AdminPage() {
 
       {selectedPerson && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="relative w-fit bg-white rounded shadow-md max-h-[90vh] overflow-y-auto">
+          <div className="relative max-h-[90vh] w-fit overflow-y-auto rounded bg-white shadow-md">
             <button
               className="absolute top-2 right-2"
               onClick={() => setSelectedPerson(null)}
             >
-              <XMarkIcon className="h-5 w-5 text-black cursor-pointer hover:text-gray-700" />
+              <XMarkIcon className="h-5 w-5 cursor-pointer text-black hover:text-gray-700" />
             </button>
             <PersonForm person={selectedPerson} />
           </div>
