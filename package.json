@@ -19,14 +19,14 @@
     "@supabase/supabase-js": "2.58.0",
     "next": "15.5.4",
     "puppeteer-core": "24.22.3",
-    "react": "19.1.1",
+    "react": "19.2.0",
     "react-dom": "19.1.1",
     "uuid": "13.0.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "4.1.13",
     "@types/node": "24.6.1",
-    "@types/react": "19.1.16",
+    "@types/react": "19.2.0",
     "@types/react-dom": "19.1.9",
     "@typescript-eslint/eslint-plugin": "8.45.0",
     "@typescript-eslint/parser": "8.45.0",
