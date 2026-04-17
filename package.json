@@ -16,7 +16,7 @@
     "@heroicons/react": "2.2.0",
     "@sparticuz/chromium": "147.0.0",
     "@supabase/ssr": "0.10.2",
-    "@supabase/supabase-js": "2.103.2",
+    "@supabase/supabase-js": "2.103.3",
     "next": "16.2.3",
     "puppeteer-core": "24.41.0",
     "react": "19.2.5",
