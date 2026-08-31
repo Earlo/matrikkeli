@@ -15,7 +15,7 @@
   "dependencies": {
     "@heroicons/react": "2.2.0",
     "@sparticuz/chromium": "149.0.0",
-    "@supabase/ssr": "0.12.4",
+    "@supabase/ssr": "0.12.5",
     "@supabase/supabase-js": "2.112.4",
     "next": "16.3.2",
     "puppeteer-core": "25.8.0",
